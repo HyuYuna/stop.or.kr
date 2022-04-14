@@ -6,6 +6,17 @@
 <%@ taglib prefix="elfunc" uri="/WEB-INF/tlds/egov_elfunc.tld"%>
 <%@ taglib prefix="cutil" uri="/WEB-INF/tlds/CommonUtil.tld"%>
 
+<style>
+.a11y-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: polygon(0 0, 0 0, 0 0);
+}
+</style>
+
 <div class="board-card">
 	<ul>
 		<c:forEach var="resultUnder" items="${underList}" varStatus="status">
@@ -35,7 +46,7 @@
 			<ul>
 				<c:forEach var="result" items="${atchfileList}" varStatus="status">
 					<c:if test="${status.index ne '0' }">
-						<li><img src="${pageContext.request.contextPath}/atchfile/imageAtchfile.do?vchkcode=${result.vchkcode}" alt="${webtoonVO.cn_title}" /></li>		
+						<li><img src="${pageContext.request.contextPath}/atchfile/imageAtchfile.do?vchkcode=${result.vchkcode}" alt="${result.alt}" />${result.add_tag}</li>		
 					</c:if>
 				</c:forEach>
 			</ul>

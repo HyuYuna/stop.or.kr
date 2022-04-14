@@ -39,7 +39,7 @@
 
 <body>
 	<!-- Accessibility -->
-	<a id="uppermost" href="#contents" class="skip-to">본문 바로가기</a>
+	<a id="uppermost" href="#path" class="skip-to">본문 바로가기</a>
 	<div id="wrap" class="main2020">
 		<header id="header">
 			<tiles:insertAttribute name="contHeader"/>
@@ -57,11 +57,16 @@
 					<c:param name="use" value="Y" />
 				</c:import>
 				
+				<c:import url="/SiteMenuWidget/path.do" >
+					<c:param name="use" value="N" />
+					<c:param name="viewFile" value="site_path" />
+				</c:import>
+				
 				<div id="contents">
 					<div class="cont-top">
 						<c:import url="/SiteMenuWidget/path.do" >
 							<c:param name="use" value="N" />
-							<c:param name="viewFile" value="site_path" />
+							<c:param name="viewFile" value="site_path2" />
 						</c:import>
 					</div>
 					<div class="cont-mid">

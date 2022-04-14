@@ -89,6 +89,7 @@ Create date : 2018-06-19
 @media screen and (max-width:800px)
 {
 	#siteinfo {padding:10px; background:none;}
+	#siteinfo .wa{display:none;}
 }
 
 @media screen and (max-width:768px)

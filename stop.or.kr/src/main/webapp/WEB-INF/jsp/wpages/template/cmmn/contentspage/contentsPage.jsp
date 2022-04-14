@@ -10,6 +10,9 @@
 <!--   ## TPCODE : TPAGE0020: 컨텐츠 페이지 ## --> 
 
 <c:if test="${param.srch_menu_nix ne 'twGjDnop'}">
+<c:if test="${contentsmanVO.ucont_id eq 'CTX000019'}">
+<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=ekropqh97o"></script>
+</c:if>
 <form name="reqForm" method="post">
 </c:if>	
 	<div id="detail_content">
@@ -19,6 +22,19 @@
 	</div>
 <c:if test="${param.srch_menu_nix ne 'twGjDnop'}">
 </form>
+</c:if>
+<c:if test="${contentsmanVO.ucont_id eq 'CTX000019'}">
+<script>
+var map = new naver.maps.Map('map', {
+    center: new naver.maps.LatLng(37.56092, 126.96701),
+    zoom: 17
+});
+
+var marker = new naver.maps.Marker({
+    position: new naver.maps.LatLng(37.56092, 126.96701),
+    map: map
+});
+</script> 
 </c:if>
 <!-- 2. 설치 스크립트 -->
 <!-- script charset="UTF-8" class="daum_roughmap_loader_script" src="http://dmaps.daum.net/map_js_init/roughmapLoader.js"></script-->

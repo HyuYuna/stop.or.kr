@@ -300,7 +300,8 @@
 			SIZE_KB,
 			IMG_WIDTH,
 			IMG_HEIGHT,
-			ALT
+			ALT,
+			ADD_TAG
 		FROM
 			CMS_ATACH
 		WHERE

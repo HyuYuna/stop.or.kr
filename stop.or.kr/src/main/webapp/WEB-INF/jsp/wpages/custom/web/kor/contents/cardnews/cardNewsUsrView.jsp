@@ -43,8 +43,8 @@
 			<c:set var="viewParams" value="seq=${resultUnder.cn_seq}&pageIndex=${pageIndex}&nownm=${resultUnder.rn}" />
 			<li <c:if test="${resultUnder.cn_seq eq cardNewsVO.cn_seq}">class="active"</c:if> >
 				<a href="${cutil:getUrl('/cardnews/cardNewsUsrView.do', viewParams, true)}">
-					<span class="title">${resultUnder.cn_title}</span>
-					<span class="img"><img src="${pageContext.request.contextPath}/atchfile/imageAtchfile.do?vchkcode=${resultUnder.vchkcode}" width="137" height="138" /></span>
+<%-- 					<span class="title">${resultUnder.cn_title}</span> --%>
+					<span class="img"><img src="${pageContext.request.contextPath}/atchfile/imageAtchfile.do?vchkcode=${resultUnder.vchkcode}" alt="${resultUnder.cn_alt}" width="137" height="138" /></span>
 				</a>
 			</li>
 		</c:forEach>

@@ -536,7 +536,7 @@ td.point1 {white-space:nowrap;}
 .vision .list1 li {float:none; position:relative; width:100%; font-size:2rem; color:#000022; text-align:center; white-space:nowrap; line-height:1.555;}
 .vision .list1 li + li .title + p {border-color:#b1dde0;}
 .vision .list1 li + li:before {display:block; height:55px; margin:10px auto; background:url('/images/kor/sub/vision.gif') no-repeat center 0; content:'';}
-.vision .list1 li + li .title {color:#3caab1;}
+.vision .list1 li + li .title {color:#3CA2B1;}
 .vision .list1 li + li .title:before,
 .vision .list1 li + li .title:after {background-color:#3caab1;}
 .vision .list1 li + li .title span {text-shadow:0 0 1px #3caab1;}
@@ -702,7 +702,7 @@ td.point1 {white-space:nowrap;}
 .org .depth3 li:nth-child(2) .depth4 .label{padding:20px 10px;height:162px}
 .org .depth3 li:nth-child(3) .depth4{margin-left:12px}
 .org .depth3 li:nth-child(3) .depth4 .label{padding:20px;height:162px;}
-.org .depth3 li:nth-child(4) .depth4{margin-left:10px}
+.org .depth3 li:nth-child(4) .depth4{margin-left:30px}
 .org .depth3 li:nth-child(4) .depth4 .label{padding: 20px 5px;height:162px;}
 .org .depth3 li:nth-child(1) .depth4 li{width:50px}
 .org .depth3 li:nth-child(2) .depth4 li{width:52px}
@@ -714,11 +714,11 @@ td.point1 {white-space:nowrap;}
 .org .depth3 li:nth-child(3) .depth4 li:nth-child(3) .label{padding: 20px 5px;font-size:11px;}
 .org .depth3 li:nth-child(3) .depth4:before{left:35px;width:133px}
 .org .depth3 li:nth-child(3) .depth4:after{left:91px}
-.org .depth3 li:nth-child(4) .depth4:after{left:112px}
-.org .depth3 li:nth-child(4) .depth4:before{left:28px;width:181px}
+.org .depth3 li:nth-child(4) .depth4:after{left:93px}
+.org .depth3 li:nth-child(4) .depth4:before{left:28px;width:114px}
 .org .depth3 li:nth-child(4) .depth4 li{width: 56px;}
 .org .depth3 li:nth-child(4) .depth4 li:nth-child(2) .label,
-.org .depth3 li:nth-child(4) .depth4 li:nth-child(3) .label{padding:20px;}
+.org .depth3 li:nth-child(4) .depth4 li:nth-child(3) .label{padding:20px 5px;}
 .org .depth3 li:nth-child(4) .depth4 li:nth-child(4) .label{padding: 20px 5px;}
 .org .depth3 li:nth-child(4) .depth4 li:nth-child(1) .label{font-size:11px;}
 .org .depth3 li:nth-child(4) .depth4 li:nth-child(5) .label{font-size:11px;}

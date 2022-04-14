@@ -50,6 +50,8 @@ public class AtchfileVO extends DefaultSearchVO {
   private int img_height;
   
   private String alt;
+  
+  private String add_tag;
 
   /** 썸네일 여부 */
   private String is_thumb = "N";
@@ -171,5 +173,13 @@ public class AtchfileVO extends DefaultSearchVO {
 	this.alt = alt;
   }
 
+  public String getAdd_tag() {
+	return add_tag;
+  }
+
+  public void setAdd_tag(String add_tag) {
+	this.add_tag = add_tag;
+  }
+  
 }
 

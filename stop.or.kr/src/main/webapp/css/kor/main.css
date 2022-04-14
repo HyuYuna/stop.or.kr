@@ -327,7 +327,7 @@ body.overflow {overflow:hidden;}
 .popupzone img {width:100%; height:190px;}
 .popupzone .bx-controls {position:absolute; left:0; bottom:15px; width:100%; text-align:center;z-index:1000;}
 .popupzone .bx-controls div {display:inline; vertical-align:top;}
-.popupzone .bx-controls a {display:inline-block; overflow:hidden; position:relative; width:18px; height:18px; margin:0 3px; color:transparent; white-space:nowrap; line-height:14px;}
+.popupzone .bx-controls a {display:inline-block; overflow:hidden; position:relative; width:30px; height:30px; margin:0 3px; color:transparent; white-space:nowrap; line-height:14px;}
 .popupzone .bx-controls .bx-start:before {position:absolute; left:0; top:0; width:100%; height:100%; font-family:'xeicon'; color:#fff; content:'';font-size:36px;}
 .popupzone .bx-controls .bx-stop {width:10px; border-left:2px solid #fff; border-right:2px solid #fff;}
 .popupzone .bx-pager-item a {border:3px solid #fff; transition:all .2s; -webkit-transition:all .2s;} 

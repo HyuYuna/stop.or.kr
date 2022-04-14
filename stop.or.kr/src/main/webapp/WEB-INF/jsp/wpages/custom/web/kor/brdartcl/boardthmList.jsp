@@ -25,7 +25,7 @@
 		<ul class="category"> 
 			<c:choose>
 				<c:when test="${empty param.srch_ctgry_idx}">
-					<li class="active"><a href="${pageContext.request.contextPath}/brdthm/boardthmList.do?brd_id=${SESS_BRD_INFO.brd_id}&&srch_menu_nix=${param.srch_menu_nix}">전체</a></li>
+					<li class="active"><a href="${pageContext.request.contextPath}/brdthm/boardthmList.do?brd_id=${SESS_BRD_INFO.brd_id}&&srch_menu_nix=${param.srch_menu_nix}">전체(현재선택됨)</a></li>
 				</c:when>
 				<c:otherwise>
 					<li><a href="${pageContext.request.contextPath}/brdthm/boardthmList.do?brd_id=${SESS_BRD_INFO.brd_id}&srch_ctgry_idx=${result.ctgry_idx}&srch_menu_nix=${param.srch_menu_nix}">전체</a></li>
@@ -46,7 +46,7 @@
 					<c:otherwise>
 						<c:choose>
 							<c:when test="${result.ctgry_idx eq param.srch_ctgry_idx}">
-								<li class="active"><a href="${pageContext.request.contextPath}/brdthm/boardthmList.do?brd_id=${SESS_BRD_INFO.brd_id}&srch_ctgry_idx=${result.ctgry_idx}&srch_menu_nix=${param.srch_menu_nix}"><c:out value="${result.ctgry_nm}"/></a></li>
+								<li class="active"><a href="${pageContext.request.contextPath}/brdthm/boardthmList.do?brd_id=${SESS_BRD_INFO.brd_id}&srch_ctgry_idx=${result.ctgry_idx}&srch_menu_nix=${param.srch_menu_nix}"><c:out value="${result.ctgry_nm}"/>(현재선택됨)</a></li>
 							</c:when>
 							<c:otherwise>
 								<li><a href="${pageContext.request.contextPath}/brdthm/boardthmList.do?brd_id=${SESS_BRD_INFO.brd_id}&srch_ctgry_idx=${result.ctgry_idx}&srch_menu_nix=${param.srch_menu_nix}"><c:out value="${result.ctgry_nm}"/></a></li>
@@ -66,7 +66,7 @@
 				<a href="${cutil:getUrl('/brdthm/boardthmView.do',a_url,true)}">
 				<%-- <a href="${pageContext.request.contextPath}/brdthm/boardthmView.do?brd_id=${param.brd_id}&srch_menu_nix=${param.srch_menu_nix}&cont_idx=${result.cont_idx}" title="${result.subject}"> --%>
 					<span class="img">
-						<img src="${pageContext.request.contextPath}/atchfile/imageAtchfile.do?vchkcode=${result.vchkcode}" width="163" height="113"/>
+						<img src="${pageContext.request.contextPath}/atchfile/imageAtchfile.do?vchkcode=${result.vchkcode}" width="163" height="113" alt="" />
 					</span>
 					<c:if test="${SESS_BRD_INFO.use_ctgry eq 'Y'}">
 						<span class="icon1 type1">

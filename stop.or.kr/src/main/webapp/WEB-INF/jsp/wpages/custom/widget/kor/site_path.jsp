@@ -9,8 +9,8 @@
 
 
 
-<h1 class="cont-title">${path.get(path.size()-1).menu_nm}</h1>
-<div class="path">
+
+<div id="path" class="path">
 	<a href="${pageContext.request.contextPath}/"><span class="home"><i class="xi-home">홈</i></span></a>
 	
 	<div class="group depth1">
@@ -116,17 +116,6 @@
 
 	<a href="javascript:window.print()" class="print"><i class="xi-print"></i><span class="sr-only">프린트</span></a>
 </div>
-<script>
-$(function(){
-	$(".path .group p a").click(function(){
-		$(this).children().text("접기");
-		if ($(".path .group").hasClass("active")) {
-		  $(this).children().text("펼치기");
-		}
-	});
-});
-</script>
-
 
 
 

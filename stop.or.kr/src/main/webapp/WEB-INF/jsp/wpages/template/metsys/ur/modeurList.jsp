@@ -51,7 +51,7 @@
 							<c:out value="${result.user_id}"/>
 							</a> --%>
 							<c:set var="viewParams" value="id=${result.user_id}" />	
-							<a href="${cutil:getUrl('/modeur/modeurView.do', viewParams, true)}">${result.user_id}</a>
+							<a href="${cutil:getUrl('/modeur/modeurView.do', viewParams, false)}">${result.user_id}</a>
 						</td>
 					</c:when>
 					<c:otherwise>

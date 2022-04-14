@@ -20,7 +20,7 @@
 				</c:url>
 			</c:if>
 			<a href="#download" data-url="${url}" class="btn-layerpopup ajajx-down">
-				<span class="img"><img src="${pageContext.request.contextPath}/atchfile/imageAtchfile.do?vchkcode=${multiCmsList.get(0).img_code}" /></span>
+				<span class="img"><img src="${pageContext.request.contextPath}/atchfile/imageAtchfile.do?vchkcode=${multiCmsList.get(0).img_code}" alt="${multiCmsList.get(0).mc_alt}" /></span>
 				<span class="text"><c:out value="${multiCmsList.get(0).mc_title}"/></span>
 			</a>
 		</li>
@@ -34,7 +34,7 @@
 				</c:url>
 			</c:if>
 			<a href="#download" data-url="${url}" class="btn-layerpopup ajajx-down">
-				<span class="img"><img src="${pageContext.request.contextPath}/atchfile/imageAtchfile.do?vchkcode=${multiCmsList.get(1).img_code}" /></span>
+				<span class="img"><img src="${pageContext.request.contextPath}/atchfile/imageAtchfile.do?vchkcode=${multiCmsList.get(1).img_code}" alt="${multiCmsList.get(1).mc_alt}"/></span>
 				<span class="text"><c:out value="${multiCmsList.get(1).mc_title}"/></span>
 			</a>
 		</li>

@@ -23,7 +23,7 @@
 			  <c:param name="subject" value="${result.mc_title}" />
 			</c:url>
 			<a href="#download" data-url="${url}" class="btn-layerpopup ajajx-down">
-				<span class="img"><img src="${pageContext.request.contextPath}/atchfile/imageAtchfile.do?vchkcode=${result.img_code}" width="140" height="190" alt="${result.mc_alt}" /></span>
+				<span class="img"><img src="${pageContext.request.contextPath}/atchfile/imageAtchfile.do?vchkcode=${result.img_code}" width="140" height="190" alt="" /></span>
 				<strong><c:out value="${result.mc_title}"/> </strong>
 				<p class="txt"><c:out value="${elfunc:removeTag(result.mc_content)}"/></p>
 			</a>
