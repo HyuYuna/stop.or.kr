@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.man.metsys.dao.ComplicityItemDAO">
+
+	<!-- 출품작 개별 정보 저장 -->
+	<insert id="insertComplicityItem" parameterType="complicityItemVO">
+		<!-- <selectKey keyProperty="data_id" resultType="int" order="BEFORE">
+			SELECT ISNULL(MAX(DATA_ID), 0) + 1 FROM CMS_COMPLICITY_ITEM
+		</selectKey> -->
+		<selectKey keyProperty="data_id" resultType="String" order="BEFORE">
+		SELECT 
+			CONVERT(VARCHAR, SYSDATETIME(), 112)+RIGHT(REPLICATE('0', 6) + CAST(#{group_id} AS VARCHAR), 6)+ RIGHT(REPLICATE('0', 2) + 
+			CAST((ISNULL(MAX(CAST(REPLACE(DATA_ID, CONVERT(VARCHAR, SYSDATETIME(), 112)+RIGHT(REPLICATE('0', 6) + CAST(#{group_id} AS VARCHAR), 6), '') AS INT)), 0) + 1) AS VARCHAR),  2)
+			AS DATA_ID
+		FROM 
+			CMS_COMPLICITY_ITEM
+		WHERE
+			DATA_ID LIKE RIGHT(CONVERT(VARCHAR, SYSDATETIME(), 112), 8)+RIGHT(REPLICATE('0', 6) + CAST(#{group_id} AS VARCHAR),  6)+'%'
+		</selectKey>		
+		INSERT INTO CMS_COMPLICITY_ITEM
+		(
+			DATA_ID,
+			GROUP_ID,
+			ITEM_DIVISION,
+			ITEM_TARGET,
+			ITEM_NAME,
+			ITEM_EXPLAIN,
+	        ITEM.ITEM_STATE,
+	        ITEM.ITEM_AWARDS
+		)
+		VALUES
+		(
+			#{data_id},
+			#{group_id},
+			#{item_division},
+			#{item_target},
+			#{item_name},
+			#{item_explain},
+			#{item_state},
+			#{item_awards}
+		)
+	</insert>
+
+	<update id="updateComplicityItem" parameterType="complicityItemVO">
+		UPDATE
+			CMS_COMPLICITY_ITEM
+		SET
+			ITEM_STATE = #{item_state},
+			ITEM_AWARDS = #{item_awards},
+			MODIFIER = #{modifier},
+			MDT = GETDATE()
+		WHERE
+			DATA_ID = #{data_id}
+	</update>	
+
+	<resultMap type="ComplicityVO" id="complicity">
+	    <result column="GROUP_ID" property="group_id"/>
+	    <result column="NAME" property="name"/>
+	    <result column="TEL" property="tel"/>
+	    <result column="EMAIL" property="email"/>
+	    <result column="AGE" property="age"/>
+	    <result column="BELONG" property="belong"/>
+	    <result column="SURVEY_GENDER" property="survey_gender"/>
+	    <result column="SURVEY_AGE" property="survey_age"/>
+	    <result column="SURVEY_CITY" property="survey_city"/>
+	    <result column="SURVEY_FROM" property="survey_from_string"/>
+	    <result column="SURVEY_ETC" property="survey_etc"/>
+	    <result column="WRITER" property="writer"/>
+	    <result column="WDT" property="wdt"/>
+	</resultMap>
+	<resultMap type="AtchfileVO" id="complicityAtchfile">
+	    <result column="ATCKEY_1ST" property="atckey_1st"/>
+	    <result column="ATCKEY_2ND" property="atckey_2nd"/>
+	    <result column="ATCKEY_3RD" property="atckey_3rd"/>
+	    <result column="ATCKEY_4TH" property="atckey_4th"/>
+	    <result column="VCHKCODE" property="vchkcode"/>
+	    <result column="FPATH" property="fpath"/>
+	    <result column="FNAME" property="fname"/>
+	    <result column="RNAME" property="rname"/>
+	    <result column="FEXT" property="fext"/>
+	    <result column="SIZE_KB" property="size_kb"/>
+	</resultMap>
+	 
+	<resultMap type="ComplicityItemVO" id="complicityItem">
+	    <result column="RN" property="rn"/>
+	    <result column="DATA_ID" property="data_id"/>
+	    <result column="GROUP_ID" property="group_id"/>
+	    <result column="ITEM_DIVISION" property="item_division"/>
+	    <result column="ITEM_TARGET" property="item_target"/>
+	    <result column="ITEM_NAME" property="item_name"/>
+	    <result column="ITEM_EXPLAIN" property="item_explain"/>
+	    <result column="ITEM_STATE" property="item_state"/>
+	    <result column="ITEM_AWARDS" property="item_awards"/>
+	    <collection property="complicityVO" resultMap="complicity"/>
+	    <collection property="atchfileVO" resultMap="complicityAtchfile"/>
+	</resultMap>
+	
+	<!-- 출품작 사용자(이메일) 검색 -->
+	<select id="selectComplicityItemGroupList" parameterType="ComplicityVO" resultMap="complicityItem">
+	    SELECT
+	        ITEM.DATA_ID,
+	        ITEM.GROUP_ID,
+	        ITEM.ITEM_DIVISION,
+	        ITEM.ITEM_TARGET,
+	        ITEM.ITEM_NAME,
+	        ITEM.ITEM_EXPLAIN,
+	        ITEM.ITEM_STATE,
+	        ITEM.ITEM_AWARDS,
+	        
+	        INFO.GROUP_ID,
+	        INFO.NAME,
+	        INFO.TEL,
+	        INFO.EMAIL,
+	        INFO.AGE,
+	        INFO.BELONG,
+	        INFO.SURVEY_GENDER,
+	        INFO.SURVEY_AGE,
+	        INFO.SURVEY_CITY,
+	        INFO.SURVEY_ETC,
+	        INFO.WRITER,
+	        INFO.WDT,
+	        
+	        ATACH.ATCKEY_1ST,
+	        ATACH.ATCKEY_2ND,
+	        ATACH.ATCKEY_3RD,
+	        ATACH.ATCKEY_4TH,
+	        ATACH.VCHKCODE,
+	        ATACH.FPATH,
+	        ATACH.FNAME,
+	        ATACH.RNAME,
+	        ATACH.FEXT,
+	        ATACH.SIZE_KB
+	        
+	    FROM
+	        CMS_COMPLICITY_ITEM AS ITEM
+	    LEFT JOIN
+	        CMS_COMPLICITY_INFO AS INFO
+	    ON
+	        INFO.GROUP_ID = ITEM.GROUP_ID
+	    LEFT JOIN
+	    	CMS_ATACH AS ATACH
+	    ON
+	    	ITEM.DATA_ID = ATCKEY_2ND  AND
+	    	ATACH.ATCKEY_1ST = 'USR_COMPLICITY'
+	    WHERE
+	        INFO.EMAIL = #{email} AND
+	        INFO.NAME = #{name}
+	</select>
+
+	<resultMap type="ComplicityItemVO" id="complicityItemGroupBy">
+	    <result column="RN" property="rn"/>
+	    <result column="DATA_ID" property="data_id"/>
+	    <result column="GROUP_ID" property="group_id"/>
+	    <result column="ITEM_DIVISION" property="item_division"/>
+	    <result column="ITEM_TARGET" property="item_target"/>
+	    <result column="ITEM_NAME" property="item_name"/>
+	    <result column="ITEM_EXPLAIN" property="item_explain"/>
+	    <result column="ITEM_STATE" property="item_state"/>
+	    <result column="ITEM_AWARDS" property="item_awards"/>
+	    <collection property="atchfileVO" resultMap="complicityAtchfile"/>
+	</resultMap>
+	
+	<!-- 출품작 그룹 검색 -->
+	<select id="selectComplicityItemGroupByList" parameterType="ComplicityVO" resultMap="complicityItemGroupBy">
+	    SELECT
+	        ITEM.DATA_ID,
+	        ITEM.GROUP_ID,
+	        ITEM.ITEM_DIVISION,
+	        ITEM.ITEM_TARGET,
+	        ITEM.ITEM_NAME,
+	        ITEM.ITEM_EXPLAIN,
+	        ITEM.ITEM_STATE,
+	        ITEM.ITEM_AWARDS,
+	        
+	        ATACH.ATCKEY_1ST,
+	        ATACH.ATCKEY_2ND,
+	        ATACH.ATCKEY_3RD,
+	        ATACH.ATCKEY_4TH,
+	        ATACH.VCHKCODE,
+	        ATACH.FPATH,
+	        ATACH.FNAME,
+	        ATACH.RNAME,
+	        ATACH.FEXT,
+	        ATACH.SIZE_KB
+	        
+	    FROM
+	        CMS_COMPLICITY_ITEM AS ITEM
+	    LEFT JOIN
+	        CMS_COMPLICITY_INFO AS INFO
+	    ON
+	        INFO.GROUP_ID = ITEM.GROUP_ID
+	    LEFT JOIN
+	    	CMS_ATACH AS ATACH
+	    ON
+	    	ITEM.DATA_ID = ATCKEY_2ND  AND
+	    	ATACH.ATCKEY_1ST = 'USR_COMPLICITY'
+	    WHERE
+	        ITEM.GROUP_ID = #{group_id} AND INFO.GROUP_ID = #{group_id}
+	</select>
+
+	<!-- 출품작 카운트 -->
+	<select id="selectComplicityItemListAllTotalCount" parameterType="ComplicityVO" resultType="int">
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_COMPLICITY_ITEM AS ITEM
+		LEFT JOIN
+		    CMS_COMPLICITY_INFO AS INFO
+		ON
+		    INFO.GROUP_ID = ITEM.GROUP_ID
+		WHERE
+			1 = 1
+			<if test="sdate != null and sdate != ''">
+				<if test="edate != null and edate != ''">
+					AND CONVERT(DATE, INFO.WDT) BETWEEN CONVERT(DATE,#{sdate}) AND CONVERT(DATE,#{edate}) 
+				</if>
+			</if>
+			<if test="searchCondition == null or searchCondition == ''">
+				AND
+				(
+					ITEM.DATA_ID LIKE '%' + #{searchKeyword} + '%' OR
+					INFO.NAME LIKE '%' + #{searchKeyword} + '%' OR
+					INFO.EMAIL LIKE '%' + #{searchKeyword} + '%' OR
+					INFO.TEL LIKE '%' + #{searchKeyword} + '%'
+				)
+			</if>
+			<if test="searchCondition != null and searchCondition != ''">
+				
+				<if test="searchCondition == '1'.toString()">
+					AND ITEM.DATA_ID LIKE '%' + #{searchKeyword} + '%'
+				</if>
+				<if test="searchCondition == '2'.toString()">
+					AND INFO.NAME LIKE '%' + #{searchKeyword} + '%'
+				</if>
+				<if test="searchCondition == '3'.toString()">
+					AND INFO.EMAIL LIKE '%' + #{searchKeyword} + '%'
+				</if>
+				<if test="searchCondition == '4'.toString()">
+					AND INFO.TEL LIKE '%' + #{searchKeyword} + '%'
+				</if>
+				<if test="searchCondition == '5'.toString()">
+					AND ITEM.ITEM_AWARDS LIKE '%' + #{searchKeyword} + '%'
+				</if>
+				<if test="searchCondition == '6'.toString()">
+					<choose>
+						<when test="searchKeyword.equals('접수대기')">
+						  AND ITEM.ITEM_STATE = '0'
+						</when>
+						<when test="searchKeyword.equals('접수완료')">
+						  AND ITEM.ITEM_STATE = '1'
+						</when>
+						<when test="searchKeyword.equals('접수반려')">
+						  AND ITEM.ITEM_STATE = '9'
+						</when>
+						<otherwise>
+						  AND ITEM.ITEM_STATE = '-1'
+						</otherwise>
+					</choose>					
+				</if>
+			</if>
+	</select>
+
+	<!-- 출품작 페이징 -->
+	<select id="selectComplicityItemListAll" parameterType="ComplicityVO" resultMap="complicityItem">
+
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY WDT DESC) RN, TB.* FROM (
+				
+				SELECT
+				    ITEM.DATA_ID,
+				    ITEM.GROUP_ID,
+				    ITEM.ITEM_DIVISION,
+				    ITEM.ITEM_TARGET,
+				    ITEM.ITEM_NAME,
+				    ITEM.ITEM_EXPLAIN,
+				    ITEM.ITEM_STATE,
+				    ITEM.ITEM_AWARDS,
+				    
+				    INFO.NAME,
+				    INFO.TEL,
+				    INFO.EMAIL,
+				    INFO.AGE,
+				    INFO.BELONG,
+				    INFO.SURVEY_GENDER,
+				    INFO.SURVEY_AGE,
+				    INFO.SURVEY_CITY,
+				    INFO.SURVEY_ETC,
+				    INFO.WRITER,
+				    INFO.WDT,
+				    
+				    ATACH.ATCKEY_1ST,
+				    ATACH.ATCKEY_2ND,
+				    ATACH.ATCKEY_3RD,
+				    ATACH.ATCKEY_4TH,
+				    ATACH.VCHKCODE,
+				    ATACH.FPATH,
+				    ATACH.FNAME,
+				    ATACH.RNAME,
+				    ATACH.FEXT,
+				    ATACH.SIZE_KB
+				
+				FROM
+				    CMS_COMPLICITY_ITEM AS ITEM
+				LEFT JOIN
+				    CMS_COMPLICITY_INFO AS INFO
+				ON
+				    INFO.GROUP_ID = ITEM.GROUP_ID
+				LEFT JOIN
+					CMS_ATACH AS ATACH
+				ON
+					ITEM.DATA_ID = ATCKEY_2ND  AND
+					ATACH.ATCKEY_1ST = 'USR_COMPLICITY'	
+					
+				WHERE
+					1 = 1
+					<if test="sdate != null and sdate != ''">
+						<if test="edate != null and edate != ''">
+							AND CONVERT(DATE, INFO.WDT) BETWEEN CONVERT(DATE,#{sdate}) AND CONVERT(DATE,#{edate}) 
+						</if>
+					</if>
+					<if test="searchCondition == null or searchCondition == ''">
+						AND
+						(
+							ITEM.DATA_ID LIKE '%' + #{searchKeyword} + '%' OR
+							INFO.NAME LIKE '%' + #{searchKeyword} + '%' OR
+							INFO.EMAIL LIKE '%' + #{searchKeyword} + '%' OR
+							INFO.TEL LIKE '%' + #{searchKeyword} + '%'
+						)
+					</if>
+					<if test="searchCondition != null and searchCondition != ''">
+						
+						<if test="searchCondition == '1'.toString()">
+							AND ITEM.DATA_ID LIKE '%' + #{searchKeyword} + '%'
+						</if>
+						<if test="searchCondition == '2'.toString()">
+							AND INFO.NAME LIKE '%' + #{searchKeyword} + '%'
+						</if>
+						<if test="searchCondition == '3'.toString()">
+							AND INFO.EMAIL LIKE '%' + #{searchKeyword} + '%'
+						</if>
+						<if test="searchCondition == '4'.toString()">
+							AND INFO.TEL LIKE '%' + #{searchKeyword} + '%'
+						</if>
+						<if test="searchCondition == '5'.toString()">
+							AND ITEM.ITEM_AWARDS LIKE '%' + #{searchKeyword} + '%'
+						</if>
+						<if test="searchCondition == '6'.toString()">
+							<choose>
+								<when test="searchKeyword.equals('접수대기')">
+								  AND ITEM.ITEM_STATE = '0'
+								</when>
+								<when test="searchKeyword.equals('접수완료')">
+								  AND ITEM.ITEM_STATE = '1'
+								</when>
+								<when test="searchKeyword.equals('접수반려')">
+								  AND ITEM.ITEM_STATE = '9'
+								</when>
+								<otherwise>
+								  AND ITEM.ITEM_STATE = '-1'
+								</otherwise>
+							</choose>
+						</if>
+					</if>					
+					
+		) TB ) MORG   WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+
+	    
+
+	
+	</select>
+
+	<!-- 출품작 엑셀 리스트 -->
+	<select id="getXlsList" parameterType="ComplicityVO" resultMap="complicityItem">
+	    
+		SELECT
+		    ITEM.RN,
+		    ITEM.DATA_ID,
+		    ITEM.GROUP_ID,
+		    ITEM.ITEM_DIVISION,
+		    ITEM.ITEM_TARGET,
+		    ITEM.ITEM_NAME,
+		    ITEM.ITEM_EXPLAIN,
+		    ITEM.ITEM_STATE,
+		    ITEM.ITEM_AWARDS,
+		    
+		    INFO.GROUP_ID,
+		    INFO.NAME,
+		    INFO.TEL,
+		    INFO.EMAIL,
+		    INFO.AGE,
+		    INFO.BELONG,
+		    INFO.SURVEY_GENDER,
+		    INFO.SURVEY_AGE,
+		    INFO.SURVEY_CITY,
+		    INFO.SURVEY_ETC,
+		    INFO.WRITER,
+		    INFO.WDT,
+		    
+		    ATACH.ATCKEY_1ST,
+		    ATACH.ATCKEY_2ND,
+		    ATACH.ATCKEY_3RD,
+		    ATACH.ATCKEY_4TH,
+		    ATACH.VCHKCODE,
+		    ATACH.FPATH,
+		    ATACH.FNAME,
+		    ATACH.RNAME,
+		    ATACH.FEXT,
+		    ATACH.SIZE_KB
+		
+		FROM
+		    (
+		    	SELECT *, ROW_NUMBER() OVER (ORDER BY DATA_ID) AS rn
+		      		FROM CMS_COMPLICITY_ITEM
+		    ) ITEM
+		LEFT JOIN
+		    CMS_COMPLICITY_INFO AS INFO
+		ON
+		    INFO.GROUP_ID = ITEM.GROUP_ID
+		LEFT JOIN
+			CMS_ATACH AS ATACH
+		ON
+			ITEM.DATA_ID = ATCKEY_2ND  AND
+			ATACH.ATCKEY_1ST = 'USR_COMPLICITY'	
+		WHERE
+			1 = 1	
+			<if test="sdate != null and sdate != ''">
+				<if test="edate != null and edate != ''">
+					AND CONVERT(DATE, INFO.WDT) BETWEEN CONVERT(DATE,#{sdate}) AND CONVERT(DATE,#{edate}) 
+				</if>
+			</if>
+			<if test="searchCondition == null or searchCondition == ''">
+				AND
+				(
+					ITEM.DATA_ID LIKE '%' + #{searchKeyword} + '%' OR
+					INFO.NAME LIKE '%' + #{searchKeyword} + '%' OR
+					INFO.EMAIL LIKE '%' + #{searchKeyword} + '%' OR
+					INFO.TEL LIKE '%' + #{searchKeyword} + '%'
+				)
+			</if>
+			<if test="searchCondition != null and searchCondition != ''">
+				
+				<if test="searchCondition == '1'.toString()">
+					AND ITEM.DATA_ID LIKE '%' + #{searchKeyword} + '%'
+				</if>
+				<if test="searchCondition == '2'.toString()">
+					AND INFO.NAME LIKE '%' + #{searchKeyword} + '%'
+				</if>
+				<if test="searchCondition == '3'.toString()">
+					AND INFO.EMAIL LIKE '%' + #{searchKeyword} + '%'
+				</if>
+				<if test="searchCondition == '4'.toString()">
+					AND INFO.TEL LIKE '%' + #{searchKeyword} + '%'
+				</if>
+				<if test="searchCondition == '5'.toString()">
+					AND ITEM.ITEM_AWARDS LIKE '%' + #{searchKeyword} + '%'
+				</if>
+				<if test="searchCondition == '6'.toString()">
+					<choose>
+						<when test="searchKeyword.equals('접수대기')">
+						  AND ITEM.ITEM_STATE = '0'
+						</when>
+						<when test="searchKeyword.equals('접수완료')">
+						  AND ITEM.ITEM_STATE = '1'
+						</when>
+						<when test="searchKeyword.equals('접수반려')">
+						  AND ITEM.ITEM_STATE = '9'
+						</when>
+						<otherwise>
+						  AND ITEM.ITEM_STATE = '-1'
+						</otherwise>
+					</choose>
+				</if>
+			</if>
+	
+	</select>
+	
+	<!-- 출품작 엑셀 리스트 -->
+	<select id="getSrvyXlsList" parameterType="ComplicityVO" resultType="ComplicityVO">
+		SELECT
+		    *,
+		    SURVEY_FROM AS SURVEY_FROM_STRING
+		FROM
+			CMS_COMPLICITY_INFO INFO
+		WHERE
+			1 = 1	
+			<if test="sdate != null and sdate != ''">
+				<if test="edate != null and edate != ''">
+					AND CONVERT(DATE, INFO.WDT) BETWEEN CONVERT(DATE,#{sdate}) AND CONVERT(DATE,#{edate}) 
+				</if>
+			</if>
+			<if test="sdate == null and sdate == ''">
+				<if test="edate == null and edate == ''">
+					AND DATEPART(YY, INFO.WDT) BETWEEN DATEPART(YY,GETDATE()) AND DATEPART(YY,GETDATE())
+				</if> 
+			</if>
+	</select>
+
+	<!-- 출품작 개별 정보 -->
+	<select id="selectComplicityItem" parameterType="String" resultType="complicityItemVO">
+		SELECT
+		    *
+		FROM
+      		CMS_COMPLICITY_ITEM
+      	WHERE
+      		DATA_ID = #{data_id}
+	</select>
+
+	<delete id="deleteComplicityItemByGroupId" parameterType="Integer">
+		DELETE FROM CMS_COMPLICITY_ITEM
+		WHERE
+			GROUP_ID = #{group_id}
+	</delete>	
+
+</mapper>
+

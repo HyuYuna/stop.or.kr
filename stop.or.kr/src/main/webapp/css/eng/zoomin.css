@@ -1,0 +1,394 @@
+@charset "utf-8";
+@import url("layout.css");
+@import url("sub.css");
+/*-------------------------------------------------
+Author : ㅈㅁㅈ
+Create date : 2018-07-09
+-------------------------------------------------*/
+
+/* 상단 */
+#header {height:110px; margin-bottom:0; padding:40px 0 0;}
+#header:after {position:absolute; left:50%; top:0; z-index:-1; width:1000%; height:100%; margin-left:-500%; border-bottom:1px solid #e5e5e5; background-color:#fff; content:'';}
+.logo a {width:196px; height:22px; margin-top:5px;}
+
+/* 상단 유틸 */
+.util {top:47px;}
+.util div.search {position:static;}
+.util div.search .form {visibility:hidden; overflow:hidden; position:absolute; left:auto; right:0; top:50px; height:0; opacity:0; transition:all .2s; -webkit-transition:all .2s;}
+.util div.search .control {display:inline-block; overflow:hidden; position:relative; top:-1px; width:25px; height:25px; padding:0; border:0 none; color:transparent; text-align:center; line-height:25px; white-space:nowrap; vertical-align:top;}
+.util div.search .control:before {position:absolute; left:0; top:0; width:100%; height:100%; font-family:'xeicon'; font-size:2.5rem; color:#222; content:''; line-height:25px;}
+.util div.search.active .form {visibility:visible; height:33px; opacity:1;}
+.util .all-menu {position:relative; top:2px; margin-left:35px; padding:0;}
+
+/* 주메뉴 */
+#gnb {padding-right:80px; font-size:2rem; font-weight:600; text-align:right;}
+#gnb li {margin-right:65px;}
+#gnb a {z-index:0;}
+#gnb a:before {left:-12px; bottom:auto; top:0; z-index:-2; width:18px; height:18px; margin:0; background:linear-gradient(120deg, #ab52ae, #7046a9); opacity:0;}
+#gnb a:after {position:absolute; left:-7px; top:5px; z-index:-1; width:13px; height:13px; background-color:#fff; content:'';}
+#gnb a:hover:before,
+#gnb a:focus:before,
+#gnb a:active:before,
+#gnb .active a:before {left:-12px; width:18px; opacity:1;}
+
+/* 전체메뉴 */
+.allmenu > li {float:none; width:100%;}
+
+/* 하단 배너존 삭제 */
+#bannerzone {display:none;}
+
+/* 콘텐츠 */
+.cont-wrap {margin:70px auto; padding:0;}
+.cont-top {min-height:65px;}
+.cont-title {display:inline-block; height:auto; margin-bottom:0; padding:0; border:0 none; font-size:3.7rem; vertical-align:bottom;}
+.cont-txt {display:inline-block; position:relative; top:2px; margin-left:10px; font-size:1.8rem; color:#222; vertical-align:bottom;}
+#snb + #contents .cont-top {min-height:0;}
+#snb + #contents .cont-title {display:block; margin-bottom:80px; font-size:4.1rem; font-weight:400; text-align:center;}
+#snb + #contents .cont-txt {display:none;}
+
+/* 서브 비주얼 */
+#spot {position:relative; height:600px; padding-top:125px; background:url('../../images/kor/zoomin/spot.jpg') no-repeat center 0;}
+#spot strong:before,
+#spot strong:after,
+#spot p:before {display:none;}
+#spot p {margin:0; padding:0;}
+#spot .item {display:table; position:relative; width:1180px; max-width:90%; height:355px; margin:0 auto; border:10px solid rgba(255, 255, 255, .25); border-left:0 none; text-align:left; table-layout:fixed;}
+#spot .desc {display:table-cell; position:relative; width:420px; padding-right:65px; font-size:1.8rem; font-weight:500; vertical-align:middle;}
+#spot .desc:before {position:absolute; left:0; top:0; width:10px; height:25px; background-color:rgba(255, 255, 255, .25); content:'';}
+#spot .desc:after {position:absolute; left:0; bottom:0; width:10px; height:25px; background-color:rgba(255, 255, 255, .25); content:'';}
+#spot .desc p {position:absolute; right:-760px; top:-50px; font-family:'Cheonnyeon'; font-weight:bold; opacity:.3;}
+#spot .desc strong {display:block; margin-top:20px; font-family:'AritaBuri'; font-size:3.5rem; font-weight:400; line-height:1.4;}
+#spot .desc em {font-family:'Gotham'; font-weight:300;}
+#spot .txt {display:table-cell; padding-right:65px; font-size:1.7rem; vertical-align:middle;}
+#spot .txt strong {display:block; margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid rgba(255, 255, 255, .1); font-size:1.8rem;}
+
+/* 서브메뉴 */
+#snb {position:relative; width:auto; margin:-70px -30px 70px;}
+#snb ul {display:table; width:100%; table-layout:fixed;}
+#snb li {display:table-cell;}
+#snb a {display:block; font-size:1.8rem; color:#999; text-align:center; white-space:nowrap;}
+#snb a:after {right:50%; top:100%; width:0; height:2px; margin:0; border:0 none; background-color:#5c2e98; transform:rotate(0deg); -webkit-transform:rotate(0deg); transition:all .2s; -webkit-transition:all .2s;}
+#snb .active a {background:none; color:#5c2e98;}
+#snb .active a:after {right:0; width:100%;}
+#snb:before {position:absolute; left:50%; bottom:0; width:1000%; height:1px; margin-left:-500%; border-bottom:1px solid #e5e5e5; content:'';}
+#snb.fixed {position:fixed; left:0; right:0; top:0; z-index:1; width:auto; margin:0; background-color:#fff;}
+#snb.fixed nav {width:1280px; max-width:100%; margin:0 auto;}
+#snb.fixed + #contents {padding-top:60px;}
+
+/* 포인트색 */
+.point5 {color:#4a2b91 !important;}
+
+/* 피해지원현황 */
+.cont-top + .cont-mid .state {margin-top:-135px;}
+.state {display:table; position:relative; z-index:0; width:100%; height:600px; margin-top:-70px; background-color:#fff; table-layout:fixed;}
+.state .desc {display:table-cell; width:50%; vertical-align:middle;}
+.state .desc h2 {margin-bottom:30px; font-family:'Cheonnyeon'; font-size:4.9rem; font-weight:normal; color:#000; word-break:keep-all; line-height:1.387;}
+.state .desc h2 span {display:block;}
+.state .btns a {display:inline-block; width:190px; height:50px; margin-right:5px; border-radius:5px; border:1px solid #5c2e98; font-size:1.8rem; color:#5c2e98; text-align:center; line-height:50px; vertical-align:top; transition:all .2s; -webkit-transition:all .2s;}
+.state .btns a:hover,
+.state .btns a:focus,
+.state .btns a:active {border-color:#222; background-color:#222; color:#fff;}
+.state .list {display:table-cell; position:relative; width:50%; vertical-align:middle;}
+.state .list:before {position:absolute; left:0; bottom:0; z-index:-1; width:760px; height:450px; background:url('../../images/kor/zoomin/state.gif') no-repeat right bottom; background-size:auto 100%; content:'';}
+.state .list li {float:left; width:50%; padding:40px 0; font-size:1.7rem; color:rgba(34, 34, 34, .6); text-align:right; line-height:1.411;}
+.state .list p strong {margin-right:5px; font-family:'Cheonnyeon'; font-size:6rem; color:#000;}
+
+/* 바로가기 */
+.know {position:relative; margin:0 -30px -70px;}
+.know:before {position:absolute; left:50%; top:0; z-index:-1; width:1000%; height:100%; margin-left:-500%; background-color:#7e51a8; background:linear-gradient(to right, #a97ebd 40%, #5c2e98 60%); content:'';}
+.know:after {display:block; clear:both; width:100%; height:1px; content:'';}
+.know li {float:left; width:20%;}
+.know li + li {border-left:1px solid rgba(255, 255, 255, .07);}
+.know a {display:block; padding:75px 20px 60px; text-align:center;}
+.know span {display:inline-block; height:45px; margin-top:30px; padding:0 20px; border-radius:45px; background-color:#fff; font-size:1.8rem; color:#000; white-space:nowrap; line-height:45px;}
+.know img {width:80px;}
+
+/* 바로알기 */
+.knowing .group {position:relative; z-index:0; padding:100px 0 100px 300px;}
+.knowing .group:nth-child(2n):before {position:absolute; left:50%; top:0; z-index:-1; width:1000%; height:100%; margin-left:-500%; background-color:#fbfbfc; content:'';}
+.knowing .group:first-child {padding-top:0;}
+.knowing .group h2 {position:absolute; left:0; top:auto; width:240px; font-size:3.3rem; font-weight:500; color:#000022; line-height:1.424;}
+.knowing .group h2 span {display:block; margin-top:15px; font-size:2.3rem;}
+.knowing .group .title1:first-child {margin-top:0;}
+.knowing .group .box1 {margin-top:10px; padding:20px; font-size:1.6rem; text-align:center;}
+
+/* 차트1 */
+.chart1 {position:relative; text-align:center;}
+.chart1 h3 {position:absolute; left:50%; top:50%; width:32%; height:175px; margin:-87.5px 0 0 -16%; padding-top:55px; border-radius:5px; border:1px dashed #5c2e98; background-color:#fff;}
+.chart1 h3 strong {font-family:'AritaBuri'; font-size:2.7rem; font-weight:400; color:#000022;}
+.chart1 h3 span {display:block; font-family:'Gotham'; font-size:1.4rem; font-weight:200; color:#000022; letter-spacing:2px; opacity:.3;}
+.chart1 .list {overflow:hidden;}
+.chart1 li {display:inline-block; position:relative; width:32%; height:175px; padding:25px 15px 0; border-radius:5px; font-weight:200; color:rgba(255, 255, 255, .6); text-align:center; word-break:keep-all; vertical-align:top;}
+.chart1 li:nth-child(1),
+.chart1 li:nth-child(4),
+.chart1 li:nth-child(6) {clear:both; float:left;}
+.chart1 li:nth-child(3),
+.chart1 li:nth-child(5),
+.chart1 li:nth-child(8) {float:right;}
+.chart1 li:nth-child(7) {top:195px;}
+.chart1 li:nth-child(n+4) {margin-top:20px;}
+.chart1 strong {display:block; margin-bottom:5px; font-size:2.1rem; font-weight:500; color:#fff;}
+.chart1 .type1 {padding-top:35px; background-color:#7e2e98;}
+.chart1 .type1 p {width:65%; max-width:100%; margin:0 auto;}
+.chart1 .type2 {padding-top:35px; background-color:#5c2e98;}
+.chart1 .type3 {background-color:#4a2b91;}
+.chart1.type1 {counter-reset:section;}
+.chart1.type1 li {padding:25px 25px 25px 40px; font-size:1.8rem; font-weight:500; color:#fff; text-align:left;}
+.chart1.type1 li:before {position:absolute; right:15px; bottom:15px; font-family:'Gotham'; font-size:4rem; font-weight:300; color:#fff; line-height:1; counter-increment:section; content:"0" counter(section); opacity:.03;}
+.chart1.type1 li:nth-child(7) {top:0;}
+
+/* 차트2 */
+.chart2 {display:table; overflow:hidden; width:100%; margin-bottom:30px; table-layout:fixed;}
+.chart2 li {display:table-cell; position:relative; z-index:0; height:230px; text-align:center; vertical-align:middle;}
+.chart2 li:after {position:absolute; left:0; top:0; right:0; height:230px; border-radius:5px; border:1px dashed #5c2e98; content:'';}
+.chart2 li + li {padding-left:20px;}
+.chart2 li + li:after {left:20px;}
+.chart2 li + li:before {position:absolute; left:10px; top:50%; z-index:1; width:60px; height:60px; margin:-30px 0 0 -30px; border-radius:100%; border:1px dashed #5c2e98; background-color:#fff; font-family:'xeicon'; font-size:30px; color:#4a2b91; content:'';s text-align:center; line-height:58px;}
+.chart2 p {display:table; width:140px; max-width:100%; height:60px; margin:0 auto; font-weight:500; word-break:keep-all; table-layout:fixed; line-height:1.444;}
+.chart2 span {display:table-cell; font-size:1.8rem; color:#000022; vertical-align:middle;}
+.chart2 small {display:block; font-size:1.6rem; color:#777;}
+
+/* 차트3 */
+.chart3 {position:relative; margin-top:40px; padding-left:285px;}
+.chart3 h3 {position:absolute; left:0; top:50%; width:230px; height:230px; padding-top:80px; border-radius:5px; border:1px dashed #5c2e98; font-family:'AritaBuri'; font-size:2.4rem; font-weight:400; color:#000022; text-align:center; line-height:1.416; transform:translate(0, -50%); -webkit-transform:translate(0, -50%);}
+.chart3 .list {position:relative;}
+.chart3 .list:before {position:absolute; left:-25px; top:70px; bottom:65px; width:25px; border-radius:5px 0 0 5px; border:1px dashed #5c2e98; border-right:0 none; content:'';}
+.chart3 .list:after {position:absolute; left:-55px; width:30px; bottom:50%; width:30px; height:1px; border-bottom:1px dashed #5c2e98; content:'';}
+.chart3 .list > li {display:table; width:100%; height:140px; table-layout:fixed;}
+.chart3 .list > li + li {margin-top:30px;}
+.chart3 .list > li p {display:table-cell; width:130px; border-radius:5px; font-size:1.7rem; font-weight:500; color:#fff; text-align:center; vertical-align:middle;}
+.chart3 .list .item {display:table-cell; vertical-align:middle;}
+.chart3 .list .bul1 {position:relative; padding-left:70px;}
+.chart3 .list .bul1:before {position:absolute; left:40px; top:13px; bottom:13px; width:2px; content:'';}
+.chart3 .list .bul1:after {position:absolute; left:0; top:50%; width:40px; height:2px; content:''; opacity:.5;}
+.chart3 .list .bul1 > li:first-child:after,
+.chart3 .list .bul1 > li:last-child:after {position:absolute; left:-30px; top:50%; width:15px; height:2px; margin-top:-1px; content:'';}
+.chart3 .list .type1 p,
+.chart3 .list .type1 .bul1:before,
+.chart3 .list .type1 .bul1:after,
+.chart3 .list .type1 .bul1 > li:before,
+.chart3 .list .type1 .bul1 > li:after {background-color:#7e2e98;}
+.chart3 .list .type2 p,
+.chart3 .list .type2 .bul1:before,
+.chart3 .list .type2 .bul1:after,
+.chart3 .list .type2 .bul1 > li:before,
+.chart3 .list .type2 .bul1 > li:after  {background-color:#4a2b91;}
+
+/* 차트4 */
+.chart4 {overflow:hidden; margin:0 -40px; text-align:center;}
+.chart4 > p {margin:0 40px; padding:10px; border:1px solid #cfd4d7; background-color:#fff; font-size:1.9rem; color:#000022;}
+.chart4 .chart {display:inline-block; position:relative; z-index:0; width:280px; margin:40px 30px -35px; vertical-align:top;}
+.chart4 .chart:before {position:absolute; top:35px; left:50%; z-index:-1; width:220px; height:220px; margin-left:-110px; border-radius:100%; content:'';}
+.chart4 .chart h3 {display:table; position:absolute; left:50%; top:85px; width:110px; height:110px; margin:0 0 0 -55px; border-radius:100%; font-size:2rem; font-weight:500; color:#fff; line-height:1.3;}
+.chart4 .chart h3 span {display:table-cell; vertical-align:middle;}
+.chart4 .chart li {display:table; width:75px; height:75px; margin:0 auto 35px; border-radius:100%; background-color:#fbfbfc; font-size:1.8rem; font-weight:500; color:#000022; line-height:1.166;}
+.chart4 .chart li p {display:table-cell; vertical-align:middle;}
+.chart4 .chart li:nth-child(2n):before {display:block; width:100%; height:0; content:'';}
+.chart4 .chart li:nth-child(2n) {clear:both; float:left;}
+.chart4 .chart li:nth-child(2n+1) {float:right;}
+.chart4 .chart li:nth-child(n+4) {margin-left:30px; margin-right:30px;}
+.chart4 .chart li:first-child {float:none; margin-bottom:20px;}
+.chart4 .chart .ea4 li:last-child {float:none; margin-left:auto; margin-right:auto;}
+.chart4 .chart.type1 h3 {background-color:#7e2e98;}
+.chart4 .chart.type1:before,
+.chart4 .chart.type1 li {border:1px dashed #7e2e98;}
+.chart4 .chart.type2 h3 {background-color:#5c2e98;}
+.chart4 .chart.type2:before,
+.chart4 .chart.type2 li {border:1px dashed #5c2e98;}
+.chart4 .chart.type3 h3 {background-color:#4a2b91;}
+.chart4 .chart.type3:before,
+.chart4 .chart.type3 li {border:1px dashed #4a2b91;}
+
+/* 차트5 */
+.chart5 {margin-top:40px;}
+.chart5 .chart {position:relative; padding-left:355px;}
+.chart5 .chart h3 {display:table; position:absolute; left:0; top:0; width:315px; height:160px; border-radius:5px; font-size:2rem; font-weight:400; color:#fff; line-height:1.4;}
+.chart5 .chart span {display:table-cell; width:150px; text-align:center; vertical-align:middle;}
+.chart5 .chart span + span {width:auto; text-align:left; word-break:keep-all;}
+.chart5 .chart div {display:table; width:100%; height:160px;}
+.chart5 .chart .bul1 {display:table-cell; vertical-align:middle;}
+.chart5 .chart + .chart {margin-top:20px;}
+.chart5 .chart.type1 h3,
+.chart5 .chart.type1 .bul1 > li:before {background-color:#7e2e98;}
+.chart5 .chart.type2 h3,
+.chart5 .chart.type2 .bul1 > li:before {background-color:#5c2e98;}
+.chart5 .chart.type3 h3,
+.chart5 .chart.type3 .bul1 > li:before {background-color:#4a2b91;}
+
+/* 차트6 */
+.chart6 .chart {overflow:hidden;}
+.chart6 .chart.type1 .depth1.label {display:table; width:315px; max-width:30%; height:175px; margin:0 auto; border-radius:5px; background-color:#d64444; font-size:1.8rem; color:#fff; text-align:center;}
+.chart6 .chart.type1 .depth1.label p {display:table-cell; vertical-align:middle;}
+.chart6 .chart.type1 .depth2 {overflow:hidden; position:relative; z-index:-1; margin:-90px 0 -40px; padding:40px 0;}
+.chart6 .chart.type1 .depth2:before {position:absolute; left:160px; top:0; right:160px; bottom:0; z-index:-1; border:1px dotted #000; content:'';}
+.chart6 .chart.type1 .depth2 li {float:left; width:320px; max-width:45%;}
+.chart6 .chart.type1 .depth2 li + li {float:right;}
+.chart6 .chart.type1 .depth2 .label {position:relative; padding:12px; border-radius:5px; background-color:#46484b; font-size:1.8rem; color:#fff; text-align:center;}
+.chart6 .chart.type1 .depth2 .label:before {position:absolute; left:50%; top:-8px; width:16px; height:16px; margin-left:-8px; border-radius:100%; border:4px solid #fbfbfc; background-color:#46484b; content:'';}
+.chart6 .chart.type1 .depth2 div {display:table; width:100%; height:90px; margin-top:10px; border-radius:5px; border:1px dashed #000; background-color:#fff; font-size:1.8rem; color:#2d548b; text-align:center;}
+.chart6 .chart.type1 .depth2 div p {display:table-cell; vertical-align:middle;}
+.chart6 .chart.type1 .depth2 div span {display:block; font-size:1.6rem;}
+.chart6 .chart.type1 .depth2 .type2 {color:#de5b13;}
+.chart6 .chart.type1 .depth3 {width:80px; height:80px; margin:0 auto; border-radius:100%; border:1px dashed #000; background:url('../../images/kor/zoomin/chart6.gif'); font-size:1.8rem; color:#000022; text-align:center; line-height:80px;}
+.chart6 .chart.type1 .depth4 {position:relative; width:90%; margin:30px auto 0;}
+.chart6 .chart.type1 .depth4:before {position:absolute; left:50%; top:-30px; width:1px; height:30px; border-left:1px dotted #000; content:'';}
+.chart6 .chart.type1 .depth4:after {position:absolute; left:50%; top:0; width:75%; height:1px; margin-left:-37.5%; border-bottom:1px dotted #000; content:'';}
+.chart6 .chart.type1 .depth4 li {float:left; position:relative; width:25%; padding-top:30px; text-align:center;}
+.chart6 .chart.type1 .depth4 li:before {position:absolute; left:50%; top:0; width:1px; height:30px; border-left:1px dotted #000; content:'';}
+.chart6 .chart.type1 .depth4 li:nth-child(2) .label {background-color:#56a17f;}
+.chart6 .chart.type1 .depth4 li:nth-child(2) div {border-color:#56a17f;}
+.chart6 .chart.type1 .depth4 li:nth-child(3) .label {background-color:#944ea1;}
+.chart6 .chart.type1 .depth4 li:nth-child(3) div {border-color:#944ea1;}
+.chart6 .chart.type1 .depth4 li:nth-child(4) .label {background-color:#35469a;}
+.chart6 .chart.type1 .depth4 li:nth-child(4) div {border-color:#35469a;}
+.chart6 .chart.type1 .depth4 .label {position:relative; z-index:0; width:70px; height:70px; margin:0 auto -20px; border-radius:100%; background-color:#5d81b5; font-size:1.8rem; color:#fff; text-align:center; line-height:70px;}
+.chart6 .chart.type1 .depth4 div {display:table; width:90%; height:95px; margin:0 auto; padding-top:15px; border-radius:5px; border:1px dashed #56a17f; background-color:#fff; color:#000022; text-align:center;}
+.chart6 .chart.type1 .depth4 div p {display:table-cell; vertical-align:middle;}
+
+/* 차트6 차트2 */
+.chart6 .chart.type2 {margin-top:70px; padding-top:65px; border-top:1px solid #e1e1e2; text-align:center;}
+.chart6 .chart.type2 .depth1 {display:inline-block; position:relative; width:670px; max-width:100%; margin:0 auto;}
+.chart6 .chart.type2 .depth1 li {float:left; position:relative; z-index:0; width:160px; text-align:center;}
+.chart6 .chart.type2 .depth1 li:before {position:absolute; left:50%; bottom:0; z-index:-1; width:1px; height:100%; background-color:#d64444; content:'';}
+.chart6 .chart.type2 .depth1 .label {display:table; position:relative; left:-10px; top:-10px; width:180px; height:180px; border-radius:100%; border:10px solid #fbfbfc; background-color:#d64444; font-size:1.8rem; color:#fff; text-align:center;}
+.chart6 .chart.type2 .depth1 .label strong {display:table-cell; vertical-align:middle;}
+.chart6 .chart.type2 .depth1 li span {display:inline-block; margin:10px 0 20px; padding:5px 15px; border-radius:5px; border:1px solid #d64444; background-color:#fbfbfc; color:#000022; white-space:nowrap; text-align:center;}
+.chart6 .chart.type2 .depth1 li span:after {position:absolute; left:0; bottom:0; width:100%; font-size:8px; color:#d64444; content:'▼'; text-indent:2px; line-height:1;}
+.chart6 .chart.type2 .depth1 .type2 {float:right;}
+.chart6 .chart.type2 .depth1 .type2 .label,
+.chart6 .chart.type2 .depth1 .type2:before {background-color:#46484b;}
+.chart6 .chart.type2 .depth1 .type2 span {border-color:#46484b;}
+.chart6 .chart.type2 .depth1 .type2 span:after {color:#46484b;}
+.chart6 .chart.type2 .depth1 .txt {position:absolute; left:185px; top:0; right:185px; height:160px; text-align:center;}
+.chart6 .chart.type2 .depth1 .txt span {display:block;}
+.chart6 .chart.type2 .depth1 .txt .type1 {position:absolute; left:0; bottom:60%; width:100%; padding-bottom:10px; border-bottom:1px solid #d64444; color:#d64444;}
+.chart6 .chart.type2 .depth1 .txt .type1:after {position:absolute; right:0; bottom:-1px; font-size:8px; color:#d64444; content:'▶'; line-height:0;}
+.chart6 .chart.type2 .depth1 .txt .type2 {position:absolute; left:0; top:55%; width:100%; padding-top:10px; border-top:1px solid #46484b; color:#46484b;}
+.chart6 .chart.type2 .depth1 .txt .type2:after {position:absolute; left:0; top:-1px; font-size:8px; color:#46484b; content:'◀'; line-height:0;}
+.chart6 .chart.type2 .depth2 {padding:10px; border-radius:5px; border:3px solid #5d81b5; font-size:1.8rem; color:#000022;}
+.chart6 .chart.type2 .depth3 {position:relative; padding:30px 0;}
+.chart6 .chart.type2 .depth3:before {position:absolute; top:0; left:50%; z-index:-1; width:1px; height:100%; border-left:1px dotted #000; content:'';}
+.chart6 .chart.type2 .depth3:after {position:absolute; top:50%; left:50%; z-index:-1; width:50%; height:1px; border-bottom:1px dotted #000; content:'';}
+.chart6 .chart.type2 .depth3 .label {width:80px; height:80px; margin:0 auto; border-radius:100%; border:1px dashed #000; background:url('../../images/kor/zoomin/chart6.gif'); font-size:1.8rem; color:#000022; text-align:center; line-height:80px;}
+.chart6 .chart.type2 .depth3 span {position:absolute; right:0; top:50%; padding:5px 20px; border-radius:5px; border:3px solid #5d81b5; background-color:#fbfbfc; color:#000022; transform:translate(0, -50%); -webkit-transform:translate(0, -50%);}
+.chart6 .chart.type2 .depth4,
+.chart6 .chart.type2 .depth4 ul {overflow:hidden;}
+.chart6 .chart.type2 .depth4 li {float:left; position:relative; width:33.333%;}
+.chart6 .chart.type2 .depth4 li:before {position:absolute; left:50%; top:0; z-index:-1; width:1px; height:100%; background-color:#7e2e98; content:'';}
+.chart6 .chart.type2 .depth4 li + li {padding-left:2%;}
+.chart6 .chart.type2 .depth4 li + li:before {margin-left:2%;}
+.chart6 .chart.type2 .depth4 li + li .label3:before {padding-right:2%;}
+.chart6 .chart.type2 .depth4 li li {width:50%;}
+.chart6 .chart.type2 .depth4 li li:first-child {padding-right:5%;}
+.chart6 .chart.type2 .depth4 li li:first-child:before {margin-left:-5%;}
+.chart6 .chart.type2 .depth4 li li:first-child .label3:before {padding-left:2%;}
+.chart6 .chart.type2 .depth4 li li + li {padding-left:5%;}
+.chart6 .chart.type2 .depth4 li ul li + li:before {margin-left:5%;}
+.chart6 .chart.type2 .depth4 li li + li .label3:before {padding-left:1%;}
+.chart6 .chart.type2 .depth4 .label {padding:15px 0; border-radius:5px; background-color:#7e2e98; font-size:1.8rem; color:#fff;}
+.chart6 .chart.type2 .depth4 .label1 {display:inline-block; width:95px; height:35px; margin-top:15px; border-radius:35px; border:1px dashed #000; background:url('../../images/kor/zoomin/chart6.gif'); font-size:1.5rem; color:#000022; white-space:norwrap; line-height:33px;}
+.chart6 .chart.type2 .depth4 .label2 {position:relative; margin-top:15px; padding:8px; border-radius:5px; border:1px solid #7e2e98; background-color:#fff; color:#000022;}
+.chart6 .chart.type2 .depth4 .label3 {position:relative; margin-top:15px; padding:8px; border-radius:5px; background-color:#797c81; color:#fff;}
+.chart6 .chart.type2 .depth4 .label3:before {position:absolute; left:0; top:-5px; width:100%; font-size:8px; color:#7e2e98; content:'▼'; line-height:5%;}
+.chart6 .chart.type2 .depth4 div.label1 {width:100%; height:auto; padding:15px 0; border-radius:5px; line-height:1.2;}
+.chart6 .chart.type2 .depth4 .type2:before {left:50%; top:50%; width:50%; height:1px; margin:8px 0 0 -25%}
+.chart6 .chart.type2 .depth4 .type2 .label,
+.chart6 .chart.type2 .depth4 .type2 li:before {background-color:#5c2e98;}
+.chart6 .chart.type2 .depth4 .type2 li + li .label2:before {position:absolute; top:50%; left:-25%; font-size:8px; color:#5c2e98; content:'◀'; line-height:0;}
+.chart6 .chart.type2 .depth4 .type2 .label2 {border-color:#5c2e98;}
+.chart6 .chart.type2 .depth4 .type2 .label3:before {color:#5c2e98;}
+.chart6 .chart.type2 .depth4 .type3 .label,
+.chart6 .chart.type2 .depth4 .type3:before {background-color:#4a2b91;}
+.chart6 .chart.type2 .depth4 .type3 .label2 {border-color:#4a2b91;}
+.chart6 .chart.type2 .depth4 .type3 .label3:before {color:#4a2b91;}
+
+/* 체계1 */
+.step1 {display:table; width:100%; table-layout:fixed;}
+.step1 .step {display:table-cell; vertical-align:top;}
+.step1 .step + .step {padding-left:10px;}
+.step1 .step + .step .title strong:before {position:absolute; left:-5px; top:50%; width:40px; height:40px; margin:-20px 0 0 -20px; border-radius:100%; border:1px dashed #5c2e98; background-color:#fff; font-size:1.2rem; color:#5c2e98; content:'▶'; text-align:center; line-height:38px;}
+.step1 .title {display:table; position:relative; width:100%; height:100px; padding:0 10px; border-radius:5px; border:1px dashed #5c2e98; font-size:1.8rem; color:#000022; text-align:center; word-break:keep-all; line-height:1.388; table-layout:fixed;}
+.step1 .title strong {display:table-cell; vertical-align:middle;}
+.step1 .etc {margin-top:30px;}
+.step1 .etc .label {display:table; width:100%; height:100px; border-radius:5px; font-size:1.8rem; color:#fff; text-align:center; word-break:keep-all; table-layout:fixed;}
+.step1 .etc .label span {display:table-cell; position:relative; vertical-align:middle;}
+.step1 .etc .label span:before {position:absolute; left:50%; top:-20px; width:40px; height:40px; margin-left:-20px; border-radius:100%; font-size:1.2rem; color:#fff; content:'▶'; text-align:center; line-height:40px;}
+.step1 .etc .bul1 {margin:10px 0 0 10px; word-break:keep-all;}
+.step1 .etc.type1 .label,
+.step1 .etc.type1 .label span:before,
+.step1 .etc.type1 .bul1 > li:before {background-color:#7e2e98;}
+.step1 .etc.type2 .label,
+.step1 .etc.type2 .label span:before,
+.step1 .etc.type2 .bul1 > li:before {background-color:#5c2e98;}
+.step1 .etc.type3 .label,
+.step1 .etc.type3 .label span:before,
+.step1 .etc.type3 .bul1 > li:before {background-color:#4a2b91;}
+
+/* 체계2 */
+.step2 {display:table; overflow:hidden; width:100%; text-align:center; table-layout:fixed;}
+.step2 li {display:table-cell; position:relative; z-index:0; vertical-align:top;}
+.step2 li:before {position:absolute; left:50%; top:0; z-index:-1; width:1px; height:200%; background-color:#7e2e98; content:'';}
+.step2 li + li {padding-left:2%;}
+.step2 div {display:table; width:100%; height:150px; margin-top:20px; padding:10px; border-radius:5px; background-color:#f7f8f9; font-weight:200; color:#222; word-break:keep-all; line-height:1.562;}
+.step2 div p {display:table-cell; vertical-align:middle;}
+.step2 .label {display:table; width:100%; height:80px; border-radius:5px; background-color:#7e2e98; font-size:1.8rem; color:#fff;}
+.step2 .label span {display:table-cell; vertical-align:middle;}
+.step2 .type2 .label,
+.step2 .type2:before {background-color:#5c2e98;}
+.step2 .type2 div {margin-top:0;}
+.step2 .type2 .label {position:absolute; left:10%; bottom:0; width:90%;}
+.step2 .type3 .label,
+.step2 .type3:before {background-color:#4a2b91;}
+
+/* 여성폭력동향 */
+.trend {border-top:2px solid #4d1198;}
+.trend .group {display:table; overflow:hidden; width:100%; height:229px; border-bottom:1px solid #e3e6e8; text-align:center; table-layout:fixed;}
+.trend .title {display:table-cell; position:relative; z-index:0; width:395px; padding:0 20px 0 50px; background-color:#f7f8f9; color:#222; vertical-align:middle;}
+.trend .title:after {position:absolute; right:-30px; top:0; z-index:-1; width:30px; height:100%; min-height:229px; background:url('../../images/kor/zoomin/trend.gif') no-repeat; background-size:30px 100%; content:'';}
+.trend .title h2 {margin-bottom:25px; padding-bottom:20px; border-bottom:1px solid #e3e6e8; font-size:2.5rem; font-weight:500; letter-spacing:-1px; word-break:keep-all;}
+.trend .title li {display:inline-block; margin-right:25px; font-size:1.8rem; text-align:left; line-height:33px; vertical-align:top;}
+.trend .title li:last-child {margin-right:0;}
+.trend .title span {display:inline-block; width:55px; height:35px; margin-right:10px; border:1px solid #c5c7c8; background-color:#fff; font-size:1.5rem; color:#555; text-align:center; vertical-align:top;}
+.trend .title strong {margin-right:3px; font-weight:500;}
+.trend .item {display:table-cell; padding:20px 0 20px 30px; font-size:1.8rem; color:#222; vertical-align:middle;}
+.trend .list {margin-top:15px;}
+.trend .list li {display:inline-block; margin:10px 10px 0; vertical-align:top;}
+.trend .list .label {display:inline-block; position:relative; z-index:0; height:35px; padding:0 10px; border-radius:35px; font-size:1.6rem; color:#fff; line-height:35px; white-space:nowrap;}
+.trend .list .count {width:155px; height:80px; margin-top:-16px; padding-top:10px; border-radius:80px; border:1px dashed #d4d6d8; line-height:70px; white-space:nowrap;}
+.trend .list .count strong {font-family:'Cheonnyeon'; font-size:2.9rem;}
+.trend .type1 .label {background-color:#9a48b1;}
+.trend .type1 p span,
+.trend .type1 .count strong {color:#9a48b1;}
+.trend .type2 .label {background-color:#e48c3f;}
+.trend .type2 p span,
+.trend .type2 .count strong {color:#e48c3f;}
+.trend .type3 .label {background-color:#3e997a;}
+.trend .type3 .count strong {color:#3e997a;}
+.trend .type4 .label {background-color:#3e59a5;}
+.trend .type4 .count strong {color:#3e59a5;}
+
+/* 여성폭력동향 피해통계*/
+.damage {overflow:hidden; margin-top:65px;}
+.damage h2 {display:inline-block; position:relative; margin-bottom:20px; font-size:2.5rem; font-weight:600; color:#222; word-break:keep-all;}
+.damage h2:after {position:absolute; left:100%; top:50%; margin-left:55px; width:1000%; height:1px; background-color:#808080; content:'';}
+.damage .list {display:inline-block; width:102%;}
+.damage .list li {display:table; overflow:hidden; float:left; width:31.333%; height:275px; margin:20px 2% 0 0; border-radius:5px; background-color:#5c2e98; font-size:1.7rem; color:#fff; text-align:center;}
+.damage .list div {display:table-cell; position:relative; vertical-align:middle; line-height:1.411;}
+.damage .list p {font-size:1.8rem;}
+.damage .list p strong {font-family:'Gotham'; font-size:6rem; font-weight:200;}
+.damage .list .list2 {background:url('../../images/kor/zoomin/damage2_1.jpg') no-repeat; background-size:100% 100%;}
+.damage .list .list2:before {position:absolute; left:0; top:0; width:100%; height:275px; background:url('../../images/kor/zoomin/damage2_2.png') no-repeat; background-size:100% 100%; content:'';}
+.damage .list .list3 {background-color:#fff; color:#222; vertical-align:top;}
+.damage .list .list3 p {display:table; width:100%; height:205px; margin-bottom:15px; border-radius:5px; background:url('../../images/kor/zoomin/damage3.jpg') no-repeat; background-size:100% 100%; color:#fff;}
+.damage .list .list3 p span {display:table-cell; vertical-align:middle;}
+.damage .list .list4 {padding-left:215px; border:1px solid #c23b3b; background-color:#fff; color:#222; text-align:left;}
+.damage .list .list4 p {color:#c23b3b;}
+.damage .list .list4 p:before {position:absolute; left:0; top:0; width:215px; height:100%; background:url('../../images/kor/zoomin/damage4.gif') no-repeat center center; content:'';}
+.damage .list .list5 {padding-left:65px; background:url('../../images/kor/zoomin/damage5.gif') no-repeat 90% bottom #f4dc3e; color:#222; text-align:left;}
+.damage .list .list5 p {color:#4d1198;}
+.damage .list .list6 {background:url('../../images/kor/zoomin/damage6.jpg') no-repeat; background-size:100% 100%;}
+.damage .box1 {margin:20px 0 40px; padding:10px; font-size:1.6rem; color:#888; text-align:center;}
+.damage .table-wrap td {padding-left:25px; padding-right:25px; text-align:right;}
+.damage .table-wrap .notice {width:80px; height:30px; font-size:1.4rem; line-height:28px;}
+.damage .table-wrap table, 
+.damage .table-wrap:after {min-width:400px;}

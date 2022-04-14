@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.project.dao.ProjectDAO">
+
+	<resultMap id="fileDetail" type="FileVO"> 
+		<result property="atchFileId" column="ATCH_FILE_ID"/>
+		<result property="fileCn" column="FILE_CN"/>
+		<result property="fileExtsn" column="FILE_EXTSN"/>
+		<result property="fileMg" column="FILE_SIZE"/>
+		<result property="fileSn" column="FILE_SN"/>
+		<result property="fileStreCours" column="FILE_STRE_COURS"/>
+		<result property="orignlFileNm" column="ORIGNL_FILE_NM"/>
+		<result property="streFileNm" column="STRE_FILE_NM"/>
+		<result property="logicFileStreCours" column="LOGIC_FILE_STRE_COURS"/>
+	</resultMap>
+
+	<sql id="searchProjectBoardDataWhereFrag">
+		<if test="pid_cd != null and pid_cd != ''">
+			and PID_CD = #{pid_cd} 
+		</if>
+		<if test="pbd_req_type != null and pbd_req_type != ''">
+			and PBD_REQ_TYPE = #{pbd_req_type} 
+		</if>
+		<if test="pbd_year != null and pbd_year != ''">
+			and PBD_YEAR = #{pbd_year} 
+		</if>
+		<if test="pbd_category != null and pbd_category != ''">
+			and PBD_CATEGORY = #{pbd_category} 
+		</if>
+		<if test="pbd_res_type != null and pbd_res_type != ''">
+			<if test="pbd_res_type != '미접수'">
+				and PBD_RES_TYPE = #{pbd_res_type} 
+			</if>
+			<if test="pbd_res_type == '미접수'">
+				and PBD_RES_TYPE IS NULL
+			</if>
+		</if>
+		<if test="searchType == '1'.toString()">
+			<if test="searchKeyword != null and searchKeyword != ''">
+				AND PBD_REQ_TITLE LIKE  '%${searchKeyword}%'
+			</if>
+		</if>
+		<if test="searchType == '2'.toString()">
+			<if test="searchKeyword != null and searchKeyword != ''">
+				AND PBD_REQ_CONTENT LIKE  '%${searchKeyword}%'
+			</if>
+		</if>
+		<if test="searchType == '3'.toString()">
+			<if test="searchKeyword != null and searchKeyword != ''">
+				AND (PBD_REQ_CONTENT LIKE  '%${searchKeyword}%' OR PBD_REQ_TITLE LIKE  '%${searchKeyword}%')
+			</if>
+		</if>
+	</sql>
+	
+	<select id="selectProjectBoardDataStats" parameterType="CmmMap" resultType="CmmMap">
+		SET ANSI_WARNINGS OFF
+		SET ARITHIGNORE ON
+		SET ARITHABORT OFF
+ 			SELECT 
+				coalesce(SUM(TOT_CNT),0) AS TOT_CNT,
+				coalesce(SUM(REQ_CNT),0) AS REQ_CNT,
+				coalesce(SUM(RE_CNT),0) AS RE_CNT,
+				coalesce(SUM(COMPLETE_CNT),0) AS COMPLETE_CNT,
+				Round(convert(float,coalesce(SUM(COMPLETE_CNT),0))/convert(float,coalesce(SUM(TOT_CNT),0)),2) AS 'PERCENT'
+			FROM (
+				SELECT 
+				1 AS 'TOT_CNT',
+				CASE WHEN PBD_REQ_TYPE = '요청' THEN CNT END AS 'REQ_CNT',
+				CASE WHEN PBD_REQ_TYPE = '재요청' THEN CNT END AS 'RE_CNT',
+				CASE WHEN PBD_RES_TYPE = '완료' THEN CNT END AS 'COMPLETE_CNT'
+				FROM (
+					SELECT PBD_REQ_TYPE,PBD_RES_TYPE, 1 AS CNT FROM TB_PROJECT_BOARD_DATA WHERE PID_CD = #{pidCd} 
+				)S
+			)T
+ 	</select>
+ 	
+ 	<select id="selectProjectBoardData" parameterType="CmmMap" resultType="CmmMap">
+ 			SELECT
+				PBD_SEQ
+				,PID_CD
+				,PBD_NO
+				,PBD_NO_SUB
+				,PBD_YEAR
+				,PBD_CATEGORY
+				,PBD_REQ_TYPE
+				,PBD_REQ_TITLE
+				,PBD_REQ_CONTENT
+				,PBD_REQ_MEM_ID
+				,PBD_REQ_MEM_NM
+				,PBD_REQ_DT
+				,PBD_DUE_DT
+				,PBD_RES_TYPE
+				,PBD_RES_TITLE
+				,PBD_RES_CONTENT
+				,PBD_RES_MEM_ID
+				,PBD_RES_MEM_NM
+				,PBD_RES_DT
+				,PBD_REF_MEM_ARRAY
+			FROM TB_PROJECT_BOARD_DATA
+			WHERE PBD_SEQ = #{pbdSeq}
+ 	</select>
+ 	
+	<select id="selectProjectList" parameterType="projectVO" resultType="projectVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY PBD_YEAR DESC, PBD_NO DESC, PBD_NO_SUB ASC) rn, TB.* FROM (
+	
+			SELECT
+				PBD_SEQ
+				,PID_CD
+				,PBD_NO
+				,PBD_NO_SUB
+				,PBD_YEAR
+				,PBD_CATEGORY
+				,PBD_REQ_TYPE
+				,PBD_REQ_TITLE
+				,PBD_REQ_CONTENT
+				,PBD_REQ_MEM_ID
+				,PBD_REQ_MEM_NM
+				,'' AS MEM_TEAM_NM
+				,CONVERT(varchar,PBD_REQ_DT,23) as PBD_REQ_DT
+				,PBD_DUE_DT
+				,PBD_RES_TYPE
+				,PBD_RES_TITLE
+				,PBD_RES_CONTENT
+				,PBD_RES_MEM_ID
+				,PBD_RES_MEM_NM
+				,CONVERT(varchar,PBD_RES_DT,23) as PBD_RES_DT
+			FROM TB_PROJECT_BOARD_DATA
+			WHERE
+				1 = 1
+				<include refid="searchProjectBoardDataWhereFrag" />
+		) TB ) MORG WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+		
+
+	</select>
+	
+	<select id="selectExcelList" parameterType="projectVO" resultType="projectVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY PBD_YEAR DESC, PBD_NO DESC, PBD_NO_SUB ASC) rn, TB.* FROM (
+	
+			SELECT
+				PBD_SEQ
+				,PID_CD
+				,PBD_NO
+				,PBD_NO_SUB
+				,PBD_YEAR
+				,PBD_CATEGORY
+				,PBD_REQ_TYPE
+				,PBD_REQ_TITLE
+				,PBD_REQ_CONTENT
+				,PBD_REQ_MEM_ID
+				,PBD_REQ_MEM_NM
+				,'' AS MEM_TEAM_NM
+				,CONVERT(varchar,PBD_REQ_DT,23) as PBD_REQ_DT
+				,PBD_DUE_DT
+				,PBD_RES_TYPE
+				,PBD_RES_TITLE
+				,PBD_RES_CONTENT
+				,PBD_RES_MEM_ID
+				,PBD_RES_MEM_NM
+				,CONVERT(varchar,PBD_RES_DT,23) as PBD_RES_DT
+			FROM TB_PROJECT_BOARD_DATA
+			WHERE
+				1 = 1
+				<include refid="searchProjectBoardDataWhereFrag" />
+		) TB ) MORG
+		
+
+	</select>
+	
+	
+	<select id="selectProjectListTotCnt" parameterType="projectVO" resultType="int">
+		SELECT 
+ 				COUNT(*) CNT
+			FROM TB_PROJECT_BOARD_DATA
+		WHERE
+			1 = 1
+			<include refid="searchProjectBoardDataWhereFrag" />
+	</select>
+	
+	
+	<insert id="insertProjectBoardData" parameterType="CmmMap">
+		<selectKey resultType="java.lang.Integer" keyProperty="pbdSeq" order="BEFORE">
+			select ISNULL(MAX(pbd_seq), 0) + 1 from TB_PROJECT_BOARD_DATA
+           	<!-- SELECT IDENT_CURRENT('TB_PROJECT_BOARD_DATA') -->
+      	</selectKey>	
+			INSERT INTO TB_PROJECT_BOARD_DATA (
+				PID_CD
+				,PBD_NO
+				,PBD_NO_SUB
+				,PBD_YEAR
+				,PBD_CATEGORY
+				,PBD_REQ_TYPE
+				,PBD_REQ_TITLE
+				,PBD_REQ_CONTENT
+				,PBD_REQ_MEM_ID
+				,PBD_REQ_MEM_NM
+				,PBD_REQ_DT
+				,PBD_DUE_DT
+				,PBD_REF_MEM_ARRAY
+			) VALUES (
+				#{pidCd}
+				<if test="pbdNo != ''">
+				,#{pbdNo}
+				,(SELECT ISNULL(MAX(PBD_NO_SUB)+1,0) PBD_NO_SUB FROM TB_PROJECT_BOARD_LOG WHERE PID_CD = #{pidCd} AND PBD_YEAR = #{pbdYear} AND PBD_NO = #{pbdNo}) 
+				</if>
+				<if test="pbdNo == ''">
+				,(SELECT ISNULL(MAX(PBD_NO),0)+1 PBD_NO FROM TB_PROJECT_BOARD_LOG WHERE PID_CD = #{pidCd} AND PBD_YEAR = #{pbdYear} )
+				,0 
+				</if>
+				,#{pbdYear}
+				,#{pbdCategory}
+				,#{pbdReqType}
+				,#{pbdReqTitle}
+				,#{pbdReqContent}
+				,#{pbdReqMemId}
+				,#{pbdReqMemNm}
+				,GETDATE()
+				,#{pbdDueDt}
+				,#{pbdRefMemArray}
+			)
+		
+	</insert>
+	
+	<insert id="insertSelectProjectBoardLog" parameterType="CmmMap">
+		<![CDATA[
+			INSERT INTO TB_PROJECT_BOARD_LOG 
+			SELECT * FROM TB_PROJECT_BOARD_DATA WHERE PBD_SEQ = #{pbdSeq}
+		]]>	 			
+	</insert>
+	
+	<update id="updateProjectBoardDataReq" parameterType="CmmMap">
+		<![CDATA[
+			UPDATE TB_PROJECT_BOARD_DATA SET
+				PBD_CATEGORY = #{pbdCategory}
+				,PBD_REQ_TYPE = #{pbdReqType}
+				,PBD_REQ_TITLE = #{pbdReqTitle}
+				,PBD_REQ_CONTENT = #{pbdReqContent}
+				,PBD_REQ_MEM_ID = #{pbdReqMemId}
+				,PBD_REQ_MEM_NM = #{pbdReqMemNm}
+				,PBD_REQ_DT = GETDATE()
+				,PBD_DUE_DT = #{pbdDueDt}
+				,PBD_REF_MEM_ARRAY = #{pbdRefMemArray}
+			WHERE PBD_SEQ = #{pbdSeq}
+		]]>
+	</update>	
+	
+	<update id="updateProjectBoardDataRes" parameterType="CmmMap">
+		<![CDATA[
+			UPDATE TB_PROJECT_BOARD_DATA SET
+				PBD_RES_TYPE = #{pbdResType}
+				,PBD_RES_TITLE = #{pbdResTitle}
+				,PBD_RES_CONTENT = #{pbdResContent}
+				,PBD_RES_MEM_ID = #{pbdResMemId}
+				,PBD_RES_MEM_NM = #{pbdResMemNm}
+				,PBD_RES_DT = GETDATE()
+			WHERE PBD_SEQ = #{pbdSeq}
+		]]>
+	</update>
+	
+ 	<delete id="deleteProjectBoardData" parameterType="CmmMap" >
+		<![CDATA[
+			DELETE FROM
+				TB_PROJECT_BOARD_DATA
+			WHERE 
+				PBD_SEQ = #{pbdSeq}
+		]]>
+	</delete>	
+	
+	<insert id="insertProjectBoardFile" parameterType="CmmMap">
+		<![CDATA[
+			INSERT INTO TB_PROJECT_BOARD_FILE ( 
+				PBD_SEQ
+				,PBF_TYPE
+				,ATCH_FILE_ID
+			) VALUES (
+				#{pbdSeq}
+				,#{pbfType}
+				,#{atchFileId}
+			)
+		]]>	 			
+	</insert>
+ 	
+	<delete id="deleteProjectBoardFile" parameterType="CmmMap" >
+		<![CDATA[
+			DELETE FROM
+				TB_PROJECT_BOARD_FILE
+			WHERE 
+				PBD_SEQ = #{pbdSeq}
+				AND PBF_TYPE = #{pbfType}
+		]]>
+	</delete>
+	
+	<insert id="insertFileDetail" parameterType="FileVO" >
+		<![CDATA[
+			INSERT INTO COMTNFILEDETAIL
+			( ATCH_FILE_ID, FILE_SN, FILE_STRE_COURS, STRE_FILE_NM, 
+			  ORIGNL_FILE_NM, FILE_EXTSN, FILE_SIZE, FILE_CN, LOGIC_FILE_STRE_COURS )
+			VALUES
+			( #{atchFileId}, #{fileSn}, #{fileStreCours}, #{streFileNm}, 
+			  #{orignlFileNm}, #{fileExtsn}, #{fileMg}, #{fileCn}, #{logicFileStreCours} )			
+		]]>
+	</insert>	
+	
+	<delete id="deleteFileDetail" parameterType="FileVO" >
+		<![CDATA[
+			DELETE FROM COMTNFILEDETAIL
+			WHERE
+				ATCH_FILE_ID = #{atchFileId}
+			AND	
+				FILE_SN = #{fileSn}			
+		]]>	
+	</delete>
+	
+	<select id="selectProjectBoardFileList" parameterType="CmmMap" resultType="CmmMap">
+ 		<![CDATA[
+ 			SELECT
+ 				A.PBF_SEQ
+				,A.PBD_SEQ
+				,A.PBF_TYPE
+				,A.ATCH_FILE_ID
+				,B.ORIGNL_FILE_NM
+				,B.LOGIC_FILE_STRE_COURS
+				,B.STRE_FILE_NM
+			FROM TB_PROJECT_BOARD_FILE A,  COMTNFILEDETAIL B
+			WHERE 
+			A.ATCH_FILE_ID = B.ATCH_FILE_ID
+			AND PBD_SEQ = #{pbdSeq}
+ 		]]>
+ 			ORDER BY PBF_SEQ ASC 
+ 	</select>
+ 	
+ 	<select id="selectFileInf" parameterType="FileVO" resultMap="fileDetail" >
+ 		<![CDATA[
+			SELECT 
+				ATCH_FILE_ID, FILE_CN, FILE_SN, FILE_STRE_COURS, STRE_FILE_NM,
+				FILE_EXTSN, ORIGNL_FILE_NM, FILE_SIZE, LOGIC_FILE_STRE_COURS
+			FROM
+				COMTNFILEDETAIL
+			WHERE
+				ATCH_FILE_ID = #{atchFileId}
+			AND 
+				FILE_SN = #{fileSn}	
+ 		]]>
+ 	</select>
+	
+</mapper>
+

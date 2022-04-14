@@ -1,0 +1,56 @@
+stages:
+  - build
+  - test
+  - deploy
+  
+maven_verify7:
+  image: registry.gitlab.com/jinpcin/singlebase/ubuntu14.04_jdk7:1
+  stage: test
+  tags:
+    - docker
+  script:
+    - echo "Verifing project with maven using jdk7"
+    - mvn compile
+  only:
+    - master
+    
+maven_verify8:
+  image: registry.gitlab.com/jinpcin/singlebase/ubuntu16.04_jdk8:1.1
+  stage: test
+  tags:
+    - docker
+  script:
+    - echo "Verifing project with maven using jdk8"
+    - mvn compile
+  only:
+    - master    
+
+maven_deploy:
+  image: registry.gitlab.com/jinpcin/singlebase/ubuntu16.04_jdk8:1.1
+  stage: deploy
+  tags:
+    - docker
+  script:
+    - echo "Building project with maven using jdk8"
+    - mvn package
+    - scp target/*.war kjplani@gj.plani.kr:/home/kjplani/tomcat7/webapps/
+  only:
+    - master    
+
+#  artifacts:
+#    name: "$CI_PROJECT_NAME-$CI_COMMIT_REF_NAME"
+#    expire_in: 3 day
+#    paths:
+#    - target/*.war
+
+.pages:
+  stage: deploy
+  script:
+  - mkdir .public
+  - cp -r html/* .public
+  - mv .public public
+  artifacts:
+    paths:
+    - public
+  only:
+  - master

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="withdrawal">
+
+	<typeAlias  alias="withdrawalVO" type="egovframework.plani.template.man.metsys.vo.WithdrawalVO"/>
+	
+	
+	<insert id="withdrawalDAO.insertWithdrawal" parameterClass="withdrawalVO">
+
+		<selectKey resultClass="java.lang.Integer" keyProperty="wd_idx">
+			SELECT NVL(MAX(WD_IDX) + 1, 1) AS WD_IDX FROM CMS_USR_WITHDRAWAL
+		</selectKey>
+		
+		INSERT INTO CMS_USR_WITHDRAWAL
+		(
+			WD_IDX,
+			USER_ID,
+			USER_NM,
+			JDT,
+			WDT,
+			WREASON
+		)
+		VALUES
+		(
+			#wd_idx#,
+			#user_id#,
+			#user_nm#,
+			#jdt#,
+			SYSDATE,
+			#wreason#
+		)
+
+	</insert>
+	
+	<update id="withdrawalDAO.updateWithdrawal" parameterClass="withdrawalVO">
+
+		UPDATE CMS_USR_WITHDRAWAL SET
+			WD_IDX = #wd_idx#,
+			USER_ID = #user_id#,
+			USER_NM = #user_nm#,
+			JDT = #jdt#,
+			WDT = #wdt#,
+			WREASON = #wreason#
+		WHERE
+			WD_IDX = #wd_idx#
+
+	</update>
+	
+	<delete id="withdrawalDAO.deleteWithdrawal" parameterClass="withdrawalVO">
+
+		DELETE FROM CMS_USR_WITHDRAWAL
+		WHERE
+			WD_IDX = #wd_idx#
+
+	</delete>
+	
+	<select id="withdrawalDAO.selectWithdrawal" parameterClass="withdrawalVO" resultClass="withdrawalVO">
+
+		SELECT
+			WD_IDX,
+			USER_ID,
+			USER_NM,
+			TO_DATE(JDT, 'YYYY-MM-DD HH24:MI:SS') JDT,
+			TO_DATE(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+			WREASON
+		FROM
+			CMS_USR_WITHDRAWAL
+		WHERE
+			WD_IDX = #wd_idx#
+
+	</select>
+	
+	<select id="withdrawalDAO.selectWithdrawalList" parameterClass="withdrawalVO" resultClass="withdrawalVO">
+
+		SELECT * FROM ( SELECT @RNUM := @RNUM + 1 AS rn, TB.* FROM (
+	
+			SELECT
+				WD_IDX,
+				USER_ID,
+				USER_NM,
+				TO_DATE(JDT, 'YYYY-MM-DD HH24:MI:SS') JDT,
+				TO_DATE(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+				WREASON
+			FROM
+				CMS_USR_WITHDRAWAL
+			WHERE
+				1 = 1
+				<isNotEmpty property = "srchFromDT">
+					<isNotEmpty property = "srchToDT" prepend="AND">
+						WDT BETWEEN CONCAT(#srchFromDT#, ' 00:00:00') AND CONCAT(#srchToDT#, ' 23:59:59')
+					</isNotEmpty>				
+				</isNotEmpty>
+
+		) TB, ( SELECT @RNUM := 0 ) R ) AL  WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+
+	</select>
+	
+	<select id="withdrawalDAO.selectWithdrawalListTotCnt" parameterClass="withdrawalVO" resultClass="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_USR_WITHDRAWAL
+		WHERE
+			1 = 1
+			<isNotEmpty property = "srchFromDT">
+				<isNotEmpty property = "srchToDT" prepend="AND">
+					WDT BETWEEN CONCAT(#srchFromDT#, ' 00:00:00') AND CONCAT(#srchToDT#, ' 23:59:59')
+				</isNotEmpty>				
+			</isNotEmpty>
+
+	</select>
+	
+	<select id="withdrawalDAO.xlsWithdrawalList" parameterClass="withdrawalVO" resultClass="withdrawalVO">
+
+		SELECT * FROM ( SELECT @RNUM := @RNUM + 1 AS rn, TB.* FROM (
+	
+			SELECT
+				WD_IDX,
+				USER_ID,
+				USER_NM,
+				DATE_FORMAT(JDT, '%Y-%m-%d %H:%i:%s') JDT,
+				DATE_FORMAT(WDT, '%Y-%m-%d %H:%i:%s') WDT,
+				WREASON
+			FROM
+				CMS_USR_WITHDRAWAL
+			WHERE
+				1 = 1
+				<isNotEmpty property = "srchFromDT">
+					<isNotEmpty property = "srchToDT" prepend="AND">
+						WDT BETWEEN CONCAT(#srchFromDT#, ' 00:00:00') AND CONCAT(#srchToDT#, ' 23:59:59')
+					</isNotEmpty>				
+				</isNotEmpty>
+
+		) TB, ( SELECT @RNUM := 0 ) R ) AL
+
+	</select>
+	
+	
+
+</sqlMap>
+

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.man.metsys.dao.AccessipDAO">
+	
+	<!-- if use clob column
+	<resultMap id="accessip" type="accessipVO"> 
+	
+		<result property="auth_cd" column="auth_cd"/>,
+				<result property="access_ip" column="access_ip"/>,
+				<result property="writer" column="writer"/>,
+				<result property="wdt" column="wdt"/>,
+				<result property="modifier" column="modifier"/>,
+				<result property="mdt" column="mdt"/>
+	</resultMap>
+	-->
+		
+	<insert id="insertAccessip" parameterType="accessipVO">
+
+		<!--
+		<selectKey resultType="java.lang.Integer" keyProperty="######" order="BEFORE">
+			SELECT IFNULL(MAX(######) + 1, 1) AS ###### FROM CMS_ACCESS_IP 
+			WHERE
+			AUTH_CD = #{auth_cd} AND
+			ACCESS_IP = #{access_ip}
+		</selectKey>
+		-->
+
+		INSERT INTO CMS_ACCESS_IP
+		(
+			AUTH_CD,
+			ACCESS_IP,
+			DESCRIPTION,
+			WRITER,
+			WDT
+		)
+		VALUES
+		(
+			#{auth_cd},
+			#{access_ip},
+			#{description},
+			#{writer},
+			NOW()
+		)
+
+	</insert>
+	
+	
+	<update id="updateAccessip" parameterType="accessipVO">
+
+		UPDATE CMS_ACCESS_IP SET
+			AUTH_CD = #{auth_cd},
+			ACCESS_IP = #{access_ip},
+			DESCRIPTION = #{description},
+			MODIFIER = #{modifier},
+			MDT = NOW()
+		WHERE
+			AUTH_CD = #{auth_cd} AND
+			ACCESS_IP = #{access_ip}
+
+	</update>
+	
+	
+	<delete id="deleteAccessip" parameterType="accessipVO">
+
+		DELETE FROM CMS_ACCESS_IP
+		WHERE
+			AUTH_CD = #{auth_cd} AND
+			ACCESS_IP = #{access_ip}
+
+	</delete>
+	
+	
+	<!-- if use clob column
+	<select id="selectAccessip" parameterType="accessipVO" resultMap="accessip">
+	-->
+	<select id="selectAccessip" parameterType="accessipVO" resultType="accessipVO">
+
+		SELECT
+			AUTH_CD,
+			ACCESS_IP,
+			DESCRIPTION,
+			WRITER,
+			DATE_FORMAT(WDT, '%Y-%m-%d %H:%i:%s') WDT,
+			MODIFIER,
+			DATE_FORMAT(MDT, '%Y-%m-%d %H:%i:%s') MDT
+		FROM
+			CMS_ACCESS_IP
+		WHERE
+			AUTH_CD = #{auth_cd} AND
+			ACCESS_IP = #{access_ip}
+
+	</select>
+	
+	
+	<select id="selectAccessipList" parameterType="accessipVO" resultType="accessipVO">
+
+		SELECT * FROM ( SELECT @RNUM := @RNUM + 1 AS rn, TB.* FROM (
+	
+			SELECT
+				AUTH_CD,
+				SF_AUTH_NM(AUTH_CD) AUTH_NM,
+				ACCESS_IP,
+				DESCRIPTION,
+				SF_USER_NM(WRITER) WRITER,
+				DATE_FORMAT(WDT, '%Y-%m-%d %H:%i:%s') WDT,
+				MODIFIER,
+				DATE_FORMAT(MDT, '%Y-%m-%d %H:%i:%s') MDT
+			FROM
+				CMS_ACCESS_IP
+			WHERE
+				1 = 1
+				<if test="auth_cd != null and auth_cd != ''">
+					AND AUTH_CD = #{auth_cd}
+				</if>
+			ORDER BY AUTH_CD ASC, ACCESS_IP ASC
+
+		) TB, ( SELECT @RNUM := 0 ) R ) AL  WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+
+	</select>
+	
+	
+	<select id="selectAccessipListTotCnt" parameterType="accessipVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_ACCESS_IP
+		WHERE
+			1 = 1
+			<if test="auth_cd != null and auth_cd != ''">
+				AND AUTH_CD = #{auth_cd}
+			</if>
+
+	</select>
+	
+	
+	<select id="xlsAccessipList" parameterType="accessipVO" resultType="accessipVO">
+
+		SELECT * FROM ( SELECT @RNUM := @RNUM + 1 AS rn, TB.* FROM (
+	
+			SELECT
+				AUTH_CD,
+				ACCESS_IP,
+				DESCRIPTION,
+				WRITER,
+				DATE_FORMAT(WDT, '%Y-%m-%d %H:%i:%s') WDT,
+				MODIFIER,
+				DATE_FORMAT(MDT, '%Y-%m-%d %H:%i:%s') MDT
+			FROM
+				CMS_ACCESS_IP
+			WHERE
+				1 = 1
+
+		) TB, ( SELECT @RNUM := 0 ) R ) AL
+
+	</select>
+	
+	
+
+</mapper>
+

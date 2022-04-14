@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>    
+    <settings>
+        <setting name="jdbcTypeForNull" value="NULL" />
+    </settings>
+    
+    <typeAliases>
+		<typeAlias alias="accessipVO" type="egovframework.plani.template.man.metsys.vo.AccessipVO"/>
+		<typeAlias alias="atchfileVO" type="egovframework.plani.template.atchfile.vo.AtchfileVO"/>
+		<typeAlias alias="boardarticleVO" type="egovframework.plani.template.brdartcl.vo.BoardarticleVO"/>
+		<typeAlias alias="boarddryVO" type="egovframework.plani.template.brdartcl.vo.BoarddryVO"/>
+		<typeAlias alias="boardfaqVO" type="egovframework.plani.template.brdartcl.vo.BoardfaqVO"/>
+		<typeAlias alias="boardinfoVO" type="egovframework.plani.template.brdartcl.vo.BoardinfoVO"/>
+		<typeAlias alias="boardrcmndVO" type="egovframework.plani.template.brdartcl.vo.BoardrcmndVO"/>
+		<typeAlias alias="boardreplyVO" type="egovframework.plani.template.brdartcl.vo.BoardreplyVO"/>
+		<typeAlias alias="boardthmVO" type="egovframework.plani.template.brdartcl.vo.BoardthmVO"/>
+		<typeAlias alias="commstatVO" type="egovframework.plani.template.man.stat.vo.CommstatVO"/>
+		<typeAlias alias="contentsmanVO" type="egovframework.plani.template.man.metsys.vo.ContentsmanVO"/>
+		<typeAlias alias="manlogVO" type="egovframework.plani.template.man.log.vo.ManlogVO"/>
+		<typeAlias alias="memberVO" type="egovframework.plani.custom.memsvc.vo.MemberVO"/>
+		<typeAlias alias="messageVO" type="egovframework.plani.template.cmm.vo.MessageVO"/>
+		<typeAlias alias="popupVO" type="egovframework.plani.template.man.popup.vo.PopupVO"/>
+		<typeAlias alias="srvydataVO" type="egovframework.plani.template.survey.vo.SrvydataVO"/>
+		<typeAlias alias="srvymainVO" type="egovframework.plani.template.survey.vo.SrvymainVO"/>
+		<typeAlias alias="srvypartVO" type="egovframework.plani.template.survey.vo.SrvypartVO"/>
+		<typeAlias alias="srvyquesansVO" type="egovframework.plani.template.survey.vo.SrvyquesansVO"/>
+		<typeAlias alias="sysauthVO" type="egovframework.plani.template.man.menuctgry.vo.SysauthVO"/>
+		<typeAlias alias="sysmenuVO" type="egovframework.plani.template.man.menuctgry.vo.SysmenuVO"/>
+		<typeAlias alias="syscategoryVO" type="egovframework.plani.template.man.menuctgry.vo.SyscategoryVO"/>
+		<typeAlias alias="syscodeVO" type="egovframework.plani.template.man.menuctgry.vo.SyscodeVO"/>
+		<typeAlias alias="sysmenuVO" type="egovframework.plani.template.man.menuctgry.vo.SysmenuVO"/>
+		<typeAlias alias="tablecrudVO" type="egovframework.plani.template.man.metsys.vo.TablecrudVO"/>
+		<typeAlias alias="withdrawalVO" type="egovframework.plani.template.man.metsys.vo.WithdrawalVO"/>
+	</typeAliases>
+	
+</configuration>

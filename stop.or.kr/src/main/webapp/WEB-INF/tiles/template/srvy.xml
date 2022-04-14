@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 
+	 <definition name="/manact/surveySrvymain/srvymainList" extends="modeecDefinitionContent">
+		 <put-attribute name="metsysTitle"	value="설문 메인 목록" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_srvy.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/sv/srvymainList.jsp" />
+	 </definition>
+
+	 <definition name="/manact/surveySrvymain/srvymainWrite" extends="modeecDefinitionEditor">
+		 <put-attribute name="metsysTitle"	value="설문 메인 등록" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_srvy.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/sv/srvymainWrite.jsp" />
+	 </definition>
+	  
+	 <definition name="/manact/surveySrvypart/srvypartList" extends="modeecDefinitionContent">
+		 <put-attribute name="metsysTitle"	value="설문 파트 목록" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_srvy.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/sv/srvypartList.jsp" />
+	 </definition>
+
+	 <definition name="/manact/surveySrvypart/srvypartWrite" extends="modeecDefinitionEditor">
+		 <put-attribute name="metsysTitle"	value="설문 파트 등록" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_srvy.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/sv/srvypartWrite.jsp" />
+	 </definition>
+
+	 
+	 <definition name="/manact/surveySrvyquesans/srvyquesansList" extends="modeecDefinitionContent">
+		 <put-attribute name="metsysTitle"	value="설문 질문 / 답변 목록" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_srvy.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/sv/srvyquesansList.jsp" />
+	 </definition>
+
+	 <definition name="/manact/surveySrvyquesans/srvyquesansWrite" extends="modeecDefinitionContent">
+		 <put-attribute name="metsysTitle"	value="설문 질문 / 답변 등록" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_srvy.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/sv/srvyquesansWrite.jsp" />
+	 </definition>
+	 
+	  <definition name="/survey/srvyList" extends="ContDefinitionContent">
+		 <put-attribute name="contTitle"	value="설문 목록" />
+		 <put-attribute name="srvyScript"	value="/WEB-INF/jsp/layout/custom/web/kor/srvy/script_srvy.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/survey/srvyList.jsp" />
+	 </definition>
+	 
+	 <definition name="/survey/srvyView" extends="ContDefinitionContent">
+		 <put-attribute name="contTitle"	value="설문 내용" />
+		 <put-attribute name="srvyScript"	value="/WEB-INF/jsp/layout/custom/web/kor/srvy/script_srvy.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/survey/srvyView.jsp" />
+	 </definition>
+	 
+</tiles-definitions>
+
+	 

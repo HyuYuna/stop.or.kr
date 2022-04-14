@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="popup">
+
+	<typeAlias  alias="popupVO" type="egovframework.plani.template.man.popup.vo.PopupVO"/>
+	
+	<sql id="PopupDAO.incSelectWhere">
+		<isNotEmpty property="searchCondition">
+			<isNotEmpty property="searchKeyword">
+				AND $searchCondition$ like '%$searchKeyword$%'
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="searchPopType">
+			AND POP_TYPE = #searchPopType#
+		</isNotEmpty>
+		<isNotEmpty property="searchUseYn">
+			AND USE_YN = #searchUseYn#
+		</isNotEmpty>
+		
+		<isNotEmpty property="searchFrom">
+			<isNotEmpty property="searchTo">
+				<![CDATA[
+					AND ( (POP_FROM <= #searchFrom# AND POP_TO >= #searchFrom#) OR (POP_FROM <= #searchTo# AND POP_TO >= #searchTo#) )
+				]]>
+			</isNotEmpty>
+			<isEmpty property="searchTo">
+				<![CDATA[
+					AND (POP_FROM >= #searchFrom# OR POP_TO >= #searchFrom#)
+				]]>
+			</isEmpty>
+		</isNotEmpty>
+		
+		
+		<isEmpty property="searchFrom">
+			<isNotEmpty property="searchTo">
+				<![CDATA[
+					AND (POP_FROM <= #searchTo# OR POP_TO <= #searchTo#)
+				]]>
+			</isNotEmpty>
+		</isEmpty>
+	</sql>
+
+	<!-- 팝업 목록 -->
+	<select id="PopupDAO.selectPopupList" parameterClass="popupVO" resultClass="popupVO">
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+	
+			SELECT
+				POP_SEQ
+				, POP_TITLE
+				, POP_TYPE
+				, POP_FROM
+				, POP_TO
+				, POP_W
+				, POP_H
+				, POP_CONTENT
+				, POP_IMAGE
+				, POP_LINK
+				, POP_TARGET
+				, USE_YN
+				, WRITER
+				, TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT
+				, POP_SORT
+	            , VCHKCODE
+			FROM
+				CMS_POPUP A,
+	  			(
+	  				SELECT 
+	  					* 
+	  				FROM
+	  					CMS_ATACH
+	  				WHERE 
+			 			ATCKEY_1ST = 'POPUP' AND
+			 			ATCKEY_3RD = 1 AND
+	        			ATCKEY_4TH = 1 AND
+	        			IS_THUMB = 'N'
+	  				 
+	  			) B 
+	 		WHERE
+	 			A.POP_SEQ = B.ATCKEY_2ND(+)
+				<include refid="PopupDAO.incSelectWhere"/>				
+					
+				ORDER BY
+					POP_SORT DESC
+		
+		) TB ) WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+	</select>
+	
+	<!-- 페이지 나누기를 위한 총 개수 -->
+	<select id="PopupDAO.selectPopupListTotCnt" parameterClass="popupVO" resultClass="int">
+	
+		SELECT
+			COUNT(*) AS totcnt
+		FROM
+			CMS_POPUP
+		WHERE
+			1=1
+		<include refid="PopupDAO.incSelectWhere"/>	
+		
+	</select>
+
+
+
+
+	<!-- 팝업 등록 -->
+	<insert id="PopupDAO.insertPopup" parameterClass="popupVO">
+		<selectKey keyProperty="pop_seq" resultClass="int">
+			SELECT NVL(MAX(POP_SEQ), 0) + 1 FROM CMS_POPUP	
+		</selectKey>
+	
+		INSERT INTO CMS_POPUP(
+			POP_SEQ
+			, POP_TITLE
+			, POP_TYPE
+			, POP_FROM
+			, POP_TO
+			, POP_W, POP_H
+			, POP_X, POP_Y
+			, POP_ALT
+			, POP_CONTENT
+			, POP_IMAGE
+			, POP_LINK
+			, POP_TARGET
+			, USE_YN
+			, WRITER
+			, WDT
+			, POP_SORT
+		)
+		VALUES(
+			#pop_seq#
+			, #pop_title#
+			, #pop_type#
+			, #pop_from#
+			, #pop_to#
+			, #pop_w#, #pop_h#
+			, #pop_x#, #pop_y#
+			, #pop_alt#
+			, #pop_content#
+			, #pop_image#
+			, #pop_link#
+			, #pop_target#
+			, 'Y'
+			, 'tmp'
+			, SYSDATE
+			, #pop_seq#
+		)
+		
+
+	</insert>
+	
+	
+	<!-- 팝업 수정 -->
+	<update id="PopupDAO.updatePopup" parameterClass="popupVO">
+		UPDATE CMS_POPUP SET
+			POP_TITLE = #pop_title#
+			, POP_TYPE = #pop_type#
+			, POP_FROM = #pop_from#
+			, POP_TO = #pop_to#
+			, POP_W = #pop_w#, POP_H = #pop_h#
+			, POP_X = #pop_x#, POP_Y = #pop_y#
+			, POP_CONTENT = #pop_content#
+			, POP_IMAGE = #pop_image#
+			, POP_LINK = #pop_link#
+			, POP_TARGET = #pop_target#
+			, POP_ALT = #pop_alt#
+		WHERE
+			POP_SEQ = #pop_seq#
+	</update>
+	
+	<!-- 팝업 삭제 -->
+	<delete id="PopupDAO.deletePopup" parameterClass="popupVO">
+		
+		DELETE FROM 
+			CMS_POPUP 
+		WHERE 
+			POP_SEQ = #pop_seq#
+			
+	</delete>
+	
+	<!-- 팝업 상세 -->
+	<select id="PopupDAO.selectPopup" parameterClass="popupVO" resultClass="popupVO">
+		
+		SELECT
+			POP_SEQ
+			, POP_TITLE
+			, POP_TYPE
+			, POP_FROM
+			, POP_TO
+			, POP_W
+			, POP_H
+			, POP_X
+			, POP_Y
+			, POP_ALT
+			, POP_CONTENT
+			, POP_IMAGE
+			, POP_LINK
+			, POP_TARGET
+			, USE_YN
+			, WRITER
+			, TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT
+			, POP_SORT
+		FROM
+			CMS_POPUP
+		WHERE
+			POP_SEQ = #pop_seq#
+			
+	</select>
+	
+	<!-- 정렬 변경 대상 조회 -->
+	<select id="PopupDAO.selectTargetReplaced" parameterClass="popupVO" resultClass="popupVO">
+		
+		SELECT POP_SEQ, POP_SORT FROM(
+			SELECT ROWNUM RN, t.* FROM( 
+				SELECT POP_SEQ, POP_SORT FROM CMS_POPUP WHERE 1=1 <include refid="PopupDAO.incSelectWhere"/> ORDER BY POP_SORT DESC
+		    ) t
+		)
+		WHERE RN = (
+		
+		  SELECT RN FROM(
+		      SELECT ROWNUM RN, t.* FROM(
+		          SELECT POP_SEQ, POP_SORT FROM CMS_POPUP WHERE 1=1 <include refid="PopupDAO.incSelectWhere"/> ORDER BY POP_SORT DESC
+		      ) t
+		  )
+		  WHERE POP_SEQ = #pop_seq#
+		
+		)
+		<isEqual property="sort_dir" compareValue="up">-1</isEqual>
+		<isEqual property="sort_dir" compareValue="down">+1</isEqual>
+		
+	</select>
+	
+	<!-- 정렬 변경 -->
+	<update id="PopupDAO.updatePopupSort" parameterClass="popupVO">
+		
+		UPDATE CMS_POPUP SET
+			POP_SORT = #pop_sort#
+		WHERE 
+			POP_SEQ = #pop_seq#
+		
+	</update>
+	
+	<!-- 유효 팝업 쿼리 -->
+	<select id="PopupDAO.selectValidPopupList" parameterClass="popupVO" resultClass="popupVO">
+		
+		SELECT  
+			POP_SEQ, 
+	        POP_TITLE, 
+	        POP_TYPE, 
+	        POP_FROM, 
+	        POP_TO, 
+	        POP_W, 
+	        POP_H, 
+	        POP_X, 
+	        POP_Y, 
+	        POP_ALT, 
+	        POP_CONTENT, 
+	        POP_IMAGE, 
+	        POP_LINK, 
+	        POP_TARGET, 
+	        USE_YN, 
+	        POP_SORT,
+	        SF_ATCFILE_INFO('POPUP', A.POP_SEQ, 1, 1, 'N', 'VCODE') VCHKCODE
+  		FROM  
+  			CMS_POPUP A
+ 		WHERE
+			USE_YN = 'Y' AND
+			POP_TYPE = #pop_type#
+			<isEqual property="pop_type" compareValue="W" prepend="AND">
+				TO_CHAR(SYSDATE, 'YYYY-MM-DD') BETWEEN POP_FROM AND POP_TO
+			</isEqual>
+			<isEqual property="pop_type" compareValue="Z" prepend="AND">
+				TO_CHAR(SYSDATE, 'YYYY-MM-DD') BETWEEN POP_FROM AND POP_TO
+			</isEqual>
+			
+		ORDER BY POP_SORT DESC
+		
+	</select>
+	
+	<!-- 사용/미사용 toggle -->
+	<update id="PopupDAO.updatePopupUseYn" parameterClass="java.lang.String">
+		
+		UPDATE CMS_POPUP SET 
+			USE_YN = 
+				CASE USE_YN 
+				WHEN 'Y' THEN 'N' 
+				ELSE 'Y' END 
+		WHERE 
+			POP_SEQ = #pop_seq#
+			
+	</update>
+</sqlMap>
+

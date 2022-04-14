@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.man.menuctgry.dao.SysauthmenuDAO">
+
+
+	<insert id="mergeSysauthmenu" parameterType="sysmenuVO">
+
+		MERGE INTO CMS_MENU_AUTH USING CMS_ACCESS_IP
+	    ON (
+	    	AUTH_CD = #{auth_cd} AND
+	    	MENU_IDX = #{menu_idx}
+	    )
+	    WHEN MATCHED THEN
+	    	UPDATE SET
+	        AUTH_YN = 'Y'
+	    WHEN NOT MATCHED THEN
+	    	INSERT
+	        (
+				AUTH_CD,
+				MENU_IDX,
+				AUTH_YN,
+				WRITER,
+				WDT
+	        )
+	        VALUES
+	        (
+				#{auth_cd},
+				#{menu_idx},
+				'Y',
+				#{writer},
+				GETDATE()
+	        );
+
+	</insert>
+	
+	<insert id="insertSysauthmenu" parameterType="sysmenuVO">
+
+		INSERT INTO CMS_MENU_AUTH 
+        (
+			AUTH_CD,
+			MENU_IDX,
+			AUTH_YN,
+			WRITER,
+			WDT
+        )
+        VALUES
+        (
+			#{auth_cd},
+			#{menu_idx},
+			'Y',
+			#{writer},
+			GETDATE()
+        )
+
+	</insert>
+	
+	<update id="updateSysauthmenu" parameterType="sysmenuVO">
+
+		UPDATE CMS_MENU_AUTH SET
+			AUTH_YN = 'Y',
+			MODIFIER = #{modifier},
+			MDT = GETDATE()
+		WHERE
+			AUTH_CD = #{auth_cd} AND
+	    	MENU_IDX = #{menu_idx}
+
+	</update>
+	
+	<update id="updateSysauthmenuDisable" parameterType="sysmenuVO">
+
+		UPDATE CMS_MENU_AUTH SET
+			AUTH_YN = 'N',
+			MODIFIER = #{modifier},
+			MDT = GETDATE()
+		WHERE
+			AUTH_CD = #{auth_cd}
+
+	</update>
+	
+	<delete id="deleteSysauthmenuByAuthcd" parameterType="sysauthVO">
+
+		DELETE FROM CMS_MENU_AUTH
+		WHERE
+			AUTH_CD = #{auth_cd}
+
+	</delete>
+
+	<delete id="deleteSysauthmenuByMenuidx" parameterType="sysmenuVO">
+
+		DELETE FROM CMS_MENU_AUTH
+		WHERE
+			MENU_IDX = #{menu_idx}
+
+	</delete>
+	
+	<select id="selectSysauthmenu" parameterType="sysmenuVO" resultType="sysmenuVO">
+
+		SELECT
+			AUTH_CD,
+			MENU_IDX,
+			AUTH_YN,
+			WRITER,
+			CONVERT(VARCHAR(19), WDT, 20) WDT,
+			MODIFIER,
+			CONVERT(VARCHAR(19), MDT, 20) MDT
+		FROM
+			CMS_MENU_AUTH
+		WHERE
+			AUTH_CD = #{auth_cd} AND
+			MENU_IDX = #{menu_idx}
+
+	</select>
+	
+
+	<select id="selectSysauthmenuList" parameterType="sysmenuVO" resultType="sysmenuVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY SORT_PATH ASC) rn, TB.* FROM (
+	
+			SELECT  
+	    		A.MENU_IDX, 
+	    		A.MENU_NM, 
+	        	A.UP_MENU_IDX, 
+	        	A.MENU_ORD,
+	   			MENU_LV, 
+	        	B.AUTH_CD,
+	        	SORT_PATH,
+	        	CASE 
+	        		WHEN B.AUTH_CD = '' OR B.AUTH_CD IS NULL THEN 'N'
+	        		ELSE AUTH_YN
+	        	END AUTH_YN 
+	  		FROM 
+	        	(
+	        		SELECT 
+	        			MENU_IDX, 
+	        			MENU_NM, 
+	        			UP_MENU_IDX, 
+	        			MENU_ORD,
+	        			MENU_LV,
+	        			SORT_PATH
+	          		FROM  
+	          			VW_SYS_MENU 
+	         		WHERE  
+	         			MU_GUB = #{mu_gub} AND 
+	                	USE_YN = 'Y' 
+	         			<if test="auth_cd != 'D0001'.toString()">AND
+	         				MENU_IDX NOT IN ('MNIDX00001', 'MNIDX00101')
+	         			</if>         			
+	        	) A LEFT OUTER JOIN
+	        	(
+	        		SELECT 
+	        			* 
+	          		FROM  
+	          			CMS_MENU_AUTH 
+	         		WHERE  
+	         				AUTH_CD = #{auth_cd} 
+	        	) B 
+	        	ON A.MENU_IDX = B.MENU_IDX 
+	 		 
+	     ) TB ) MORG   	
+			
+	</select>
+
+	
+	<select id="selectSysauthmenuListTotCnt" parameterType="sysmenuVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_MENU_AUTH
+		WHERE
+			AUTH_CD = #{auth_cd} AND
+			MENU_IDX = #{menu_idx}
+
+	</select>
+	
+	<select id="xlsSysauthmenuList" parameterType="sysmenuVO" resultType="sysmenuVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY AUTH_CD ASC, MENU_IDX ASC) rn, TB.* FROM (
+
+			SELECT
+				AUTH_CD,
+				MENU_IDX,
+				AUTH_YN,
+				WRITER,
+				CONVERT(VARCHAR(19), WDT, 20) WDT,
+				MODIFIER,
+				CONVERT(VARCHAR(19), MDT, 20) MDT
+			FROM
+				CMS_MENU_AUTH
+			WHERE
+				AUTH_CD = #{auth_cd} AND
+				MENU_IDX = #{menu_idx}
+
+		) TB ) MORG  
+
+	</select>
+	
+	
+
+</mapper>
+

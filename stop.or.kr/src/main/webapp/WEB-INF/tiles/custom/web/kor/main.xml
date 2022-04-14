@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 
+	 
+	 <definition name="MainDefinitionContent" template="/WEB-INF/jsp/layout/custom/web/kor/main/mainLayout.jsp">
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/kor/script.jsp"/>
+		 <put-attribute name="mainHeader"	value="/WEB-INF/jsp/layout/template/cmmn/kor/header.jsp"/>
+		 <put-attribute name="mainScript"	value="/WEB-INF/jsp/layout/custom/web/kor/main/script_main.jsp"/>
+		 <put-attribute name="mainFooter"	value="/WEB-INF/jsp/layout/template/cmmn/kor/footer.jsp"/>
+	 </definition>
+	 
+	 <definition name="TodayScheduleDefinitionContent" template="/WEB-INF/jsp/layout/blank/blank.jsp">
+	 </definition>
+	 
+	 <definition name="/contents/mainView" extends="MainDefinitionContent">
+		 <put-attribute name="mainMeta"	value="/WEB-INF/jsp/layout/custom/web/kor/main/meta.jsp"/>
+		 <put-attribute name="mainTitle"	value="한국여성인권진흥원" />
+		 <put-attribute name="mainContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/main/siteMain.jsp" />
+	 </definition>
+	 
+	  <definition name="/contents/mainView2" extends="MainDefinitionContent">
+		 <put-attribute name="mainMeta"	value="/WEB-INF/jsp/layout/custom/web/kor/main/meta.jsp"/>
+		 <put-attribute name="mainTitle"	value="한국여성인권진흥원" />
+		 <put-attribute name="mainContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/main/siteMain_20190716.jsp" />
+	 </definition>
+
+	 <definition name="/contents/mainSearch" extends="ContDefinitionContent">
+		 <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/meta/meta_content.jsp"/>
+		 <put-attribute name="contTitle"	value="통합검색 결과" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/gsearch/mainSearch.jsp" />
+	 </definition>
+	
+	 
+
+</tiles-definitions>
+

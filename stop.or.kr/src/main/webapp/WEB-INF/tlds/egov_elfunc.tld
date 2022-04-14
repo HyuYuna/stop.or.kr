@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+    version="2.0">
+    
+    
+    <description>Excute class method in EL</description>
+    <tlib-version>1.0</tlib-version>
+    <short-name>ELFunctions</short-name>
+    <uri>/ELFunctions</uri>
+    <function>
+    	<description>Base64 Decode</description>
+    	<name>decode</name>
+    	<function-class>egovframework.plani.template.cmm.utils.EgovFileScrty</function-class>
+    	<function-signature>
+    		String decode(java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>Base64 Decode Telephone Num</description>
+    	<name>decodeTelLast</name>
+    	<function-class>egovframework.plani.template.cmm.utils.EgovFileScrty</function-class>
+    	<function-signature>
+    		String decodeTelLast(java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>Base64 Decode Telephone Num</description>
+    	<name>decodeTelAll</name>
+    	<function-class>egovframework.plani.template.cmm.utils.EgovFileScrty</function-class>
+    	<function-signature>
+    		String decodeTelAll(java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>NL2BR</description>
+    	<name>nl2br</name>
+    	<function-class>egovframework.plani.template.cmm.utils.EgovWebUtil</function-class>
+    	<function-signature>
+    		String nl2br(java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>NL2BRTP100</description>
+    	<name>nl2brTP100</name>
+    	<function-class>egovframework.plani.template.cmm.utils.EgovWebUtil</function-class>
+    	<function-signature>
+    		String nl2brTP100(java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>NL2BRSearch</description>
+    	<name>nl2brSearch</name>
+    	<function-class>egovframework.plani.template.cmm.utils.EgovWebUtil</function-class>
+    	<function-signature>
+    		String nl2brSearch(java.lang.String, java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>get imgicon by file extention</description>
+    	<name>getImgicoByExt</name>
+    	<function-class>egovframework.plani.template.cmm.utils.EgovWebUtil</function-class>
+    	<function-signature>
+    		String getImgicoByExt(java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>Cut String</description>
+    	<name>cutString</name>
+    	<function-class>egovframework.plani.template.cmm.utils.EgovWebUtil</function-class>
+    	<function-signature>
+    		String cutString(java.lang.String, int, java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>UTF8 Decode</description>
+    	<name>UTF8Decode</name>
+    	<function-class>egovframework.plani.template.cmm.utils.EgovWebUtil</function-class>
+    	<function-signature>
+    		String UTF8Decode(java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>get Javascript link String</description>
+    	<name>getJavascriptLinkStr</name>
+    	<function-class>egovframework.plani.template.cmm.utils.EgovWebUtil</function-class>
+    	<function-signature>
+    		String getJavascriptLinkStr(java.lang.String, java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>get zerofill String</description>
+    	<name>getZerofillStr</name>
+    	<function-class>egovframework.plani.template.cmm.utils.EgovWebUtil</function-class>
+    	<function-signature>
+    		String getZerofillStr(int, int)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>get Number format String</description>
+    	<name>getNumberFormat</name>
+    	<function-class>egovframework.plani.template.cmm.utils.EgovWebUtil</function-class>
+    	<function-signature>
+    		String getNumberFormat(int)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>String 2 Int</description>
+    	<name>parseInt</name>
+    	<function-class>egovframework.plani.template.cmm.utils.EgovWebUtil</function-class>
+    	<function-signature>
+    		int parseInt(java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>Starts with string or not</description>
+    	<name>isStartsWith</name>
+    	<function-class>egovframework.plani.template.cmm.utils.EgovWebUtil</function-class>
+    	<function-signature>
+    		boolean isStartsWith(java.lang.String, java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>Ends with string or not</description>
+    	<name>isEndsWith</name>
+    	<function-class>egovframework.plani.template.cmm.utils.EgovWebUtil</function-class>
+    	<function-signature>
+    		boolean isEndsWith(java.lang.String, java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>remove script tags</description>
+    	<name>removeScrtag</name>
+    	<function-class>egovframework.plani.template.cmm.utils.EgovWebUtil</function-class>
+    	<function-signature>
+    		String removeScrtag(java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>remove tags</description>
+    	<name>removeTag</name>
+    	<function-class>egovframework.plani.template.cmm.utils.EgovWebUtil</function-class>
+    	<function-signature>
+    		String removeTag(java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>get day of week in korean</description>
+    	<name>getDayofWeekKor</name>
+    	<function-class>egovframework.plani.template.cmm.utils.EgovWebUtil</function-class>
+    	<function-signature>
+    		String getDayofWeekKor(int, int, int)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>get Youtube movie key</description>
+    	<name>getUtubeThumbUrl</name>
+    	<function-class>egovframework.plani.template.cmm.utils.EgovWebUtil</function-class>
+    	<function-signature>
+    		String getYoutubeThumbUrl(java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>string concat</description>
+    	<name>concat</name>
+    	<function-class>egovframework.plani.template.cmm.utils.EgovWebUtil</function-class>
+    	<function-signature>
+    		String concat(java.lang.String, java.lang.String)
+    	</function-signature>
+    </function>
+    
+</taglib>

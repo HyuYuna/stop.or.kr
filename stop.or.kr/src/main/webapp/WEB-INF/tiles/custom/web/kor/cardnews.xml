@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 
+	 <definition name="/cardnews/*" extends="ContDefinitionContent">
+		 <put-attribute name="contTitle"	value="카드뉴스목록페이지" />
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/script/script_cont.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/cardnews/{1}.jsp" />
+	 </definition>
+	 
+	 <definition name="/webtoon/*" extends="ContDefinitionContent">
+		 <put-attribute name="contTitle"	value="웹툰목록페이지" />
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/script/script_cont.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/webtoon/{1}.jsp" />
+	 </definition>
+	 
+</tiles-definitions>
+

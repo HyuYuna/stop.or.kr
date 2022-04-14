@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 
+	 <definition name="ComplicityMainDefinitionContent" template="/WEB-INF/jsp/layout/custom/complicity/kor/main/mainLayout.jsp">
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/complicity/script.jsp"/>
+		 <put-attribute name="mainHeader"	value="/WEB-INF/jsp/layout/template/complicity/header.jsp"/>
+		 <put-attribute name="mainScript"	value="/WEB-INF/jsp/layout/custom/complicity/kor/main/script_main.jsp"/>
+		 <put-attribute name="mainFooter"	value="/WEB-INF/jsp/layout/template/complicity/footer.jsp"/>
+	 </definition>
+	 
+	 <definition name="TodayScheduleDefinitionContent" template="/WEB-INF/jsp/layout/blank/blank.jsp">
+	 </definition>
+	 
+	 <definition name="/complicity/contents/mainView" extends="ComplicityMainDefinitionContent">
+		 <put-attribute name="mainMeta"	value="/WEB-INF/jsp/layout/custom/complicity/kor/main/meta.jsp"/>
+		 <put-attribute name="mainTitle"	value="한국여성인권진흥원" />
+		 <put-attribute name="mainContent"	value="/WEB-INF/jsp/wpages/custom/complicity/kor/contents/main/siteMain.jsp" />
+	 </definition>
+
+	 <definition name="/complicity/contents/mainSearch" extends="WomenContDefinitionContent">
+		 <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/meta/meta_content.jsp"/>
+		 <put-attribute name="contTitle"	value="통합검색 결과" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/gsearch/mainSearch.jsp" />
+	 </definition>
+	 
+</tiles-definitions>
+

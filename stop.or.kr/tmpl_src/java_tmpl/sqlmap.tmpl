@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="{##BIZNM##}">
+
+	<typeAlias  alias="{##BIZNM##}VO" type="{##IMPT_BIZVO##}"/>
+	
+	
+	<!-- if use clob column
+	<resultMap id="{##BIZNM##}" class="{##IMPT_BIZVO##}"> 
+		{##SQL_RESULTMAP_ITER##}
+	</resultMap>
+	-->
+	
+	<!--
+	<sql id="{##BIZNM##}DAO.srch{##BIZNM_UP1##}Stmtcond">
+		<isNotEmpty property="####" prepend="AND">
+			COLUMN = #column#	
+		</isNotEmpty>
+	</sql>
+	-->
+
+	<insert id="{##BIZNM##}DAO.merge{##BIZNM_UP1##}" parameterClass="{##BIZNM##}VO">
+
+		MERGE INTO {##SQL_TBL_NM##} USING DUAL
+	    ON (
+	    	{##SQL_MERGE_KEYS##}
+	    )
+	    WHEN MATCHED THEN
+	    	UPDATE SET
+	        {##SQL_UPDTCOLS##}
+	    WHEN NOT MATCHED THEN
+	    	INSERT
+	        (
+				{##SQL_INSCOLS_ITER##}
+	        )
+	        VALUES
+	        (
+				{##SQL_INSVALS_ITER##}
+	        )
+
+	</insert>
+	
+	<insert id="{##BIZNM##}DAO.insert{##BIZNM_UP1##}" parameterClass="{##BIZNM##}VO">
+
+		<!--
+		<selectKey resultClass="java.lang.Integer" keyProperty="######">
+			SELECT NVL(MAX(######) + 1, 1) AS ###### FROM {##SQL_TBL_NM##} 
+		</selectKey>
+		-->
+
+		INSERT INTO {##SQL_TBL_NM##}
+		(
+			{##SQL_INSCOLS_ITER##}
+		)
+		VALUES
+		(
+			{##SQL_INSVALS_ITER##}
+		)
+
+	</insert>
+	
+	
+	<update id="{##BIZNM##}DAO.update{##BIZNM_UP1##}" parameterClass="{##BIZNM##}VO">
+
+		UPDATE {##SQL_TBL_NM##} SET
+			{##SQL_UPDTCOLS##}
+		{##SQL_KEYS##}
+
+	</update>
+	
+	
+	<delete id="{##BIZNM##}DAO.delete{##BIZNM_UP1##}" parameterClass="{##BIZNM##}VO">
+
+		DELETE FROM {##SQL_TBL_NM##}
+		{##SQL_KEYS##}
+
+	</delete>
+	
+	
+	<!-- if use clob column
+	<select id="{##BIZNM##}DAO.select{##BIZNM_UP1##}" parameterClass="{##BIZNM##}VO" resultMap="{##BIZNM##}">
+	-->
+	<select id="{##BIZNM##}DAO.select{##BIZNM_UP1##}" parameterClass="{##BIZNM##}VO" resultClass="{##BIZNM##}VO">
+
+		SELECT
+			{##SQL_SELCOLS##}
+		FROM
+			{##SQL_TBL_NM##}
+		{##SQL_KEYS##}
+		
+	</select>
+	
+	
+	<select id="{##BIZNM##}DAO.select{##BIZNM_UP1##}List" parameterClass="{##BIZNM##}VO" resultClass="{##BIZNM##}VO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+	
+			SELECT
+				{##SQL_SELCOLS##}
+			FROM
+				{##SQL_TBL_NM##}
+			WHERE
+				1 = 1
+				<!--
+				<include refid="{##BIZNM##}DAO.srch{##BIZNM_UP1##}Stmtcond"/>
+				-->		
+
+		) TB )  WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+
+	</select>
+	
+	
+	<select id="{##BIZNM##}DAO.select{##BIZNM_UP1##}ListTotCnt" parameterClass="{##BIZNM##}VO" resultClass="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			{##SQL_TBL_NM##}
+		WHERE
+			1 = 1
+			<!--
+			<include refid="{##BIZNM##}DAO.srch{##BIZNM_UP1##}Stmtcond"/>
+			-->	
+	</select>
+	
+	
+	<select id="{##BIZNM##}DAO.xls{##BIZNM_UP1##}List" parameterClass="{##BIZNM##}VO" resultClass="{##BIZNM##}VO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+	
+			SELECT
+				{##SQL_SELCOLS##}
+			FROM
+				{##SQL_TBL_NM##}
+			WHERE
+				1 = 1
+				<!--
+				<include refid="{##BIZNM##}DAO.srch{##BIZNM_UP1##}Stmtcond"/>
+				-->	
+		) TB ) 
+
+	</select>
+	
+	
+
+</sqlMap>
+

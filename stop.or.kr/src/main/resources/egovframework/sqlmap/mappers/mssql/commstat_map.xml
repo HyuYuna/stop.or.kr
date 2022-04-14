@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.man.stat.dao.CommstatDAO">
+
+	<insert id="insertCommstat" parameterType="commstatVO">
+
+		INSERT INTO CMS_COMM_STAT
+		(
+			STAT_KEY,
+			STAT_SESSID,
+			STAT_KEY_NM,
+			STAT_CITY,
+			STAT_NAT,
+			STAT_NAT_CD,
+			STAT_BW,
+			STAT_OS,
+			STAT_REFERER,
+			STAT_DT,
+			STAT_RADDR,
+			STAT_UID
+		)
+		VALUES
+		(
+			#{stat_key},
+			#{stat_sessid},
+			#{stat_key_nm},
+			#{stat_city},
+			#{stat_nat},
+			#{stat_nat_cd},
+			#{stat_bw},
+			#{stat_os},
+			#{stat_referer},
+			GETDATE(),
+			#{stat_raddr},
+			#{stat_uid}			
+		)
+
+	</insert>
+	
+
+	<select id="selectCommstatList" parameterType="commstatVO" resultType="commstatVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY STAT_DT DESC) rn, TB.* FROM (
+
+			SELECT 
+				STAT_KEY,
+				STAT_SESSID,
+				STAT_KEY_NM,
+				STAT_CITY,
+				STAT_NAT,
+				STAT_NAT_CD,
+				STAT_OS,
+				STAT_BW,
+				STAT_REFERER,
+				STAT_DT,
+				STAT_RADDR,
+				STAT_UID,
+				STAT_UNM
+			FROM
+				(
+					SELECT 
+						STAT_KEY,
+						STAT_SESSID,
+						STAT_KEY_NM,
+						UPPER(STAT_CITY) STAT_CITY,
+						UPPER(STAT_NAT) STAT_NAT,
+						STAT_NAT_CD,
+						STAT_OS,
+						STAT_BW,
+						STAT_REFERER,
+						CONVERT(VARCHAR(19), STAT_DT, 20) STAT_DT,
+						STAT_RADDR,
+						STAT_UID,
+						dbo.SF_USER_NM(STAT_UID) STAT_UNM
+					FROM 
+						CMS_COMM_STAT
+				) INNA
+			WHERE
+				1 = 1 
+				<choose>
+					<when test="stat_key == null or stat_key == ''">
+						AND STAT_KEY IN ('USERMAN', 'APPLMAN')
+					</when>
+					<otherwise>
+						AND STAT_KEY = #{stat_key}
+					</otherwise>
+				</choose>
+				<if test="srchFromDT != null and srchFromDT != ''">
+					<if test="srchToDT != null and srchToDT != ''">
+						AND STAT_DT BETWEEN #{srchFromDT} || ' 00:00:00' AND #{srchToDT} || ' 23:59:59'
+					</if>
+				</if>				
+				
+			
+		) TB ) MORG   WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+
+	</select>
+	
+
+
+	<select id="selectCommstatListTotCnt" parameterType="commstatVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			(
+				SELECT 
+					STAT_KEY,
+					STAT_SESSID,
+					STAT_KEY_NM,
+					UPPER(STAT_CITY) STAT_CITY,
+					UPPER(STAT_NAT) STAT_NAT,
+					STAT_NAT_CD,
+					STAT_OS,
+					STAT_BW,
+					STAT_REFERER,
+					CONVERT(VARCHAR(19), STAT_DT, 20) STAT_DT,
+					STAT_RADDR,
+					STAT_UID,
+					dbo.SF_USER_NM(STAT_UID) STAT_UNM
+				FROM 
+					CMS_COMM_STAT
+			) INNA			
+		WHERE
+			1 = 1 
+			<choose>
+				<when test="stat_key == null or stat_key == ''">
+					AND STAT_KEY IN ('USERMAN', 'APPLMAN')
+				</when>
+				<otherwise>
+					AND STAT_KEY = #{stat_key}
+				</otherwise>
+			</choose>
+			<if test="srchFromDT != null and srchFromDT != ''">
+				<if test="srchToDT != null and srchToDT != ''">
+					AND STAT_DT BETWEEN #{srchFromDT} || ' 00:00:00' AND #{srchToDT} || ' 23:59:59'
+				</if>
+			</if>				
+
+
+	</select>
+
+ 	
+	<select id="selectCommstatCnt" parameterType="commstatVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_COMM_STAT			
+		WHERE
+			STAT_KEY = #{stat_key} AND
+			STAT_SESSID = #{stat_sessid}
+
+	</select>
+	
+		<select id="xlsCommstatList" parameterType="commstatVO" resultType="commstatVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY STAT_DT DESC) rn, TB.* FROM (
+
+			SELECT 
+				STAT_KEY,
+				STAT_SESSID,
+				STAT_KEY_NM,
+				STAT_CITY,
+				STAT_NAT,
+				STAT_NAT_CD,
+				STAT_OS,
+				STAT_BW,
+				STAT_REFERER,
+				STAT_DT,
+				STAT_RADDR,
+				STAT_UID,
+				STAT_UNM
+			FROM
+				(
+					SELECT 
+						STAT_KEY,
+						STAT_SESSID,
+						STAT_KEY_NM,
+						UPPER(STAT_CITY) STAT_CITY,
+						UPPER(STAT_NAT) STAT_NAT,
+						STAT_NAT_CD,
+						STAT_OS,
+						STAT_BW,
+						STAT_REFERER,
+						CONVERT(VARCHAR(19), STAT_DT, 20) STAT_DT,
+						STAT_RADDR,
+						STAT_UID,
+						dbo.SF_USER_NM(STAT_UID) STAT_UNM
+					FROM 
+						CMS_COMM_STAT
+				) INNA
+			WHERE
+				1 = 1 
+				<choose>
+					<when test="stat_key == null or stat_key == ''">
+						AND STAT_KEY IN ('USERMAN', 'APPLMAN')
+					</when>
+					<otherwise>
+						AND STAT_KEY = #{stat_key}
+					</otherwise>
+				</choose>
+				<if test="srchFromDT != null and srchFromDT != ''">
+					<if test="srchToDT != null and srchToDT != ''">
+						AND STAT_DT BETWEEN #{srchFromDT} || ' 00:00:00' AND #{srchToDT} || ' 23:59:59'
+					</if>
+				</if>				
+			
+		) TB ) MORG   
+
+	</select>
+	
+	<select id="viewstatCountry" parameterType="commstatVO" resultType="commstatVO">
+		
+		SELECT 
+			ISNULL(UPPER(STAT_NAT), 'UNKNOWN') CHARTDATA_KEY,  
+		  	COUNT(*) CHARTDATA_VAL
+		FROM 
+			CMS_COMM_STAT
+		WHERE 
+			STAT_KEY = 'MAIN'
+			<if test="date_choice != null and date_choice != ''">
+				<if test="date_choice == 'YY'.toString()">
+					AND CONVERT(VARCHAR(4), STAT_DT, 112) BETWEEN #{srchFromDT} AND #{srchToDT}
+				</if>
+				<if test="date_choice == 'MM'.toString()">
+					AND CONVERT(VARCHAR(6), STAT_DT, 112) BETWEEN #{srchFromDT} AND #{srchToDT}
+				</if>
+				<if test="date_choice == 'DD'.toString()">
+					AND CONVERT(VARCHAR(8), STAT_DT, 112) BETWEEN #{srchFromDT} AND #{srchToDT}
+				</if>
+			</if>	
+		GROUP BY UPPER(STAT_NAT)
+		ORDER BY CHARTDATA_VAL
+		
+	</select>
+
+	<select id="viewstatCity" parameterType="commstatVO" resultType="commstatVO">
+
+		SELECT 
+			ISNULL(UPPER(STAT_CITY), 'UNKNOWN') CHARTDATA_KEY,  
+			COUNT(*) CHARTDATA_VAL
+		FROM 
+			CMS_COMM_STAT
+		WHERE 
+			STAT_KEY = 'MAIN'
+			<if test="date_choice != null and date_choice != ''">
+				<if test="date_choice == 'YY'.toString()">
+					AND CONVERT(VARCHAR(4), STAT_DT, 112) BETWEEN #{srchFromDT} AND #{srchToDT}
+				</if>
+				<if test="date_choice == 'MM'.toString()">
+					AND CONVERT(VARCHAR(6), STAT_DT, 112) BETWEEN #{srchFromDT} AND #{srchToDT}
+				</if>
+				<if test="date_choice == 'DD'.toString()">
+					AND CONVERT(VARCHAR(8), STAT_DT, 112) BETWEEN #{srchFromDT} AND #{srchToDT}
+				</if>
+			</if>		
+		GROUP BY UPPER(STAT_CITY)		
+		ORDER BY CHARTDATA_VAL
+		
+	</select>
+
+	<select id="viewstatOS" parameterType="commstatVO" resultType="commstatVO">
+
+		SELECT 
+			ISNULL(STAT_OS, 'UNKNOWN') CHARTDATA_KEY,  
+		  	COUNT(*) CHARTDATA_VAL
+		FROM 
+			CMS_COMM_STAT
+		WHERE 
+			STAT_KEY = 'MAIN'
+			<if test="date_choice != null and date_choice != ''">
+				<if test="date_choice == 'YY'.toString()">
+					AND CONVERT(VARCHAR(4), STAT_DT, 112) BETWEEN #{srchFromDT} AND #{srchToDT}
+				</if>
+				<if test="date_choice == 'MM'.toString()">
+					AND CONVERT(VARCHAR(6), STAT_DT, 112) BETWEEN #{srchFromDT} AND #{srchToDT}
+				</if>
+				<if test="date_choice == 'DD'.toString()">
+					AND CONVERT(VARCHAR(8), STAT_DT, 112) BETWEEN #{srchFromDT} AND #{srchToDT}
+				</if>
+			</if>
+		GROUP BY STAT_OS
+		ORDER BY CHARTDATA_VAL
+		
+	</select>
+
+	<select id="viewstatBrowser" parameterType="commstatVO" resultType="commstatVO">
+		
+		SELECT 
+			ISNULL(STAT_BW, 'UNKNOWN') CHARTDATA_KEY,  
+		  	COUNT(*) CHARTDATA_VAL
+		FROM 
+			CMS_COMM_STAT
+		WHERE 
+			STAT_KEY = 'MAIN'
+			<if test="date_choice != null and date_choice != ''">
+				<if test="date_choice == 'YY'.toString()">
+					AND CONVERT(VARCHAR(4), STAT_DT, 112) BETWEEN #{srchFromDT} AND #{srchToDT}
+				</if>
+				<if test="date_choice == 'MM'.toString()">
+					AND CONVERT(VARCHAR(6), STAT_DT, 112) BETWEEN #{srchFromDT} AND #{srchToDT}
+				</if>
+				<if test="date_choice == 'DD'.toString()">
+					AND CONVERT(VARCHAR(8), STAT_DT, 112) BETWEEN #{srchFromDT} AND #{srchToDT}
+				</if>
+			</if>			
+		GROUP BY STAT_BW
+		ORDER BY CHARTDATA_VAL
+		
+	</select>
+
+	<select id="viewstatVisitHourly" parameterType="commstatVO" resultType="commstatVO">
+	
+		WITH DLIST AS ( SELECT 1 AS ADDDT UNION ALL SELECT ADDDT + 1 FROM DLIST WHERE ADDDT <![CDATA[ <= ]]> 23)
+		SELECT 
+			'0' AS CHARTDATA_SRZ, 
+	    	B.CTDATE + '시' AS CHARTDATA_KEY, 
+	    	ISNULL(CNT, 0) AS CHARTDATA_VAL
+	  	FROM 
+	    (
+	    	SELECT 
+	    		STAT_DT, 
+	    		COUNT(*) CNT 
+	    	FROM 
+	   		(
+	   			SELECT 
+	   				CONVERT(VARCHAR(2), STAT_DT, 8) STAT_DT 
+	   			FROM 
+	   				CMS_COMM_STAT A 
+	   			WHERE 
+	   				STAT_KEY = 'MAIN' 			
+					<if test="date_choice != null and date_choice != ''">
+		   				<if test="date_choice == 'YY'.toString()">
+		   					AND CONVERT(VARCHAR(4), STAT_DT, 112) BETWEEN #{srchFromDT} AND #{srchToDT}
+						</if>
+						<if test="date_choice == 'MM'.toString()">
+							AND CONVERT(VARCHAR(6), STAT_DT, 112) BETWEEN #{srchFromDT} AND #{srchToDT}
+						</if>
+						<if test="date_choice == 'DD'.toString()">
+							AND CONVERT(VARCHAR(8), STAT_DT, 112) BETWEEN #{srchFromDT} AND #{srchToDT}
+						</if>
+					</if>
+	   		) INNA
+		    GROUP BY STAT_DT 
+	    ) A RIGHT OUTER JOIN 
+	    (
+	    	SELECT RIGHT(REPLICATE('0', 2) + CAST((ADDDT - 1) AS VARCHAR), 2) AS CTDATE FROM DLIST 
+	    ) B 
+	 	ON A.STAT_DT = B.CTDATE 
+		ORDER BY CTDATE
+	</select>
+
+	<select id="viewstatVisitDaily" parameterType="commstatVO" resultType="commstatVO">
+		
+		WITH DLIST AS ( SELECT 1 AS ADDDT UNION ALL SELECT ADDDT + 1 FROM DLIST WHERE ADDDT <![CDATA[ <= ]]> DATEDIFF(DD, #{srchFromDT}, #{srchToDT}))
+		SELECT 
+			'0' CHARTDATA_SRZ, 
+	    	B.CTDATE CHARTDATA_KEY, 
+	    	ISNULL(CNT, 0) CHARTDATA_VAL
+	  	FROM 
+	    (
+	    	SELECT 
+	    		STAT_DT, 
+	    		COUNT(*) CNT 
+	    	FROM 
+	   		(
+	   			SELECT 
+	   				CONVERT(VARCHAR(8), STAT_DT, 112) STAT_DT 
+	   			FROM 
+	   				CMS_COMM_STAT A 
+	   			WHERE 
+	   				STAT_KEY = 'MAIN' AND
+					CONVERT(VARCHAR(8), STAT_DT, 112) BETWEEN #{srchFromDT} AND #{srchToDT} 				
+	   				
+	   		) INNA
+		    GROUP BY STAT_DT 
+	    ) A RIGHT OUTER JOIN 
+	    (
+	    	SELECT CONVERT(VARCHAR(8), DATEADD(DD, ADDDT - 1, #{srchFromDT}), 112) AS CTDATE FROM DLIST 
+	    ) B 
+	 	ON A.STAT_DT = B.CTDATE 
+		ORDER BY CTDATE
+		
+	</select>
+
+	<select id="viewstatVisitMonthly" parameterType="commstatVO" resultType="commstatVO">
+
+		WITH DLIST AS ( SELECT 1 AS ADDDT UNION ALL SELECT ADDDT + 1 FROM DLIST WHERE ADDDT <![CDATA[ <= ]]> DATEDIFF(MM, #{srchFromDT} + '01', #{srchToDT} + '01'))
+		SELECT 
+			'0' CHARTDATA_SRZ, 
+	    	B.CTDATE CHARTDATA_KEY, 
+	    	ISNULL(CNT, 0) CHARTDATA_VAL
+	  	FROM 
+	    (
+	    	SELECT 
+	    		STAT_DT, 
+	    		COUNT(*) CNT 
+	    	FROM 
+	   		(
+	   			SELECT 
+	   				CONVERT(VARCHAR(6), STAT_DT, 112) STAT_DT 
+	   			FROM 
+	   				CMS_COMM_STAT A 
+	   			WHERE 
+	   				STAT_KEY = 'MAIN' AND
+					CONVERT(VARCHAR(6), STAT_DT, 112) BETWEEN #{srchFromDT} AND #{srchToDT} 				
+	   				
+	   		) INNA
+		    GROUP BY STAT_DT 
+	    ) A RIGHT OUTER JOIN 
+	    (
+	    	SELECT CONVERT(VARCHAR(6), DATEADD(MM, ADDDT - 1, #{srchFromDT} + '01'), 112) AS CTDATE FROM DLIST 
+	    ) B 
+	 	ON A.STAT_DT = B.CTDATE 
+		ORDER BY CTDATE
+		
+	</select>
+	
+	<select id="viewstatVisitYearly" parameterType="commstatVO" resultType="commstatVO">
+
+		WITH DLIST AS ( SELECT 1 AS ADDDT UNION ALL SELECT ADDDT + 1 FROM DLIST WHERE ADDDT <![CDATA[ <= ]]> DATEDIFF(YY, #{srchFromDT} + '0101', #{srchToDT} + '1231'))
+		SELECT 
+			'0' CHARTDATA_SRZ, 
+	    	B.CTDATE CHARTDATA_KEY, 
+	    	ISNULL(CNT, 0) CHARTDATA_VAL
+	  	FROM 
+	    (
+	    	SELECT 
+	    		STAT_DT, 
+	    		COUNT(*) CNT 
+	    	FROM 
+	   		(
+	   			SELECT 
+	   				CONVERT(VARCHAR(4), STAT_DT, 112) STAT_DT 
+	   			FROM 
+	   				CMS_COMM_STAT A 
+	   			WHERE 
+	   				STAT_KEY = 'MAIN' AND
+					CONVERT(VARCHAR(4), STAT_DT, 112) BETWEEN #{srchFromDT} AND #{srchToDT} 				
+	   				
+	   		) INNA
+		    GROUP BY STAT_DT 
+	    ) A RIGHT OUTER JOIN 
+	    (
+	    	SELECT CONVERT(VARCHAR(4), DATEADD(YY, ADDDT - 1, #{srchFromDT} + '0101'), 112) AS CTDATE FROM DLIST 
+	    ) B 
+	 	ON A.STAT_DT = B.CTDATE 
+		ORDER BY CTDATE
+		
+	</select>
+	
+	<select id="viewstatVisitDailyTotCnt" parameterType="commstatVO" resultType="commstatVO">
+	
+	
+			SELECT 
+				COUNT(CONTACT_CNT) TOT_CNT, 
+				ISNULL(SUM(CONTACT_CNT), 0) TOT_CNT_IGNORE_DUP 
+			FROM 
+				CMS_COMM_STAT 
+			WHERE 
+				STAT_KEY = 'MAIN' AND
+				CONVERT(VARCHAR(8), STAT_DT, 112) BETWEEN #{srchFromDT} AND #{srchToDT} 
+			
+	</select>
+	
+	<select id="viewstatVisitMonthlyTotCnt" parameterType="commstatVO" resultType="commstatVO">
+
+		
+			SELECT 
+				COUNT(CONTACT_CNT) TOT_CNT, 
+				ISNULL(SUM(CONTACT_CNT), 0) TOT_CNT_IGNORE_DUP 
+			FROM 
+				CMS_COMM_STAT 
+			WHERE 
+				STAT_KEY = 'MAIN' AND
+				CONVERT(VARCHAR(6), STAT_DT, 112) BETWEEN #{srchFromDT} AND #{srchToDT}
+				
+	</select>
+	
+	<select id="viewstatVisitYearlyTotCnt" parameterType="commstatVO" resultType="commstatVO">
+
+			SELECT 
+				COUNT(CONTACT_CNT) TOT_CNT, 
+				ISNULL(SUM(CONTACT_CNT), 0) TOT_CNT_IGNORE_DUP 
+			FROM 
+				CMS_COMM_STAT 
+			WHERE 
+				STAT_KEY = 'MAIN' AND
+				CONVERT(VARCHAR(4), STAT_DT, 112) BETWEEN #{srchFromDT} AND #{srchToDT}
+				
+	</select>
+	
+	<update id="updateCommstatContactCnt" parameterType="commstatVO">
+		
+		UPDATE CMS_COMM_STAT SET
+			CONTACT_CNT = CONTACT_CNT + 1 
+		WHERE
+			STAT_KEY = #{stat_key} AND
+			STAT_SESSID = #{stat_sessid}
+				
+	</update>
+
+	<select id="viewstatVisitPage" parameterType="commstatVO" resultType="commstatVO">
+		
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY CHARTDATA_KEY) rn, TB.* FROM (
+	
+			SELECT 
+				STAT_KEY_NM CHARTDATA_KEY,  
+			  	COUNT(*) CHARTDATA_VAL
+			FROM 
+				CMS_COMM_STAT
+			WHERE
+				( STAT_KEY <![CDATA[ <> ]]> 'MAIN' AND STAT_KEY <![CDATA[ <> ]]> 'LOGIN_USR' )  
+				<if test="srchFromDT != null and srchFromDT != ''">
+					<if test="srchToDT != null and srchToDT != ''">AND
+						CONVERT(VARCHAR(8), STAT_DT, 112) BETWEEN #{srchFromDT} AND #{srchToDT}
+					</if>
+				</if>			
+			GROUP BY STAT_KEY, STAT_KEY_NM
+
+		) TB ) MORG				
+		
+	</select>
+
+
+</mapper>
+

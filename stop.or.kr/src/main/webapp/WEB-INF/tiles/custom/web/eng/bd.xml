@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 
+	 <definition name="BoardDefinitionContentEng" template="/WEB-INF/jsp/layout/custom/web/eng/contents/layout/contentsLayout.jsp">
+		 <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/web/eng/contents/meta/meta_content.jsp"/>
+		 <put-attribute name="contHeader"	value="/WEB-INF/jsp/layout/template/cmmn/eng/header.jsp"/>
+		 <put-attribute name="contSidemenu"	value="/WEB-INF/jsp/layout/template/cmmn/eng/sidemenu.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/eng/script.jsp"/>
+		 <put-attribute name="boardScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_content.jsp"/>
+		 <put-attribute name="contQuicklink"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/quickLink.jsp"/>
+		 <put-attribute name="contFooter"	value="/WEB-INF/jsp/layout/template/cmmn/eng/footer.jsp"/>
+	 </definition>
+	 
+	 
+	 <definition name="BoardDefinitionEditorEng" template="/WEB-INF/jsp/layout/custom/web/eng/contents/layout/contentsLayout.jsp">
+		 <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/web/eng/board/meta/meta_type_editor.jsp"/>
+		 <put-attribute name="contHeader"	value="/WEB-INF/jsp/layout/template/cmmn/eng/header.jsp"/>
+		 <put-attribute name="contSidemenu"	value="/WEB-INF/jsp/layout/template/cmmn/eng/sidemenu.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/eng/script.jsp"/>
+		 <put-attribute name="boardScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_editor.jsp"/>
+		 <put-attribute name="contQuicklink"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/quickLink.jsp"/>
+		 <put-attribute name="contFooter"	value="/WEB-INF/jsp/layout/template/cmmn/eng/footer.jsp"/>
+	 </definition>
+	 
+<!-- 	 <definition name="BoardPreviewDefinition" template="/WEB-INF/jsp/layout/custom/web/kor/board/boardPreviewLayout.jsp">
+	 </definition> -->
+	 	 
+	 <definition name="/*/brdartcl/boardarticleList" extends="BoardDefinitionContentEng">
+		 <put-attribute name="contTitle"	value="일반 게시판 목록" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardarticleList.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdartcl/boardarticleWrite" extends="BoardDefinitionEditorEng">
+		 <put-attribute name="contTitle"	value="일반 게시판 글쓰기" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardarticleWrite.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdartcl/boardarticleView" extends="BoardDefinitionEditorEng">
+		 <put-attribute name="contTitle"	value="일반 게시판 보기" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardarticleView.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdartcl/boardarticleUpdate" extends="BoardDefinitionEditorEng">
+		 <put-attribute name="contTitle"	value="일반 게시판 수정" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardarticleWrite.jsp" />
+	 </definition>
+	 
+	 	 
+	 <definition name="/*/brdanm/boardanonimList" extends="BoardDefinitionContentEng">
+		 <put-attribute name="contTitle"	value="익명 게시판 목록" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardanonimList.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdanm/boardanonimListB" extends="BoardDefinitionContentEng">
+		 <put-attribute name="contTitle"	value="익명 게시판 목록" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardanonimListB.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdanm/boardanonimWrite" extends="BoardDefinitionEditorEng">
+		 <put-attribute name="contTitle"	value="익명 게시판 글쓰기" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardanonimWrite.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdanm/boardanonimWriteB" extends="BoardDefinitionEditorEng">
+		 <put-attribute name="contTitle"	value="익명 게시판 글쓰기" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardanonimWriteB.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdanm/boardanonimView" extends="BoardDefinitionEditorEng">
+		 <put-attribute name="contTitle"	value="익명 게시판 보기" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardanonimView.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdanm/boardanonimViewB" extends="BoardDefinitionEditorEng">
+		 <put-attribute name="contTitle"	value="익명 게시판 보기" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardanonimViewB.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdanm/boardanonimUpdate" extends="BoardDefinitionEditorEng">
+		 <put-attribute name="contTitle"	value="익명 게시판 수정" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardanonimWrite.jsp" />
+	 </definition>
+	 	 	 
+	 <definition name="/*/brdanm/boardanonimUpdateB" extends="BoardDefinitionEditorEng">
+		 <put-attribute name="contTitle"	value="익명 게시판 수정" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardanonimWriteB.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdfaq/boardfaqList" extends="BoardDefinitionContentEng">
+		 <put-attribute name="contTitle"	value="FAQ 게시판 목록" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardfaqList.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdfaq/boardfaqWrite" extends="BoardDefinitionEditorEng">
+		 <put-attribute name="contTitle"	value="FAQ 게시판 글쓰기" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardfaqWrite.jsp" />
+	 </definition>
+	 	 
+	 <definition name="/*/brdfaq/boardfaqUpdate" extends="BoardDefinitionEditorEng">
+		 <put-attribute name="contTitle"	value="FAQ 게시판 수정" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardfaqWrite.jsp" />
+	 </definition>
+	 
+
+	 <definition name="/*/brdthm/boardthmList" extends="BoardDefinitionContentEng">
+		 <put-attribute name="contTitle"	value="이미지 게시판 목록" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardthmList.jsp" />
+	 </definition>
+	 
+	 	 <definition name="/*/brdthm/boardthmListB" extends="BoardDefinitionContentEng">
+		 <put-attribute name="contTitle"	value="이미지 게시판 목록" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardthmListB.jsp" />
+	 </definition>
+		 
+	 <definition name="/*/brdthm/boardthmWrite" extends="BoardDefinitionEditorEng">
+		 <put-attribute name="contTitle"	value="이미지 게시판 글쓰기" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardthmWrite.jsp" />
+	 </definition>	 
+	 
+	 <definition name="/*/brdthm/boardthmView" extends="BoardDefinitionEditorEng">
+		 <put-attribute name="contTitle"	value="이미지 게시판 보기" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardthmView.jsp" />
+	 </definition>
+		 
+	 <definition name="/*/brdthm/boardthmUpdate" extends="BoardDefinitionEditorEng">
+		 <put-attribute name="contTitle"	value="이미지 게시판 수정" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardthmWrite.jsp" />
+	 </definition>
+	 	  
+	 <definition name="/*/brddry/boarddryList" extends="BoardDefinitionContentEng">
+		 <put-attribute name="contTitle"	value="일정 게시판 보기" />
+		 <put-attribute name="boardScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_brddry.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boarddryListView.jsp" />
+	 </definition>
+	 
+<!-- 	 <definition name="/*/brddry/boardPreview" extends="BoardPreviewDefinition">
+		 <put-attribute name="contTitle"	value="게시판 미리 보기" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardPreview.jsp" />
+	 </definition>
+	 
+	  -->
+	 <!-- 공모전 -->
+	 <!-- <definition name="ComplicityBoardDefinitionContent" template="/WEB-INF/jsp/layout/custom/complicity/kor/contents/layout/contentsLayout.jsp">
+		 <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/meta/meta_content.jsp"/>
+		 <put-attribute name="contHeader"	value="/WEB-INF/jsp/layout/template/complicity/header.jsp"/>
+		 <put-attribute name="contSidemenu"	value="/WEB-INF/jsp/layout/template/complicity/sidemenu.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/eng/script.jsp"/>
+		 <put-attribute name="boardScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_content.jsp"/>
+		 <put-attribute name="contQuicklink"	value="/WEB-INF/jsp/layout/custom/complicity/kor/contents/quickLink.jsp"/>
+		 <put-attribute name="contFooter"	value="/WEB-INF/jsp/layout/template/complicity/footer.jsp"/>
+	 </definition>
+	 <definition name="ComplicityBoardDefinitionEditor" template="/WEB-INF/jsp/layout/custom/complicity/kor/contents/layout/contentsLayout.jsp">
+		 <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/web/kor/board/meta/meta_type_editor.jsp"/>
+		 <put-attribute name="contHeader"	value="/WEB-INF/jsp/layout/template/complicity/header.jsp"/>
+		 <put-attribute name="contSidemenu"	value="/WEB-INF/jsp/layout/template/complicity/sidemenu.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/eng/script.jsp"/>
+		 <put-attribute name="boardScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_editor.jsp"/>
+		 <put-attribute name="contQuicklink"	value="/WEB-INF/jsp/layout/custom/complicity/kor/contents/quickLink.jsp"/>
+		 <put-attribute name="contFooter"	value="/WEB-INF/jsp/layout/template/complicity/footer.jsp"/>
+	 </definition>
+	 
+	 
+	 <definition name="/*/complicity/brdartcl/boardarticleList" extends="ComplicityBoardDefinitionContent">
+		 <put-attribute name="contTitle"	value="일반 게시판 목록" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardarticleList.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/complicity/brdartcl/boardarticleWrite" extends="ComplicityBoardDefinitionEditor">
+		 <put-attribute name="contTitle"	value="일반 게시판 글쓰기" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardarticleWrite.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/complicity/brdartcl/boardarticleView" extends="ComplicityBoardDefinitionEditor">
+		 <put-attribute name="contTitle"	value="일반 게시판 보기" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardarticleView.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/complicity/brdartcl/boardarticleUpdate" extends="ComplicityBoardDefinitionEditor">
+		 <put-attribute name="contTitle"	value="일반 게시판 수정" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardarticleWrite.jsp" />
+	 </definition>
+	  -->
+	 
+	 
+</tiles-definitions>
+

@@ -1,0 +1,108 @@
+@charset "utf-8";
+/*-------------------------------------------------
+Author : ㅈㅁㅈ
+Create date : 2018-06-08
+-------------------------------------------------*/
+
+
+/* 버튼 */
+.btns {margin-top:30px;}
+.btn-b {display:inline-block; min-width:130px; height:45px; padding:0 15px; font-size:1.6rem; text-align:center; line-height:45px; vertical-align:top;}
+.btn-m {display:inline-block; height:35px; padding:0 15px; font-size:1.5rem; line-height:35px; vertical-align:top;}
+.btn1 {border:0 none; background-color:#969eae; color:#fff;}
+.btn2 {border:0 none; background-color:#555; color:#fff;}
+
+/* 테이블 */
+.table-wrap {clear:both; border-top:1px solid #707070;}
+.table-wrap th {padding:15px; border-bottom:1px solid #c2c2c2; background-color:#f9f9fb; font-size:1.8rem; font-weight:500; color:#333; text-align:center;}
+.table-wrap td {padding:15px; border-bottom:1px solid #e1e1e1; font-size:1.8rem; font-weight:200; color:#555; text-align:center;}
+.table-wrap .subject .new {display:inline-block; position:relative; top:-1px; width:20px; height:20px; margin-left:5px; border-radius:100%; background-color:#c00; color:transparent; white-space:nowrap; vertical-align:middle;}
+.table-wrap .subject .new:before {position:absolute; left:0; top:0; width:100%; height:100%; font-size:12px; font-weight:bold; color:#fff; content:'N'; text-align:center; line-height:20px;}
+
+/* 테이블 목록 가로값 */
+.num {width:100px;}
+.hit {width:120px;}
+.date {width:150px;}
+.subject {text-align:left !important;}
+
+/* 페이지 카운트 */
+.page-count,
+.page-total {display:inline; font-size:1.8rem; font-weight:200; color:#555;}
+.page-total em {font-weight:500; color:#1b5e96;}
+
+/* 게시판 검색 */
+.board-search {float:right; margin-bottom:20px;}
+.board-search select {min-width:85px; height:40px; border:1px solid #e1e1e1; font-size:1.6rem; font-weight:200; color:#555; vertical-align:top;}
+.board-search input[type='text'] {width:175px; height:40px; padding:0 10px; border:1px solid #e1e1e1; font-size:1.6rem; font-weight:200; color:#555; vertical-align:top;}
+.board-search a {display:inline-block; width:75px; height:40px; border:0 none; background-color:#1b5e96; font-size:1.6rem; color:#fff; text-align:center; line-height:40px; vertical-align:top;}
+
+/* 게시판 내용보기 */
+.board-view {border-top:1px solid #707070;}
+.board-view .view-title {padding:10px; border-bottom:1px solid #c2c2c2; font-size:1.8rem; font-weight:400; color:#555; text-align:center;}
+.board-view .info {display:table; width:100%; font-size:1.6rem; color:#555;}
+.board-view .info li {display:table-cell; position:relative; padding:10px 0 10px 160px; border-bottom:1px solid #ddd;}
+.board-view .info li:before {position:absolute; left:0; top:0; bottom:0; z-index:-1; width:140px; background-color:#f9f9fb; content:'';}
+.board-view .info strong {position:absolute; left:25px; top:auto;}
+.board-view .download-list {position:relative; padding:10px 0 10px 160px; border-bottom:1px solid #ddd; font-size:1.6rem; color:#555;}
+.board-view .download-list:before {position:absolute; left:0; top:0; bottom:0; z-index:-1; width:140px; background-color:#f9f9fb; content:'';}
+.board-view .download-list .title {position:absolute; left:25px; top:auto;}
+.board-view .download-list .xi-attachment {display:inline-block; position:relative; top:-1px; width:18px; height:19px; margin-right:5px; background:url('../../images/kor/sub/icon_file.gif') no-repeat; vertical-align:middle;}
+.board-view .download-list .xi-attachment:before {display:none;}
+.board-view .view-content {padding:20px; border-bottom:1px solid #ddd;}
+
+/* 글쓰기 */
+.board-write {border-top:2px solid #555;}
+.board-write th {width:145px; padding-left:20px; border-color:#ddd; font-size:1.6rem; text-align:left;}
+.board-write th:before {display:inline-block; position:relative; top:-1px; width:4px; height:4px; margin-right:10px; background-color:#005aab; content:''; vertical-align:middle;}
+.board-write td {padding:10px 20px; font-size:1.6rem;}
+.board-write td[colspan] {padding:20px;}
+.board-write input[type='text'] {width:100%; height:35px; border:1px solid #ddd;}
+.board-write textarea {width:100%; border:1px solid #ddd;}
+.board-write .download-list .del {overflow:hidden; float:right; position:relative; top:6px; width:19px; height:19px; border-radius:3px; background-color:#969eae; color:transparent; white-space:nowrap;}
+.board-write .download-list .del:before {position:absolute; left:50%; top:50%; width:70%; height:1px; margin:-.5px 0 0 -35%; background-color:#fff; content:''; transform:rotate(45deg); -webkit-transform:rotate(45deg);}
+.board-write .download-list .del:after {position:absolute; left:50%; top:50%; width:1px; height:70%; margin:-35% 0 0 -.5px; background-color:#fff; content:''; transform:rotate(45deg); -webkit-transform:rotate(45deg);}
+.board-write .download-list .xi-attachment {display:inline-block; position:relative; top:-1px; width:18px; height:19px; margin-right:5px; background:url('../../images/kor/sub/icon_file.gif') no-repeat; vertical-align:middle;}
+.board-write .download-list .xi-attachment:before {display:none;}
+.board-write .download-list .icon-pdf {background:url('../../images/kor/sub/icon_pdf.gif') no-repeat center center;}
+
+/* 페이징 */
+.pager {margin-top:60px; text-align:center;}
+.pager strong {display:inline-block; overflow:hidden; width:35px; height:35px; background-color:#1b5e96; font-size:2rem; color:#fff; text-align:center; line-height:35px; vertical-align:top; white-space:nowrap;}
+.pager a {display:inline-block; overflow:hidden; width:35px; height:35px; font-size:2rem; color:#555; text-align:center; line-height:35px; vertical-align:top; white-space:nowrap;}
+.pager .arr {position:relative; border:1px solid #ccc; color:transparent;}
+.pager .arr:before {position:absolute; left:50%; top:50%; width:8px; height:8px; margin:-4px 0 0 -4px; border-right:2px solid #adadad; border-top:2px solid #adadad; content:''; vertical-align:middle; transform:rotate(45deg); -webkit-transform:rotate(45deg);}
+.pager .first:before,
+.pager .last:before {margin-left:-8px;}
+.pager .first:after,
+.pager .last:after {position:absolute; left:50%; top:50%; width:8px; height:8px; margin:-4px 0 0 0; border-right:2px solid #adadad; border-top:2px solid #adadad; content:''; vertical-align:middle; transform:rotate(45deg); -webkit-transform:rotate(45deg);}
+.pager .first:before {margin-left:-6px; border:0 none; border-left:2px solid #adadad; border-bottom:2px solid #adadad;}
+.pager .first:after {margin-left:2px; border:0 none; border-left:2px solid #adadad; border-bottom:2px solid #adadad;}
+.pager .prev {margin-right:20px;}
+.pager .prev:before {margin-left:-3px; border:0 none; border-left:2px solid #adadad; border-bottom:2px solid #adadad;}
+.pager .next {margin-left:20px;}
+
+/* 코멘트 */
+.comment {margin-bottom:10px;}
+.comment .write {position:relative; height:70px; margin:30px 0; padding-right:100px; font-size:1.5rem;}
+.comment .write textarea {width:100%; height:100%; padding:10px 15px; border:1px solid #ddd; color:#888;}
+.comment .write input[type='submit'],
+.comment .write a {position:absolute; right:0; top:0; width:95px; height:100%; border:0 none; background-color:#005aab; color:#fff; text-align:center; line-height:70px;}
+.comment .list {border-top:1px solid #ddd;}
+.comment .list li {position:relative; padding:15px 25px; border-bottom:1px solid #ddd; font-size:1.5rem; color:#555;}
+.comment .list strong {color:#333;}
+.comment .list span {margin-left:5px; color:#777;}
+.comment .list .btn {position:absolute; right:25px; top:20px; font-size:1.4rem; color:#666;}
+.comment .list .btn a + a {margin-left:5px;}
+.comment .list .reply {background-color:#f9f9fb;}
+.comment .list .reply:before {position:absolute; left:auto; top:auto; width:9px; height:9px; margin:7px 0 0 5px; border-left:1px dotted #555; border-bottom:1px dotted #555; content:'';}
+.comment .list .reply .txt,
+.comment .list .reply .write {padding-left:20px;}
+.comment .list .write {height:40px; margin:-5px 0;}
+.comment .list .write input[type='text'] {width:100%; height:100%; padding-left:15px; border:1px solid #ddd; background-color:#fff; color:#777;}
+.comment .list .write a {line-height:40px;}
+.comment + .btns.txt-right {margin-top:0;}
+
+/* 이전글다음글 */
+.prev-next {margin:10px 0 0; border-top:1px solid #ddd; font-size:1.6rem; color:#555;}
+.prev-next li {overflow:hidden; position:relative; height:50px; padding-left:165px; border-bottom:1px solid #ddd; white-space:nowrap; text-overflow:ellipsis; line-height:50px;}
+.prev-next strong {position:absolute; left:0; top:0; width:145px; height:50px; background-color:#fafafa; color:#333; text-align:center;}

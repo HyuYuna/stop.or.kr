@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<CMS_SURVEY_MAIN SRVY_IDX="2" SRVY_NM="유채화테스트" SRVY_OPEN_YN ="N" SRVY_ALLOW_DUP="Y" 
+					SRVY_MAX_ANS="0" SRVY_POP_TYPE="W" SRVY_START="2018-05-03" SRVY_END="2018-05-08" />	
+</dataset>

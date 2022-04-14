@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 
+	 <definition name="SvcmemDefinitionContent" template="/WEB-INF/jsp/layout/custom/web/kor/contents/layout/svcmemLayout.jsp">
+		 <put-attribute name="svcmemMeta"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/meta/meta_content.jsp"/>
+		 <put-attribute name="svcmemHeader"	value="/WEB-INF/jsp/layout/template/cmmn/kor/header.jsp"/>
+		 <put-attribute name="svcmemSidemenu"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/sidemenu/sidemenu_sys.jsp"/>
+		 <put-attribute name="svcmemScript"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/script/script_svcmem.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/kor/script.jsp"/>
+		 <put-attribute name="svcmemQuicklink"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/quickLink.jsp"/>
+		 <put-attribute name="svcmemFooter"	value="/WEB-INF/jsp/layout/template/cmmn/kor/footer.jsp"/>
+	 </definition>
+	 
+	 <definition name="/svcmem/siteLogin" extends="SvcmemDefinitionContent">
+		 <put-attribute name="svcmemTitle"	value="로그인" />
+		 <put-attribute name="svcmemContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/svcmem/01_siteLogin.jsp" />
+	 </definition>
+	 
+	 <definition name="/svcmem/memJoinForm" extends="SvcmemDefinitionContent">
+		 <put-attribute name="svcmemTitle"	value="회원가입" />
+		 <put-attribute name="svcmemContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/svcmem/03_memJoin/memJoinForm.jsp" />
+	 </definition>
+
+
+
+
+
+
+
+	 <definition name="/svcmem/userCertForm" extends="SvcmemDefinitionContent">
+		 <put-attribute name="svcmemTitle"	value="본인인증" />
+		 <put-attribute name="svcmemContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/svcmem/userCertForm.jsp" />
+	 </definition>
+
+	 <definition name="/svcmem/memJoinStep01" extends="SvcmemDefinitionContent">
+		 <put-attribute name="svcmemTitle"	value="회원가입" />
+		 <put-attribute name="svcmemContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/svcmem/03_memJoin/memJoinStep01.jsp" />
+	 </definition>
+	 
+	 <definition name="/svcmem/memJoinStep02" extends="SvcmemDefinitionContent">
+		 <put-attribute name="svcmemTitle"	value="회원가입" />
+		 <put-attribute name="svcmemContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/svcmem/03_memJoin/memJoinStep02.jsp" />
+	 </definition>
+	 
+	 <definition name="/svcmem/modMeminfo" extends="SvcmemDefinitionContent">
+		 <put-attribute name="svcmemTitle"	value="회원정보 수정" />
+		 <put-attribute name="svcmemContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/svcmem/04_myPage/memberInfo.jsp" />
+	 </definition>
+	 
+	 <definition name="/svcmem/closePopAndRedirect" extends="SvcmemDefinitionContent">
+		 <put-attribute name="svcmemTitle"	value="회원가입 - 페이지 이동" />
+		 <put-attribute name="svcmemContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/svcmem/03_memJoin/closePopAndRedirect.jsp" />
+	 </definition>
+	 
+	 <definition name="/svcmem/closePop" extends="SvcmemDefinitionContent">
+		 <put-attribute name="svcmemTitle"	value="회원가입 - 페이지 이동" />
+		 <put-attribute name="svcmemContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/svcmem/03_memJoin/closePop.jsp" />
+	 </definition>
+	 
+	 <definition name="/svcmem/modUsrinfo" extends="SvcmemDefinitionContent">
+		 <put-attribute name="svcmemTitle"	value="회원정보 수정" />
+		 <put-attribute name="svcmemContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/svcmem/04_myPage/memberInfo.jsp" />
+	 </definition>
+	 
+	 <definition name="/svcmem/memWithdraw" extends="SvcmemDefinitionContent">
+		 <put-attribute name="svcmemTitle"	value="회원정보 수정" />
+		 <put-attribute name="svcmemContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/svcmem/04_myPage/memWithdraw.jsp" />
+	 </definition>
+	 
+	 <definition name="/svcmem/memRecover" extends="SvcmemDefinitionContent">
+		 <put-attribute name="svcmemTitle"	value="회원정보 수정" />
+		 <put-attribute name="svcmemContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/svcmem/02_recoverMem/memRecover.jsp" />
+	 </definition>
+	 
+	 <!-- 
+	 <definition name="/svcmem/loginAuth" extends="SvcmemDefinitionContent">
+		 <put-attribute name="svcmemTitle"	value="로그인및 본인인증" />
+		 <put-attribute name="svcmemTop"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/cmmn_top_auth.jsp"/>
+		 <put-attribute name="svcmemContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/svcmem/01_1_siteLoginAuth.jsp" />
+	 </definition>
+
+	 <definition name="/svcmem/recoverId" extends="SvcmemDefinitionContent">
+		 <put-attribute name="svcmemTitle"	value="ID 찾기" />
+		 <put-attribute name="svcmemContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/svcmem/02_recoverScrt/recoverId.jsp" />
+	 </definition>
+	 <definition name="/svcmem/recoverIdCmpt" extends="SvcmemDefinitionContent">
+		 <put-attribute name="svcmemTitle"	value="ID 찾기 결과" />
+		 <put-attribute name="svcmemContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/svcmem/02_recoverScrt/recoverIdCmpt.jsp" />
+	 </definition>
+
+	 <definition name="/svcmem/recoverScrt" extends="SvcmemDefinitionContent">
+		 <put-attribute name="svcmemTitle"	value="패스워드 찾기" />
+		 <put-attribute name="svcmemContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/svcmem/02_recoverScrt/recoverScrt.jsp" />
+	 </definition>
+	 
+	 <definition name="/svcmem/recoverScrtCmpt" extends="SvcmemDefinitionContent">
+		 <put-attribute name="svcmemTitle"	value="패스워드 찾기 결과" />
+		 <put-attribute name="svcmemContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/svcmem/02_recoverScrt/recoverScrtCmpt.jsp" />
+	 </definition>
+	 
+	 <definition name="/svcmem/changePwForm" extends="SvcmemDefinitionContent">
+		 <put-attribute name="svcmemTitle"	value="패스워드 변경" />
+		 <put-attribute name="svcmemContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/svcmem/02_recoverScrt/changePwForm.jsp" />
+	 </definition>
+
+	 <definition name="/svcmem/memJoin" extends="SvcmemDefinitionContent">
+		 <put-attribute name="svcmemTitle"	value="회원가입 - 약관동의" />
+		 <put-attribute name="svcmemTop"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/cmmn_top.jsp"/>
+		 <put-attribute name="svcmemContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/svcmem/03_memJoin/memJoin.jsp" />
+	 </definition>
+	 
+	 <definition name="/svcmem/chkUsrcertForm" extends="SvcmemDefinitionContent">
+		 <put-attribute name="svcmemTitle"	value="회원가입 - 인증방법선택" />
+		 <put-attribute name="svcmemTop"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/cmmn_top.jsp"/>
+		 <put-attribute name="svcmemContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/svcmem/03_memJoin/chkUsrcertForm.jsp" />
+	 </definition>
+	 
+	 
+	 <definition name="/svcmem/memJoinStep2" extends="SvcmemDefinitionContent">
+		 <put-attribute name="svcmemTitle"	value="회원가입 - 정보입력" />
+		 <put-attribute name="svcmemTop"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/cmmn_top.jsp"/>
+		 <put-attribute name="svcmemContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/svcmem/03_memJoin/memJoinStep2.jsp" />
+	 </definition>
+
+	 <definition name="/svcmem/memJoinStep3" extends="SvcmemDefinitionContent">
+		 <put-attribute name="svcmemTitle"	value="회원가입 - 가입완료" />
+		 <put-attribute name="svcmemContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/svcmem/03_memJoin/memJoinStep3.jsp" />
+	 </definition>
+
+	  --> 
+	 
+</tiles-definitions>
+

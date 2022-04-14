@@ -1,0 +1,165 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<script type="text/javascript">
+
+/**************************************************************
+ *  	{##BIZKR##} 관리자 페이지 스크립트 Start
+ **************************************************************/
+jQuery(document).ready(function(){
+
+	// datepicker 설정
+	{##DTAEPICKER_SET##}
+	 
+	// 다음에디터 사용시 쓰기페이지에서 아래 주석해제 (컬럼명은 clob 컬럼명으로 변경한다)
+	//cmmfn_remove_scrtag(jQuery("#{##BIZNM##}_cont"));
+	//cmmfn_init_editor("{##BIZNM##}_cont", "G", null);
+
+	// Uploadify 를 사용한 파일전송을 사용하는 경우 아래 주석 해제
+	/*
+	cmmfn_init_uploadify(
+		"file_upload", 
+		g_context, 
+		10,		// 업로드큐 제한 (최대 업로드 가능 파일 수)  
+		0, 		// 만약 수정페이지에서 이미 첨부된 파일이 있다면 그 갯수를 넣어줘야 함 
+		5,		// 업로드 파일 사이즈 제한 (mb) 
+		"GMR",  // 파일 종류 : 일반파일 (IMG, DOC 등 사용가능)
+		fn_egov_complete_upload // 파일 업로드 후 실행할 콜백함수
+	);
+	*/
+
+});
+
+function fn_egov_{##BIZNM##}_save()
+{
+	var data = cmmfn_get_post_data("divMainArticle");
+	
+	/* null check
+	if(cmmfn_check_inputnull(jQuery("#xxx,#yyy")) == false)
+	{
+		return;
+	}
+	*/
+		
+	// 다음에디터 사용시 주석해제 (컬럼명은 clob 컬럼명으로 변경한다)
+	/*
+	var {##BIZNM##}_cont = Editor.getContent();
+	data.{##BIZNM##}_cont = {##BIZNM##}_cont;
+	jQuery("#clobcolumn_name").val({##BIZNM##}_cont);
+		
+	if(cmmfn_str_trim({##BIZNM##}_cont) == "" || cmmfn_str_trim({##BIZNM##}_cont) == "<p>&nbsp;</p>")
+	{
+		alert("내용은 반드시 입력하셔야 합니다.");
+		cmmfn_editor_focus();
+		return;
+	}
+	*/
+	
+	var bizst = "";
+	var msg_confirm = "";
+	
+	if(jQuery("#edomweivgp").val() == "A")
+	{
+		bizst = "add";
+		msg_confirm = "입력하신 내용을 저장하시겠습니까?";
+	}
+	else
+	{
+		bizst = "mdf";
+		msg_confirm = "수정된 내용을 저장하시겠습니까?";
+	}
+	
+	if(confirm(msg_confirm) == false)
+		return;
+	
+	// form upload
+	var form = document.reqForm;
+	fn_egov_move_action(form, "{##MANACT_PREFIX##}/{##LASTDIR##}{##BIZNM_UP1##}/" + bizst + "{##BIZNM_UP1##}.do?srch_menu_nix=${param.srch_menu_nix}");
+	
+	/* 
+	// ajax / uploadify upload 
+  	$.ajax({
+      	url 		: g_context + "{##MANACT_PREFIX##}/{##LASTDIR##}{##BIZNM_UP1##}/" + bizst + "{##BIZNM_UP1##}.do?srch_menu_nix=${param.srch_menu_nix}",
+      	type  		: "post",
+    	data 		: data,
+    	datatype	: "json",
+		async 		: false,	        
+      	success 	: function(data){        	
+
+      		var key = cmmfn_str_trim(data);
+      		var version = key.replace(/CTX[0-9]{6}_/gi, ""); 
+      	
+      		ucont_id = key.replace(/_[0-9]{1,6}/gi, "");
+      		jQuery("#ucont_id").val(ucont_id);
+      		jQuery("#ucont_version").val(version);
+			cmmfn_set_uploadifykeys('file_upload', '${CONTENTS_UPLOAD_KEY}', ucont_id, version, fupgb);
+			cmmfn_upload_uploadify('file_upload', fn_egov_complete_upload);
+      },
+      
+      error: function(){
+          
+      	alert("에러가 발생했습니다.");
+      }
+	});
+	*/
+}
+
+function fn_egov_{##BIZNM##}_search()
+{
+	var form = document.reqForm;
+	form.pageIndex.value = 1;
+	fn_egov_{##BIZNM##}_list();
+}
+
+function fn_egov_{##BIZNM##}_list()
+{
+	var form = document.reqForm;
+	fn_egov_move_action(form, "{##MANACT_PREFIX##}/{##LASTDIR##}{##BIZNM_UP1##}/{##BIZNM##}List.do?srch_menu_nix=${param.srch_menu_nix}");
+}
+
+function fn_egov_{##BIZNM##}_add()
+{
+	var form = document.reqForm;
+	form.edomweivgp.value = "A";
+	fn_egov_move_action(form, "{##MANACT_PREFIX##}/{##LASTDIR##}{##BIZNM_UP1##}/{##BIZNM##}View.do?srch_menu_nix=${param.srch_menu_nix}");
+}
+
+function fn_egov_{##BIZNM##}_mod({##PK_PARAMS##})
+{
+	var form = document.reqForm;
+	form.edomweivgp.value = "M";
+{##PK_PARAMS_SET##}
+	fn_egov_move_action(form, "{##MANACT_PREFIX##}/{##LASTDIR##}{##BIZNM_UP1##}/{##BIZNM##}View.do?srch_menu_nix=${param.srch_menu_nix}");
+}
+
+function fn_egov_{##BIZNM##}_del()
+{
+	
+	if(confirm("현재 항목을 삭제하시겠습니까?") == false)
+		return;
+	
+	var form = document.reqForm;
+	fn_egov_move_action(form, "{##MANACT_PREFIX##}/{##LASTDIR##}{##BIZNM_UP1##}/rmv{##BIZNM_UP1##}.do?srch_menu_nix=${param.srch_menu_nix}");
+}
+
+function fn_egov_link_page(pageIndex)
+{
+	var form = document.reqForm;
+	form.pageIndex.value = pageIndex;
+	fn_egov_{##BIZNM##}_list();
+}
+
+/* use uploadify
+function fn_egov_complete_upload()
+{
+	alert("저장이 완료되었습니다.");
+	fn_egov_{##BIZNM##}_list();
+}	
+*/
+
+/**************************************************************
+ *  	{##BIZKR##} 관리자 페이지 스크립트 End
+ **************************************************************/
+
+
+</script>

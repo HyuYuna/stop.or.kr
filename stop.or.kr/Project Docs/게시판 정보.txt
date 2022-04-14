@@ -1,0 +1,7 @@
+게시판 공지 설정 기준
+- 댓글삭제 권한을 가지는 기준과 같이 둠
+- CMS_SYS_AUTH 테이블 AUTH_LV가 1000 보다 작을경우 노출됨
+
+게시판 수정삭제 노출 설정 기준
+- /src/main/webapp/WEB-INF/jsp/layout/custom/web/lor/board/script 밑 파일에 정의되어져있음
+- 내가쓴글에대해 삭제가 보여짐에도 불구하고, 정회원은 삭제를 못하게 정적으로 박힌 부분이 있음(갤러리 rmvBoardthm)

@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.brdartcl.dao.BoardthmDAO">
+
+	<resultMap id="boardthm" type="boardthmVO"> 
+		<result property="brd_id" column="brd_id"/>
+		<result property="cont_idx" column="cont_idx"/>
+		<result property="ctgry_idx" column="ctgry_idx"/>
+		<result property="subject" column="subject"/>
+		<result property="brd_cont" column="brd_cont"/>
+		<result property="brd_utb" column="brd_utb"/>
+		<result property="hits" column="hits"/>
+		<result property="is_notice" column="is_notice"/>
+		<result property="img_idx" column="img_idx"/>
+		<result property="thm_img_idx" column="thm_img_idx"/>
+		<result property="writer" column="writer"/>
+		<result property="pre_atcl" column="pre_atcl"/>
+		<result property="pre_subj" column="pre_subj"/>
+		<result property="next_atcl" column="next_atcl"/>
+		<result property="next_subj" column="next_subj"/>
+		<result property="writer_nm" column="writer_nm"/>
+		<result property="wdt" column="wdt"/>
+		<result property="modifier" column="modifier"/>
+		<result property="mdt" column="mdt"/>
+	</resultMap> 
+	
+	
+	
+	<insert id="insertBoardthm" parameterType="boardthmVO">
+
+		<selectKey resultType="java.lang.Integer" keyProperty="cont_idx" order="BEFORE">
+		
+			SELECT ISNULL(MAX(CONT_IDX) + 1, 1) AS CONT_IDX FROM ${tbl_nm} WHERE
+				BRD_ID = #{brd_id}
+		
+		</selectKey>
+
+		INSERT INTO ${tbl_nm}
+		(
+			BRD_ID,
+			CONT_IDX,
+			CTGRY_IDX,
+			SUBJECT,
+			BRD_CONT, 
+			BRD_UTB,
+			IMG_IDX,
+			THM_IMG_IDX,
+			HITS,
+			EXTRA1,
+			EXTRA2,
+			WRITER,
+			WDT
+		)
+		VALUES
+		(
+			#{brd_id},
+			#{cont_idx},
+			#{ctgry_idx},
+			#{subject},
+			#{brd_cont},
+			#{brd_utb},
+			0,
+			0,
+			#{hits},
+			#{extra1},
+			#{extra2},
+			#{writer},
+			GETDATE()
+		)
+
+	</insert>
+	
+	<update id="updateBoardthm" parameterType="boardthmVO">
+
+		UPDATE ${tbl_nm} SET
+			<if test="subject != null and subject != ''">
+				CTGRY_IDX = #{ctgry_idx},
+				SUBJECT = #{subject},
+				BRD_CONT = #{brd_cont},
+			</if>
+			<if test="brd_utb != null and brd_utb != ''">
+				BRD_UTB = #{brd_utb},
+			</if>
+			<!-- <if test="extra2 != null and extra2 != ''"> -->
+				<!-- EXTRA1 = #{extra2}, -->
+			<!-- </if> -->
+			EXTRA1 = #{extra1},
+			EXTRA2 = #{extra2},
+			<!-- <if test="wdt != null and wdt != ''">
+				WDT = CONVERT(DATETIME, #{wdt}),
+			</if> -->
+			MODIFIER = #{modifier},
+			MDT = GETDATE()
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}
+	</update>
+	
+	
+	<update id="updateBoardxcount" parameterType="boardthmVO" >
+		UPDATE ${tbl_nm} SET
+			<if test="hits != '0'.toString()">
+				HITS = #{hits},
+			</if>
+			MDT = MDT
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}
+	</update>
+	
+	<delete id="deleteBoardthm" parameterType="boardthmVO">
+
+		DELETE FROM ${tbl_nm}
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}
+
+	</delete>
+	
+	<select id="selectBoardthm" parameterType="boardthmVO" resultMap="boardthm">
+
+		SELECT
+			A.BRD_ID,
+			A.CONT_IDX,
+			CTGRY_IDX,
+			dbo.SF_CTGRY_NM(CTGRY_IDX) CTGRY_NM,
+			SUBJECT,
+			BRD_CONT,
+			BRD_UTB,
+			IMG_IDX,
+			THM_IMG_IDX,
+			HITS,
+			EXTRA1,
+			EXTRA2,
+			IS_NOTICE,
+			PRE_ATCL,
+			(SELECT SUBJECT FROM ${tbl_nm} WHERE CONT_IDX = A.PRE_ATCL AND BRD_ID = #{brd_id}) PRE_SUBJ,
+			NEXT_ATCL,
+			(SELECT SUBJECT FROM ${tbl_nm} WHERE CONT_IDX = A.NEXT_ATCL AND BRD_ID = #{brd_id}) NEXT_SUBJ,
+			A.WRITER,
+			CONVERT(VARCHAR(10), A.WDT, 20) WDT,
+			A.MODIFIER,
+			CONVERT(VARCHAR(10), A.MDT, 20) MDT,
+			ISNULL(IMG_WIDTH, 1) IMG_WIDTH,
+			ISNULL(IMG_HEIGHT, 1) IMG_HEIGHT,
+			ISNULL(dbo.SF_USER_NM(A.WRITER), 'GUEST') WRITER_NM
+		FROM
+			(
+				SELECT
+					X.*,
+			    	dbo.SF_BRD_SIBL_ARTCL('PREV', BRD_ID, CONT_IDX, IS_NOTICE, #{srch_ctgry_idx}) PRE_ATCL,
+			    	dbo.SF_BRD_SIBL_ARTCL('NEXT', BRD_ID, CONT_IDX, IS_NOTICE, #{srch_ctgry_idx}) NEXT_ATCL
+			    FROM 
+			    	${tbl_nm} X
+				WHERE
+					BRD_ID = #{brd_id} AND
+					CONT_IDX = #{cont_idx}	
+				    	
+			)  A 
+			LEFT OUTER JOIN 
+			(
+				SELECT 
+					* 
+				FROM 
+					CMS_ATACH
+				WHERE
+					ATCKEY_1ST = #{brd_id} AND
+					ATCKEY_2ND = #{cont_idx} AND
+					ATCKEY_3RD = 1 AND
+					ATCKEY_4TH = 1 AND
+					IS_THUMB = 'N'
+			) B 
+		ON
+			A.BRD_ID = B.ATCKEY_1ST  AND
+			A.CONT_IDX = B.ATCKEY_2ND
+
+	</select>
+	
+	<select id="selectBoardthmList" parameterType="boardthmVO" resultType="boardthmVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY WDT DESC, CONT_IDX DESC) rn, TB.* FROM (
+
+			SELECT
+				BRD_ID,
+				CONT_IDX,
+				SUBJECT,
+				BRD_CONT,
+				CTGRY_IDX,
+				dbo.SF_CTGRY_NM(CTGRY_IDX) CTGRY_NM,
+				BRD_UTB,
+				IMG_IDX,
+				EXTRA1,
+				EXTRA2,   
+				THM_IMG_IDX,
+				HITS,
+				dbo.SF_ATCFILE_INFO(BRD_ID, CAST(CONT_IDX AS VARCHAR(11)), 0, 0, 'N', 'COUNT') IMG_CNT,
+                dbo.SF_ATCFILE_INFO(BRD_ID, CAST(CONT_IDX AS VARCHAR(11)), 0, 0, 'Y', 'VCODE') VCHKCODE,
+				PRE_ATCL,
+				PRE_SUBJ,
+				NEXT_ATCL,
+				NEXT_SUBJ,
+				<if test="reply_gb == 'R'.toString()">
+                	(SELECT COUNT(*) FROM ${reply_tbl_nm} WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX) REPLY_CNT,
+                </if>        
+                <if test="reply_gb == 'B'.toString()">
+                	(SELECT COUNT(*) FROM ${reply_tbl_nm} WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX) REPLY_CNT,
+                </if>
+                <if test="reply_gb == 'A'.toString()">
+                 	0 REPLY_CNT,
+                </if>
+                <if test="reply_gb == 'N'.toString()">
+                	0 REPLY_CNT,
+                </if>  
+				WRITER,
+				ISNULL(dbo.SF_USER_NM(WRITER), 'GUEST') WRITER_NM,
+				CONVERT(VARCHAR(10), WDT, 20) WDT,
+				MODIFIER,
+				CONVERT(VARCHAR(10), WDT, 20) MAIN_MDT,
+				CONVERT(VARCHAR(19), MDT, 20) MDT
+			FROM
+		    	(
+					SELECT
+						X.*,
+				    	LAG(CONT_IDX, 1, NULL) OVER (ORDER BY CONT_IDX ) PRE_ATCL,
+				    	LAG(SUBJECT, 1, NULL) OVER (ORDER BY CONT_IDX ) PRE_SUBJ,
+				    	LEAD(CONT_IDX, 1, NULL) OVER (ORDER BY CONT_IDX) NEXT_ATCL,
+				    	LEAD(SUBJECT, 1, NULL) OVER (ORDER BY CONT_IDX) NEXT_SUBJ
+				    FROM 
+				    	${tbl_nm} X
+				    WHERE
+				    	BRD_ID = #{brd_id} 
+				)  A 
+			WHERE
+				1 = 1 
+				<if test="searchKeyword != null and searchKeyword != ''">
+					<if test="searchCondition != null and searchCondition != ''">AND
+						<if test="searchCondition == 'SC_ALL'.toString()">
+							( SUBJECT LIKE '%' + #{searchKeyword} + '%' OR BRD_CONT LIKE '%' + #{searchKeyword} + '%' )
+						</if>
+						<if test="searchCondition != 'SC_ALL'.toString()">
+							${searchCondition} LIKE '%' + #{searchKeyword} + '%'
+						</if>
+					</if>
+				</if>
+				<if test="srch_ctgry_idx != null and srch_ctgry_idx != ''">AND
+					CTGRY_IDX = #{srch_ctgry_idx}
+				</if>
+				
+			
+		) TB ) MORG   WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+		
+	</select>
+	
+	<select id="selectBoardthmListTotCnt" parameterType="boardthmVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			(
+				SELECT 
+					A.*,
+					dbo.SF_USER_NM(WRITER) WRITER_NM 
+				FROM
+					${tbl_nm} A
+			) A
+		WHERE
+			BRD_ID = #{brd_id} 
+			<if test="searchKeyword != null and searchKeyword != ''">
+				<if test="searchCondition != null and searchCondition != ''">AND
+					<if test="searchCondition == 'SC_ALL'.toString()">
+						( SUBJECT LIKE '%' + #{searchKeyword} + '%' OR BRD_CONT LIKE '%' + #{searchKeyword} + '%' )
+					</if>
+					<if test="searchCondition != 'SC_ALL'.toString()">
+						${searchCondition} LIKE '%' + #{searchKeyword} + '%'
+					</if>
+				</if>	
+			</if>		
+			<if test="srch_ctgry_idx != null and srch_ctgry_idx != ''">AND
+				CTGRY_IDX = #{srch_ctgry_idx}
+			</if>
+
+	</select>
+	
+	
+
+</mapper>
+

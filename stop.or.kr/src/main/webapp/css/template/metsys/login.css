@@ -1,0 +1,125 @@
+@charset "utf-8";
+
+/*-------------------------------------------------
+login Style Sheet
+Version : 1.0
+Author : myeong-hee park
+Create date : 2011. 11. 07.
+Last update : 2011. 11. 07.
+-------------------------------------------------*/
+html {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	-webkit-text-size-adjust: none; 
+	-moz-text-size-adjust: none; 
+	-ms-text-size-adjust: none; 
+	}
+body {
+	margin: 0;
+	padding: 0;
+	color: #636363;	
+	background: #092756;
+	background: -moz-radial-gradient(0% 100%, ellipse cover, rgba(104,128,138,.4) 10%, rgba(138,114,76,0) 40%), -moz-linear-gradient(top, rgba(57,173,219,.25) 0%, rgba(42,60,87,.4) 100%), -moz-linear-gradient(-45deg, #670d10 0%, #092756 100%);
+	background: -webkit-radial-gradient(0% 100%, ellipse cover, rgba(104,128,138,.4) 10%, rgba(138,114,76,0) 40%), -webkit-linear-gradient(top, rgba(57,173,219,.25) 0%, rgba(42,60,87,.4) 100%), -webkit-linear-gradient(-45deg, #670d10 0%, #092756 100%);
+	background: -o-radial-gradient(0% 100%, ellipse cover, rgba(104,128,138,.4) 10%, rgba(138,114,76,0) 40%), -o-linear-gradient(top, rgba(57,173,219,.25) 0%, rgba(42,60,87,.4) 100%), -o-linear-gradient(-45deg, #670d10 0%, #092756 100%);
+	background: -ms-radial-gradient(0% 100%, ellipse cover, rgba(104,128,138,.4) 10%, rgba(138,114,76,0) 40%), -ms-linear-gradient(top, rgba(57,173,219,.25) 0%, rgba(42,60,87,.4) 100%), -ms-linear-gradient(-45deg, #670d10 0%, #092756 100%);
+	background: -webkit-radial-gradient(0% 100%, ellipse cover, rgba(104,128,138,.4) 10%, rgba(138,114,76,0) 40%), linear-gradient(to bottom, rgba(57,173,219,.25) 0%, rgba(42,60,87,.4) 100%), linear-gradient(135deg, #670d10 0%, #092756 100%);
+ 	/*filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3E1D6D', endColorstr='#092756', GradientType=1 );*/
+	background: url(../../../images/template/metsys/login/login_bg.jpg) no-repeat 0 0;
+	background: url(../../../images/template/metsys/login/login_bg02.jpg) no-repeat 0 0;
+	background-size: cover;
+	vertical-align: baseline;
+	font-size: 87.5%;
+	font-family: "맑은 고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Tahoma, Verdana, AppleGothic, UnDotum, sans-serif;
+
+	}	
+/* render html5 elements as block */
+header, footer, article, section {
+	display: block;
+	}
+a {
+	color: #464646;
+	text-decoration: none;
+	}
+a:hover {
+	text-decoration: underline;
+	}
+img {
+	border: none;
+	}
+hr {
+	display: none;
+	}		
+#wrap {
+	position: relative;
+	width: 310px;
+	height: 362px;
+	margin: 16% auto 0;
+	padding: 50px;
+	background-color: rgba(24, 39, 71, 0.3);
+	border-radius: 8px;
+	text-align: center;
+	}	
+.logo {
+	margin-bottom: 33px;
+	padding-top: 140px;
+	background: url(../../../images/template/metsys/login/login_logo.png) no-repeat center top;
+	color: #fff;
+	line-height: 1;
+    letter-spacing: 0.05em;
+	font: normal 1.143em Tahoma, Arial, sans-serif;
+	}
+/* 로그인 영역 */
+#loginForm {	
+	position: relative; 
+	margin: 0 auto;
+	}
+.idpw_area p {
+	margin-top: 15px;
+	}
+.idpw_area p:first-child {
+	margin-top: 0;
+	}	
+.idpw_area input[type="text"],
+.idpw_area input[type="password"] {	
+	width: 100%;
+	padding: 10px 15px 11px 43px;
+	background: url(http://cssdeck.com/uploads/media/items/8/8bcLQqF.png) no-repeat;
+	border: 1px solid #fff;
+	box-sizing: border-box;	
+	transition: all 0.5s ease;
+	color: #fff;
+	font: 1.143em Helvetica, Arial, sans-serif;
+	}
+.idpw_area input[type="text"]:focus,
+.idpw_area input[type="password"]:focus {
+	outline: none;
+	}
+#user_id { 
+	background-position: 10px 10px;
+	}
+#user_scrt { 
+	background-position: 10px -52px;
+	}	
+.btn_login {
+	margin: 20px auto 0;
+	background: #626b89;
+	border-radius: 2px;	
+	font-size: 1.071em;
+	}	
+.bgColor {
+	background: #aebacd;
+	}	
+.btn_login a {
+	display: block;
+	padding: 10px 0;
+	color: #fff;
+	}
+	
+/* FOOTER STYLE
+-------------------------------------------------*/	
+address	{
+	margin-top: 15px;
+	color: #959595;
+	}

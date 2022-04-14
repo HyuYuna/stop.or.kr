@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.custom.man.schedule.dao.ScheduleDAO">
+
+	<insert id="insertSchedule" parameterType="scheduleVO">
+	
+		<selectKey resultType="java.lang.Integer" keyProperty="sch_idx" order="BEFORE">
+			SELECT ISNULL(MAX(SCH_IDX) + 1, 1) AS SCH_IDX FROM CMS_SCHEDULE
+		</selectKey>
+	
+		INSERT INTO CMS_SCHEDULE
+		(
+			SCH_IDX,
+			S_DATE,
+			E_DATE,
+			SUBJECT,
+			MU_LANG,
+			WDT
+		)
+		VALUES
+		(
+			#{sch_idx},
+			CONVERT(DATE,#{s_date}),
+			CONVERT(DATE,#{e_date}),
+			#{subject},
+			#{srch_mu_lang},
+			GETDATE()
+		)
+
+	</insert>
+	<select id="selectScheduleList" parameterType="scheduleVO" resultType="scheduleVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY S_DATE DESC) rn, TB.* FROM (
+	
+			SELECT
+				SCH_IDX,
+				SUBJECT,
+				CONVERT(VARCHAR(10), S_DATE, 23) S_DATE,
+				CONVERT(VARCHAR(10), E_DATE, 23) E_DATE,
+				CONVERT(VARCHAR(19), WDT, 23) WDT,
+				CONVERT(VARCHAR(19), MDT, 23) MDT
+			FROM
+				CMS_SCHEDULE
+			WHERE
+				1 = 1
+				AND MU_LANG = #{srch_mu_lang}
+				<if test="s_date != null and s_date != ''">
+					<if test="e_date != null and e_date != ''">
+						AND S_DATE BETWEEN CONVERT(DATE,#{s_date}) AND CONVERT(DATE,#{e_date}) 
+					</if>
+				</if>
+				<if test="searchKeyword != null and searchKeyword != ''">AND
+					SUBJECT LIKE '%' + #{searchKeyword} + '%'
+				</if>
+
+		) TB ) MORG   WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+
+	</select>
+	
+	<select id="selectScheduleListTotCnt" parameterType="scheduleVO" resultType="int">
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_SCHEDULE
+		WHERE
+			1 = 1
+			AND MU_LANG = #{srch_mu_lang}
+			<if test="s_date != null and s_date != ''">
+					<if test="e_date != null and e_date != ''">
+						AND S_DATE BETWEEN CONVERT(DATE,#{s_date}) AND CONVERT(DATE,#{e_date}) 
+					</if>
+			</if>
+			<if test="searchKeyword != null and searchKeyword != ''">AND
+				SUBJECT LIKE '%' + #{searchKeyword} + '%'
+			</if>
+	</select>
+	
+	<select id="selectSchedule" parameterType="scheduleVO" resultType="scheduleVO">
+
+		SELECT
+			SCH_IDX,
+			SUBJECT,
+			CONVERT(VARCHAR(10), S_DATE, 23) S_DATE,
+			CONVERT(VARCHAR(10), E_DATE, 23) E_DATE,
+			CONVERT(VARCHAR(19), WDT, 23) WDT,
+			CONVERT(VARCHAR(19), MDT, 23) MDT
+		FROM
+			CMS_SCHEDULE
+		WHERE
+			SCH_IDX = #{sch_idx}
+			AND MU_LANG = #{srch_mu_lang}
+
+	</select>
+	
+	<update id="updateSchedule" parameterType="scheduleVO">
+		UPDATE CMS_SCHEDULE SET
+			SUBJECT  = #{subject}
+			, S_DATE = CONVERT(DATE,#{s_date})
+			, E_DATE = CONVERT(DATE,#{e_date})
+			, MDT	 = GETDATE()
+		WHERE
+			SCH_IDX = #{sch_idx}
+			AND MU_LANG = #{srch_mu_lang}
+	</update>
+	
+	<!-- 삭제 -->
+	<delete id="deleteSchedule" parameterType="scheduleVO">
+		
+		DELETE FROM 
+			CMS_SCHEDULE 
+		WHERE 
+			SCH_IDX = #{sch_idx}
+			AND MU_LANG = #{srch_mu_lang}
+			
+	</delete>
+	
+	<select id="selectTodayScheduleList" parameterType="scheduleVO" resultType="scheduleVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY S_DATE DESC) rn, TB.* FROM (
+	
+			SELECT
+				SCH_IDX,
+				SUBJECT,
+				CONVERT(VARCHAR(10), S_DATE, 23) S_DATE,
+				CONVERT(VARCHAR(10), E_DATE, 23) E_DATE,
+				CONVERT(VARCHAR(19), WDT, 23) WDT,
+				CONVERT(VARCHAR(19), MDT, 23) MDT
+			FROM
+				CMS_SCHEDULE
+			WHERE
+				1 = 1
+				AND CONVERT(DATE,#{s_date}, 23)  BETWEEN S_DATE AND E_DATE
+				AND MU_LANG = #{srch_mu_lang}
+				
+		) TB ) MORG 
+
+	</select>
+	
+	<select id="selectMonthScheduleList" parameterType="scheduleVO" resultType="scheduleVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY S_DATE ASC) rn, TB.* FROM (
+	
+			SELECT
+				SCH_IDX,
+				SUBJECT,
+				CONVERT(VARCHAR(10), S_DATE, 23) S_DATE,
+				CONVERT(VARCHAR(10), E_DATE, 23) E_DATE,
+				CONVERT(VARCHAR(19), WDT, 23) WDT,
+				CONVERT(VARCHAR(19), MDT, 23) MDT
+			FROM
+				CMS_SCHEDULE
+			WHERE
+				1 = 1
+				AND DATEPART(MM,CONVERT(DATE,#{s_date}, 23))  BETWEEN DATEPART(MM,S_DATE) AND DATEPART(MM,E_DATE)
+				AND MU_LANG = #{srch_mu_lang}
+		) TB ) MORG 
+
+	</select>
+	
+</mapper>
+

@@ -1,0 +1,310 @@
+package {##PKG_NM##};
+
+import java.text.NumberFormat;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springmodules.validation.commons.DefaultBeanValidator;
+import egovframework.rte.fdl.property.EgovPropertyService;
+import egovframework.plani.template.cmm.utils.EgovSessionCookieUtil;
+import egovframework.plani.template.cmm.pagination.PlaniPaginationInfo;
+import egovframework.plani.template.cmm.utils.ExcelDownUtil;
+import egovframework.plani.template.atchfile.service.AtchfileService;
+import egovframework.plani.template.man.menuctgry.service.SyscodeService;
+import egovframework.plani.custom.memsvc.vo.MemberVO;
+import {##IMPT_BIZSVC##};
+import {##IMPT_BIZVO##};
+
+@Controller
+@RequestMapping("{##USRACT_PREFIX##}/{##LASTDIR##}{##BIZNM_UP1##}")
+public class {##BIZNM_UP1##}Controller {
+
+	/** {##BIZNM_UP1##}Service */
+	@Resource(name = "{##BIZNM##}Service")
+	private {##BIZNM_UP1##}Service {##BIZNM##}Service;
+
+	/** EgovPropertyService */
+	@Resource(name = "propertiesService")
+	protected EgovPropertyService propertiesService;
+
+	/** SyscodeService */
+	@Resource(name = "syscodeService")
+	protected SyscodeService syscodeService;
+
+	/** AtchfileService */
+	@Resource(name = "atchfileService")
+	protected AtchfileService atchfileService;
+
+	/** Validator */
+	@Resource(name = "beanValidator")
+	protected DefaultBeanValidator beanValidator;
+
+
+	/**
+	 * {##BIZKR##} 목록을 조회한다.
+	 * @param {##BIZNM##}VO : 조회할 정보
+	 * @exception Exception
+	 */
+	@RequestMapping("/{##BIZNM##}List")
+	public String {##BIZNM##}List(
+			@ModelAttribute("{##BIZNM##}VO") {##BIZNM_UP1##}VO {##BIZNM##}VO,
+			HttpServletRequest request,
+			Model model)
+	throws Exception {
+
+		
+		/** pageing setting */
+		PlaniPaginationInfo paginationInfo = new PlaniPaginationInfo();
+		paginationInfo.setContextPath(request.getContextPath());
+		paginationInfo.setCurrentPageNo({##BIZNM##}VO.getPageIndex());
+		paginationInfo.setRecordCountPerPage(propertiesService.getInt("pageUnit"));
+		paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
+		
+		{##BIZNM##}VO.setFirstIndex(paginationInfo.getFirstRecordIndex());
+		{##BIZNM##}VO.setLastIndex(paginationInfo.getLastRecordIndex());
+		{##BIZNM##}VO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
+		
+		List {##BIZNM##}List = {##BIZNM##}Service.select{##BIZNM_UP1##}List({##BIZNM##}VO);
+		model.addAttribute("resultList", {##BIZNM##}List);
+		
+		int totCnt = {##BIZNM##}Service.select{##BIZNM_UP1##}ListTotCnt({##BIZNM##}VO);
+		paginationInfo.setTotalRecordCount(totCnt);
+		model.addAttribute("paginationInfo", paginationInfo);
+		
+		model.addAttribute("curPage", paginationInfo.getCurrentPageNo());
+		model.addAttribute("totCnt", totCnt);
+		model.addAttribute("totPage", paginationInfo.getTotalPageCount());
+		
+		return "{##USRACT_PREFIX##}/{##LASTDIR##}{##BIZNM_UP1##}/{##BIZNM##}List";
+
+	}
+	
+	/**
+	 * {##BIZKR##} 항목 상세조회 페이지 이동.
+	 * @param {##BIZNM##}VO : 조회할 정보
+	 * @exception Exception
+	 */
+	@RequestMapping("/{##BIZNM##}View")
+	public String {##BIZNM##}View(
+			@ModelAttribute("{##BIZNM##}VO") {##BIZNM_UP1##}VO {##BIZNM##}VO,
+			HttpServletRequest request,
+			ModelMap model) throws Exception {
+		
+		// 상세 내용 조회
+		{##BIZNM_UP1##}VO resultVO = {##BIZNM##}Service.select{##BIZNM_UP1##}({##BIZNM##}VO);
+		if(resultVO != null)
+		{
+			resultVO.setEdomweivgp({##BIZNM##}VO.getEdomweivgp());
+			resultVO.setSrch_mu_site({##BIZNM##}VO.getSrch_mu_site());
+			resultVO.setSrch_mu_lang({##BIZNM##}VO.getSrch_mu_lang());
+			resultVO.setSrch_menu_nix({##BIZNM##}VO.getSrch_menu_nix());
+			resultVO.setSeltab_idx({##BIZNM##}VO.getSeltab_idx());
+			resultVO.setPageIndex({##BIZNM##}VO.getPageIndex());
+			resultVO.setSearchCondition({##BIZNM##}VO.getSearchCondition());
+			resultVO.setSearchKeyword({##BIZNM##}VO.getSearchKeyword());
+			resultVO.setSrchFromDT({##BIZNM##}VO.getSrchFromDT());
+			resultVO.setSrchToDT({##BIZNM##}VO.getSrchToDT());
+			model.addAttribute("{##BIZNM##}VO", resultVO);
+	
+			/*
+			// 첨부파일 목록 가져오기
+			AtchfileVO fileVO = new AtchfileVO();
+			fileVO.setAtckey_1st("");
+			fileVO.setAtckey_2nd("");
+			fileVO.setAtckey_3rd("");
+			List fileList = atchfileService.selectAtchfileList(fileVO);
+	
+			model.addAttribute("atchfileList", fileList);
+			model.addAttribute("atchfileListCount", fileList == null ? 0 : fileList.size());
+			*/
+	
+			/*
+			// 코드 조회하기
+			SyscodeVO codeVO = new SyscodeVO();
+			codeVO.setUse_yn("Y");
+			codeVO.setUp_code_idx("");
+			List xxxxcode = syscodeService.selectSyscodeList(codeVO);
+			model.addAttribute("xxxxcode", xxxxcode);
+			
+			*/
+		}
+		
+		
+		return "{##USRACT_PREFIX##}/{##LASTDIR##}{##BIZNM_UP1##}/{##BIZNM##}View";
+	}
+
+	
+	/**
+	 * {##BIZKR##} 항목 추가/수정 페이지 이동.
+	 * @param {##BIZNM##}VO : 조회할 정보
+	 * @exception Exception
+	 */
+	@RequestMapping("/{##BIZNM##}MoveView")
+	public String {##BIZNM##}MoveView(
+			@ModelAttribute("{##BIZNM##}VO") {##BIZNM_UP1##}VO {##BIZNM##}VO,
+			HttpServletRequest request,
+			ModelMap model) throws Exception {
+		
+		String returl = "";
+		
+		if("M".equals({##BIZNM##}VO.getEdomweivgp()))
+		{
+			{##BIZNM_UP1##}VO resultVO = {##BIZNM##}Service.select{##BIZNM_UP1##}({##BIZNM##}VO);
+			if(resultVO != null)
+			{
+				resultVO.setEdomweivgp({##BIZNM##}VO.getEdomweivgp());
+				resultVO.setSrch_mu_site({##BIZNM##}VO.getSrch_mu_site());
+				resultVO.setSrch_mu_lang({##BIZNM##}VO.getSrch_mu_lang());
+				resultVO.setSrch_menu_nix({##BIZNM##}VO.getSrch_menu_nix());
+				resultVO.setSeltab_idx({##BIZNM##}VO.getSeltab_idx());
+				resultVO.setPageIndex({##BIZNM##}VO.getPageIndex());
+				resultVO.setSearchCondition({##BIZNM##}VO.getSearchCondition());
+				resultVO.setSearchKeyword({##BIZNM##}VO.getSearchKeyword());
+				resultVO.setSrchFromDT({##BIZNM##}VO.getSrchFromDT());
+				resultVO.setSrchToDT({##BIZNM##}VO.getSrchToDT());
+				model.addAttribute("{##BIZNM##}VO", resultVO);
+				
+				/*
+				// 첨부파일 목록 가져오기
+				AtchfileVO fileVO = new AtchfileVO();
+				fileVO.setAtckey_1st("");
+				fileVO.setAtckey_2nd("");
+				fileVO.setAtckey_3rd("");
+				List fileList = atchfileService.selectAtchfileList(fileVO);
+				
+				model.addAttribute("atchfileList", fileList);
+				model.addAttribute("atchfileListCount", fileList == null ? 0 : fileList.size());
+				*/
+				
+				/*
+				// 코드 조회하기
+				SyscodeVO codeVO = new SyscodeVO();
+				codeVO.setUse_yn("Y");
+				codeVO.setUp_code_idx("");
+				List xxxxcode = syscodeService.selectSyscodeList(codeVO);
+				model.addAttribute("xxxxcode", xxxxcode);
+				*/
+			}
+			
+			returl = "{##USRACT_PREFIX##}/{##LASTDIR##}{##BIZNM_UP1##}/{##BIZNM##}Update";
+		}
+		else
+		{
+			returl = "{##USRACT_PREFIX##}/{##LASTDIR##}{##BIZNM_UP1##}/{##BIZNM##}Write";
+		}
+		
+		return returl;
+	}
+
+	
+	/**
+	 * {##BIZKR##} 항목을 추가한다.
+	 * @param {##BIZNM##}VO : 추가할 정보
+	 * @exception Exception
+	 */
+	@RequestMapping("/add{##BIZNM_UP1##}")
+	public String add{##BIZNM_UP1##}(
+			@ModelAttribute("{##BIZNM##}VO") {##BIZNM_UP1##}VO {##BIZNM##}VO,
+			HttpServletRequest request,
+			ModelMap model) throws Exception {
+		
+		MemberVO user = (MemberVO) EgovSessionCookieUtil.getSessionAttribute(request, "SESS_USR_INFO");
+		{##BIZNM##}VO.setWriter(user.getUser_id());
+		{##BIZNM##}Service.insert{##BIZNM_UP1##}({##BIZNM##}VO);
+		
+		return "redirect:{##USRACT_PREFIX##}/{##LASTDIR##}{##BIZNM_UP1##}/{##BIZNM##}List.do?srch_menu_nix=" + {##BIZNM##}VO.getSrch_menu_nix();
+	}
+
+	/**
+	 * {##BIZKR##} 항목을 삭제한다.
+	 * @param {##BIZNM##}VO : 삭제할 정보
+	 * @exception Exception
+	 */
+	@RequestMapping("/rmv{##BIZNM_UP1##}")
+	public String rmv{##BIZNM_UP1##}(
+			@ModelAttribute("{##BIZNM##}VO") {##BIZNM_UP1##}VO {##BIZNM##}VO,
+			HttpServletRequest request,
+			ModelMap model) throws Exception {
+		
+		{##BIZNM##}Service.delete{##BIZNM_UP1##}({##BIZNM##}VO);
+		
+		return "redirect:{##USRACT_PREFIX##}/{##LASTDIR##}{##BIZNM_UP1##}/{##BIZNM##}List.do?srch_menu_nix=" + {##BIZNM##}VO.getSrch_menu_nix() + "&pageIndex=1";
+	}
+
+	/**
+	 * {##BIZKR##} 항목을 수정한다.
+	 * @param {##BIZNM##}VO : 수정할 정보
+	 * @exception Exception
+	 */
+	@RequestMapping("/mdf{##BIZNM_UP1##}")
+	public String mdf{##BIZNM_UP1##}(
+			@ModelAttribute("{##BIZNM##}VO") {##BIZNM_UP1##}VO {##BIZNM##}VO,
+			HttpServletRequest request,
+			ModelMap model) throws Exception {
+		
+		MemberVO user = (MemberVO) EgovSessionCookieUtil.getSessionAttribute(request, "SESS_USR_INFO");
+		{##BIZNM##}VO.setModifier(user.getUser_id());
+		{##BIZNM##}Service.update{##BIZNM_UP1##}({##BIZNM##}VO);
+		
+		// 아래 리다이렉트 파라미터에 키값이 더 추가되어야 함.
+		return "redirect:{##USRACT_PREFIX##}/{##LASTDIR##}{##BIZNM_UP1##}/{##BIZNM##}List.do?srch_menu_nix=" + {##BIZNM##}VO.getSrch_menu_nix() + "&edomweivgp=M";
+	}
+
+	/**
+	 * {##BIZKR##} 목록의 엑셀 다운로드 요청을 처리한다.
+	 * @param {##BIZNM##}VO : 수정할 정보
+	 * @exception Exception
+	 */
+	@RequestMapping("/xls{##BIZNM_UP1##}Save")
+	public void xls{##BIZNM_UP1##}Save(
+			@ModelAttribute("{##BIZNM##}VO") {##BIZNM_UP1##}VO {##BIZNM##}VO,
+			HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		
+		ExcelDownUtil xlsDownUtil = new ExcelDownUtil();
+		ArrayList colinfoList = new ArrayList();
+		
+		String[][] col_name = {
+			{##EXCEL_COLDEF_ITER##}
+		};
+		
+		for(int i = 0; i < col_name.length; i++)
+		{
+			HashMap ifmap = new HashMap();
+			ifmap.put("COL_NAME", col_name[i][0]);
+			ifmap.put("COL_INFO", col_name[i][1]);
+			colinfoList.add(ifmap);
+		}
+		
+		List {##BIZNM##}OrgList = {##BIZNM##}Service.xls{##BIZNM_UP1##}List({##BIZNM##}VO);
+		
+		/************************************************************
+		 * 질의 결과를 그대로 엑셀에 저장할 수 없으므로 데이터를 가공한다.
+		 * 그대로 저장해도 되는 경우(가공이 필요없는 경우) 이부분은 생략한다....
+		 ************************************************************/
+		List {##BIZNM##}XlsList = new ArrayList();
+		for(int i = 0; i < {##BIZNM##}OrgList.size(); i++)
+		{
+			{##BIZNM_UP1##}VO vo = ({##BIZNM_UP1##}VO) {##BIZNM##}OrgList.get(i);
+		
+			HashMap rsmap = new HashMap();
+			{##EXCEL_COLSET_ITER##}
+		
+			{##BIZNM##}XlsList.add(rsmap);
+		}
+			
+		String fileName = "{##BIZKR##}";
+		xlsDownUtil.ExcelWrite(response, {##BIZNM##}XlsList, colinfoList, fileName);
+	}
+
+
+}
+

@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="commstat">
+
+	<typeAlias  alias="commstatVO" type="egovframework.plani.template.man.stat.vo.CommstatVO"/>
+	
+	<insert id="commstatDAO.insertCommstat" parameterClass="commstatVO">
+
+		INSERT INTO CMS_COMM_STAT
+		(
+			STAT_KEY,
+			STAT_SESSID,
+			STAT_KEY_NM,
+			STAT_CITY,
+			STAT_NAT,
+			STAT_NAT_CD,
+			STAT_BW,
+			STAT_OS,
+			STAT_REFERER,
+			STAT_DT,
+			STAT_RADDR,
+			STAT_UID
+		)
+		VALUES
+		(
+			#stat_key#,
+			#stat_sessid#,
+			#stat_key_nm#,
+			#stat_city#,
+			#stat_nat#,
+			#stat_nat_cd#,
+			#stat_bw#,
+			#stat_os#,
+			#stat_referer#,
+			SYSDATE,
+			#stat_raddr#,
+			#stat_uid#			
+		)
+
+	</insert>
+	
+
+	<select id="commstatDAO.selectCommstatList" parameterClass="commstatVO" resultClass="commstatVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+
+			SELECT 
+				STAT_KEY,
+				STAT_SESSID,
+				STAT_KEY_NM,
+				STAT_CITY,
+				STAT_NAT,
+				STAT_NAT_CD,
+				STAT_OS,
+				STAT_BW,
+				STAT_REFERER,
+				STAT_DT,
+				STAT_RADDR,
+				STAT_UID,
+				STAT_UNM
+			FROM
+				(
+					SELECT 
+						STAT_KEY,
+						STAT_SESSID,
+						STAT_KEY_NM,
+						UPPER(STAT_CITY) STAT_CITY,
+						UPPER(STAT_NAT) STAT_NAT,
+						STAT_NAT_CD,
+						STAT_OS,
+						STAT_BW,
+						STAT_REFERER,
+						TO_CHAR(STAT_DT, 'YYYY-MM-DD HH24:MI:SS') STAT_DT,
+						STAT_RADDR,
+						STAT_UID,
+						SF_USER_NM(STAT_UID) STAT_UNM
+					FROM 
+						CMS_COMM_STAT
+				)
+			WHERE
+				1 = 1 
+				<isEmpty property = "stat_key" prepend="AND">
+					STAT_KEY IN ('USERMAN', 'APPLMAN')
+				</isEmpty>
+				<isNotEmpty property = "stat_key" prepend="AND">
+					STAT_KEY = #stat_key#
+				</isNotEmpty>
+				<isNotEmpty property = "srchFromDT">
+					<isNotEmpty property = "srchToDT" prepend="AND">
+						STAT_DT BETWEEN #srchFromDT# || ' 00:00:00' AND #srchToDT# || ' 23:59:59'
+					</isNotEmpty>				
+				</isNotEmpty>
+				
+			ORDER BY STAT_DT DESC
+		) TB )  WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+
+	</select>
+	
+
+
+	<select id="commstatDAO.selectCommstatListTotCnt" parameterClass="commstatVO" resultClass="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			(
+				SELECT 
+					STAT_KEY,
+					STAT_SESSID,
+					STAT_KEY_NM,
+					UPPER(STAT_CITY) STAT_CITY,
+					UPPER(STAT_NAT) STAT_NAT,
+					STAT_NAT_CD,
+					STAT_OS,
+					STAT_BW,
+					STAT_REFERER,
+					TO_CHAR(STAT_DT, 'YYYY-MM-DD HH24:MI:SS') STAT_DT,
+					STAT_RADDR,
+					STAT_UID,
+					SF_USER_NM(STAT_UID) STAT_UNM
+				FROM 
+					CMS_COMM_STAT
+				)			
+		WHERE
+			1 = 1 
+			<isEmpty property = "stat_key" prepend="AND">
+				STAT_KEY IN ('USERMAN', 'APPLMAN')
+			</isEmpty>
+			<isNotEmpty property = "stat_key" prepend="AND">
+				STAT_KEY = #stat_key#
+			</isNotEmpty>
+			<isNotEmpty property = "srchFromDT">
+				<isNotEmpty property = "srchToDT" prepend="AND">
+					STAT_DT BETWEEN #srchFromDT# || ' 00:00:00' AND #srchToDT# || ' 23:59:59'
+				</isNotEmpty>					
+			</isNotEmpty>
+
+	</select>
+
+ 	
+	<select id="commstatDAO.selectCommstatCnt" parameterClass="commstatVO" resultClass="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_COMM_STAT			
+		WHERE
+			STAT_KEY = #stat_key# AND
+			STAT_SESSID = #stat_sessid#
+
+	</select>
+	
+		<select id="commstatDAO.xlsCommstatList" parameterClass="commstatVO" resultClass="commstatVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+
+			SELECT 
+				STAT_KEY,
+				STAT_SESSID,
+				STAT_KEY_NM,
+				STAT_CITY,
+				STAT_NAT,
+				STAT_NAT_CD,
+				STAT_OS,
+				STAT_BW,
+				STAT_REFERER,
+				STAT_DT,
+				STAT_RADDR,
+				STAT_UID,
+				STAT_UNM
+			FROM
+				(
+					SELECT 
+						STAT_KEY,
+						STAT_SESSID,
+						STAT_KEY_NM,
+						UPPER(STAT_CITY) STAT_CITY,
+						UPPER(STAT_NAT) STAT_NAT,
+						STAT_NAT_CD,
+						STAT_OS,
+						STAT_BW,
+						STAT_REFERER,
+						TO_CHAR(STAT_DT, 'YYYY-MM-DD HH24:MI:SS') STAT_DT,
+						STAT_RADDR,
+						STAT_UID,
+						SF_USER_NM(STAT_UID) STAT_UNM
+					FROM 
+						CMS_COMM_STAT
+				)
+			WHERE
+				1 = 1 
+				<isEmpty property = "stat_key" prepend="AND">
+					STAT_KEY IN ('USERMAN', 'APPLMAN')
+				</isEmpty>
+				<isNotEmpty property = "stat_key" prepend="AND">
+					STAT_KEY = #stat_key#
+				</isNotEmpty>
+				<isNotEmpty property = "srchFromDT">
+					<isNotEmpty property = "srchToDT" prepend="AND">
+						STAT_DT BETWEEN #srchFromDT# || ' 00:00:00' AND #srchToDT# || ' 23:59:59'
+					</isNotEmpty>				
+				</isNotEmpty>
+				
+			ORDER BY STAT_DT DESC
+		) TB )  
+
+	</select>
+	
+	<select id="commstatDAO.viewstatCountry" parameterClass="commstatVO" resultClass="commstatVO">
+		
+		SELECT 
+			NVL(UPPER(STAT_NAT), 'UNKNOWN') CHARTDATA_KEY,  
+		  	COUNT(*) CHARTDATA_VAL
+		FROM 
+			CMS_COMM_STAT
+		WHERE 
+			STAT_KEY = 'MAIN'
+			<isNotEmpty property="date_choice">
+				<isEqual property="date_choice" compareValue="YY" prepend="AND">
+					TO_CHAR(STAT_DT, 'YYYY') BETWEEN #srchFromDT# AND #srchToDT#
+				</isEqual>
+				<isEqual property="date_choice" compareValue="MM" prepend="AND">
+					TO_CHAR(STAT_DT, 'YYYYMM') BETWEEN #srchFromDT# AND #srchToDT#
+				</isEqual>
+				<isEqual property="date_choice" compareValue="DD" prepend="AND">
+					TO_CHAR(STAT_DT, 'YYYYMMDD') BETWEEN #srchFromDT# AND #srchToDT#
+				</isEqual>
+			</isNotEmpty>	
+		GROUP BY UPPER(STAT_NAT)
+		ORDER BY CHARTDATA_VAL
+		
+	</select>
+
+	<select id="commstatDAO.viewstatCity" parameterClass="commstatVO" resultClass="commstatVO">
+
+		SELECT 
+			NVL(UPPER(STAT_CITY), 'UNKNOWN') CHARTDATA_KEY,  
+			COUNT(*) CHARTDATA_VAL
+		FROM 
+			CMS_COMM_STAT
+		WHERE 
+			STAT_KEY = 'MAIN'
+			<isNotEmpty property="date_choice">
+				<isEqual property="date_choice" compareValue="YY" prepend="AND">
+					TO_CHAR(STAT_DT, 'YYYY') BETWEEN #srchFromDT# AND #srchToDT#
+				</isEqual>
+				<isEqual property="date_choice" compareValue="MM" prepend="AND">
+					TO_CHAR(STAT_DT, 'YYYYMM') BETWEEN #srchFromDT# AND #srchToDT#
+				</isEqual>
+				<isEqual property="date_choice" compareValue="DD" prepend="AND">
+					TO_CHAR(STAT_DT, 'YYYYMMDD') BETWEEN #srchFromDT# AND #srchToDT#
+				</isEqual>
+			</isNotEmpty>		
+		GROUP BY UPPER(STAT_CITY)		
+		ORDER BY CHARTDATA_VAL
+		
+	</select>
+
+	<select id="commstatDAO.viewstatOS" parameterClass="commstatVO" resultClass="commstatVO">
+
+		SELECT 
+			NVL(STAT_OS, 'UNKNOWN') CHARTDATA_KEY,  
+		  	COUNT(*) CHARTDATA_VAL
+		FROM 
+			CMS_COMM_STAT
+		WHERE 
+			STAT_KEY = 'MAIN'
+			<isNotEmpty property="date_choice">
+				<isEqual property="date_choice" compareValue="YY" prepend="AND">
+					TO_CHAR(STAT_DT, 'YYYY') BETWEEN #srchFromDT# AND #srchToDT#
+				</isEqual>
+				<isEqual property="date_choice" compareValue="MM" prepend="AND">
+					TO_CHAR(STAT_DT, 'YYYYMM') BETWEEN #srchFromDT# AND #srchToDT#
+				</isEqual>
+				<isEqual property="date_choice" compareValue="DD" prepend="AND">
+					TO_CHAR(STAT_DT, 'YYYYMMDD') BETWEEN #srchFromDT# AND #srchToDT#
+				</isEqual>
+			</isNotEmpty>
+		GROUP BY STAT_OS
+		ORDER BY CHARTDATA_VAL
+		
+	</select>
+
+	<select id="commstatDAO.viewstatBrowser" parameterClass="commstatVO" resultClass="commstatVO">
+		
+		SELECT 
+			NVL(STAT_BW, 'UNKNOWN') CHARTDATA_KEY,  
+		  	COUNT(*) CHARTDATA_VAL
+		FROM 
+			CMS_COMM_STAT
+		WHERE 
+			STAT_KEY = 'MAIN'
+			<isNotEmpty property="date_choice">
+				<isEqual property="date_choice" compareValue="YY" prepend="AND">
+					TO_CHAR(STAT_DT, 'YYYY') BETWEEN #srchFromDT# AND #srchToDT#
+				</isEqual>
+				<isEqual property="date_choice" compareValue="MM" prepend="AND">
+					TO_CHAR(STAT_DT, 'YYYYMM') BETWEEN #srchFromDT# AND #srchToDT#
+				</isEqual>
+				<isEqual property="date_choice" compareValue="DD" prepend="AND">
+					TO_CHAR(STAT_DT, 'YYYYMMDD') BETWEEN #srchFromDT# AND #srchToDT#
+				</isEqual>
+			</isNotEmpty>			
+		GROUP BY STAT_BW
+		ORDER BY CHARTDATA_VAL
+		
+	</select>
+
+	<select id="commstatDAO.viewstatVisitHourly" parameterClass="commstatVO" resultClass="commstatVO">
+		
+		SELECT 
+			'0' AS CHARTDATA_SRZ, 
+	    	B.CTDATE || '시' AS CHARTDATA_KEY, 
+	    	NVL(CNT, 0) AS CHARTDATA_VAL
+	  	FROM 
+	    (
+	    	SELECT 
+	    		STAT_DT, 
+	    		COUNT(*) CNT 
+	    	FROM 
+	   		(
+	   			SELECT 
+	   				TO_CHAR(STAT_DT, 'HH24') STAT_DT 
+	   			FROM 
+	   				CMS_COMM_STAT A 
+	   			WHERE 
+	   				STAT_KEY = 'MAIN' 			
+					<isNotEmpty property="date_choice">
+		   				<isEqual property="date_choice" compareValue="YY" prepend="AND">
+							TO_CHAR(STAT_DT, 'YYYY') BETWEEN #srchFromDT# AND #srchToDT#
+						</isEqual>
+						<isEqual property="date_choice" compareValue="MM" prepend="AND">
+							TO_CHAR(STAT_DT, 'YYYYMM') BETWEEN #srchFromDT# AND #srchToDT#
+						</isEqual>
+						<isEqual property="date_choice" compareValue="DD" prepend="AND">
+							TO_CHAR(STAT_DT, 'YYYYMMDD') BETWEEN #srchFromDT# AND #srchToDT#
+						</isEqual>
+					</isNotEmpty>
+	   		) 
+		    GROUP BY STAT_DT 
+	    ) A, 
+	    (
+	    	SELECT 
+	    		LEVEL - 1 AS CTDATE 
+	    	FROM DUAL CONNECT BY LEVEL - 1 <![CDATA[ <= ]]> 23 
+	    ) B 
+	 	WHERE A.STAT_DT(+) = B.CTDATE 
+		ORDER BY CTDATE
+	</select>
+
+	<select id="commstatDAO.viewstatVisitDaily" parameterClass="commstatVO" resultClass="commstatVO">
+		
+		SELECT 
+			'0' CHARTDATA_SRZ, 
+	    	B.CTDATE CHARTDATA_KEY, 
+	    	NVL(CNT, 0) CHARTDATA_VAL
+	  	FROM 
+	    (
+	    	SELECT 
+	    		STAT_DT, 
+	    		COUNT(*) CNT 
+	    	FROM 
+	   		(
+	   			SELECT 
+	   				TO_CHAR(STAT_DT, 'YYYYMMDD') STAT_DT 
+	   			FROM 
+	   				CMS_COMM_STAT A 
+	   			WHERE 
+	   				STAT_KEY = 'MAIN' AND
+					TO_CHAR(STAT_DT, 'YYYYMMDD') BETWEEN #srchFromDT# AND #srchToDT# 				
+	   				
+	   		) 
+		    GROUP BY STAT_DT 
+	    ) A, 
+	    (
+	    	SELECT 
+	    		TO_CHAR(TO_DATE(#srchFromDT#, 'YYYYMMDD') + LEVEL - 1, 'YYYYMMDD') AS CTDATE 
+	    	FROM DUAL CONNECT BY TO_DATE(#srchFromDT#, 'YYYYMMDD') + LEVEL - 1 <![CDATA[ <= ]]> TO_DATE(#srchToDT#, 'YYYYMMDD') 
+	    ) B 
+	 	WHERE A.STAT_DT(+) = B.CTDATE 
+		ORDER BY CTDATE
+	</select>
+
+	<select id="commstatDAO.viewstatVisitMonthly" parameterClass="commstatVO" resultClass="commstatVO">
+		
+		SELECT 
+			'0' CHARTDATA_SRZ, 
+	    	B.CTDATE CHARTDATA_KEY, 
+	    	NVL(CNT, 0) CHARTDATA_VAL
+	  	FROM 
+	    (
+	    	SELECT 
+	    		STAT_DT, 
+	    		COUNT(*) CNT 
+	    	FROM 
+	   		(
+	   			SELECT 
+	   				TO_CHAR(STAT_DT, 'YYYYMM') STAT_DT 
+	   			FROM 
+	   				CMS_COMM_STAT A 
+	   			WHERE 
+	   				STAT_KEY = 'MAIN' AND
+					TO_CHAR(STAT_DT, 'YYYYMM') BETWEEN #srchFromDT# AND #srchToDT# 
+	   		) 
+		    GROUP BY STAT_DT 
+	    ) A, 
+	    (
+	    	SELECT 
+	    		TO_CHAR(ADD_MONTHS(TO_DATE(#srchFromDT#, 'YYYYMM'), LEVEL - 1),  'YYYYMM') AS CTDATE
+            FROM DUAL CONNECT BY ADD_MONTHS(TO_DATE(#srchFromDT#, 'YYYYMM'), LEVEL - 1) <![CDATA[ <= ]]> TO_DATE(#srchToDT#, 'YYYYMM')
+	    ) B 
+	 	WHERE A.STAT_DT(+) = B.CTDATE 
+		ORDER BY CTDATE
+		
+	</select>
+	
+	<select id="commstatDAO.viewstatVisitYearly" parameterClass="commstatVO" resultClass="commstatVO">
+		
+		SELECT 
+			'0' CHARTDATA_SRZ, 
+	    	B.CTDATE CHARTDATA_KEY, 
+	    	NVL(CNT, 0) CHARTDATA_VAL
+	  	FROM 
+	    (
+	    	SELECT 
+	    		STAT_DT, 
+	    		COUNT(*) CNT 
+	    	FROM 
+	   		(
+	   			SELECT 
+	   				TO_CHAR(STAT_DT, 'YYYY') STAT_DT 
+	   			FROM 
+	   				CMS_COMM_STAT A 
+	   			WHERE 
+	   				STAT_KEY = 'MAIN' AND
+					TO_CHAR(STAT_DT, 'YYYY') BETWEEN #srchFromDT# AND #srchToDT#
+	   		) 
+		    GROUP BY STAT_DT 
+	    ) A, 
+	    (
+	    	SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#srchFromDT#, 'YYYY'),  (LEVEL - 1) * 12),  'YYYY') AS CTDATE
+            FROM DUAL CONNECT BY ADD_MONTHS(TO_DATE(#srchFromDT#, 'YYYY'), (LEVEL - 1) * 12) <![CDATA[ <= ]]> TO_DATE(#srchToDT#, 'YYYY')
+	    ) B 
+	 	WHERE A.STAT_DT(+) = B.CTDATE 
+		ORDER BY CTDATE
+		
+	</select>
+	
+	<select id="commstatDAO.viewstatVisitDailyTotCnt" parameterClass="commstatVO" resultClass="commstatVO">
+	
+		SELECT 
+			COUNT(CONTACT_CNT) TOT_CNT, 
+			NVL(SUM(CONTACT_CNT), 0) TOT_CNT_IGNORE_DUP 
+		FROM 
+			CMS_COMM_STAT 
+		WHERE 
+			STAT_KEY = 'MAIN' AND
+			TO_CHAR(STAT_DT, 'YYYYMMDD') BETWEEN #srchFromDT# AND #srchToDT# ORDER BY STAT_DT
+			
+	</select>
+	
+	<select id="commstatDAO.viewstatVisitMonthlyTotCnt" parameterClass="commstatVO" resultClass="commstatVO">
+	
+		SELECT 
+			COUNT(CONTACT_CNT) TOT_CNT, 
+			NVL(SUM(CONTACT_CNT), 0) TOT_CNT_IGNORE_DUP 
+		FROM 
+			CMS_COMM_STAT 
+		WHERE 
+			STAT_KEY = 'MAIN' AND
+			TO_CHAR(STAT_DT, 'YYYYMM') BETWEEN #srchFromDT# AND #srchToDT# ORDER BY STAT_DT
+			
+	</select>
+	
+	<select id="commstatDAO.viewstatVisitYearlyTotCnt" parameterClass="commstatVO" resultClass="commstatVO">
+	
+		SELECT 
+			COUNT(CONTACT_CNT) TOT_CNT, 
+			NVL(SUM(CONTACT_CNT), 0) TOT_CNT_IGNORE_DUP 
+		FROM 
+			CMS_COMM_STAT 
+		WHERE 
+			STAT_KEY = 'MAIN' AND
+			TO_CHAR(STAT_DT, 'YYYY') BETWEEN #srchFromDT# AND #srchToDT# ORDER BY STAT_DT
+			
+	</select>
+	
+	<update id="commstatDAO.updateCommstatContactCnt" parameterClass="commstatVO">
+		
+		UPDATE CMS_COMM_STAT SET
+			CONTACT_CNT = CONTACT_CNT + 1 
+		WHERE
+			STAT_KEY = #stat_key# AND
+			STAT_SESSID = #stat_sessid#
+				
+	</update>
+
+	<select id="commstatDAO.viewstatVisitPage" parameterClass="commstatVO" resultClass="commstatVO">
+		
+		SELECT 
+			STAT_KEY_NM CHARTDATA_KEY,  
+		  	COUNT(*) CHARTDATA_VAL
+		FROM 
+			CMS_COMM_STAT
+		WHERE
+			( STAT_KEY <![CDATA[ <> ]]> 'MAIN' AND STAT_KEY <![CDATA[ <> ]]> 'LOGIN_USR' )  
+			<isNotEmpty property="srchFromDT">
+				<isNotEmpty property="srchToDT" prepend="AND">
+					TO_CHAR(STAT_DT, 'YYYYMMDD') BETWEEN #srchFromDT# AND #srchToDT#
+				</isNotEmpty>
+			</isNotEmpty>			
+		GROUP BY STAT_KEY, STAT_KEY_NM
+		ORDER BY CHARTDATA_KEY
+		
+	</select>
+
+
+</sqlMap>
+

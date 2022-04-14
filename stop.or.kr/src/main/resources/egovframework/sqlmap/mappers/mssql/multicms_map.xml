@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.multicms.dao.MultiCmsDAO">
+
+		<!-- 게시물목록 목록 -->
+	<select id="selectMultiCmsList" parameterType="multiCmsVO" resultType="multiCmsVO">
+		
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY MC_SEQ DESC) rn, TB.* FROM (
+	
+			SELECT
+				MC_SEQ
+				, MC_TITLE
+				, MC_CONTENT
+				, MC_CATEGORY
+				, CONVERT(VARCHAR(10), WDT, 20) WDT
+				, (SELECT VCHKCODE FROM CMS_ATACH WHERE ATCKEY_1ST = 'MULTI_CMS' AND ATCKEY_2ND = MC_SEQ AND ATCKEY_3RD = 2  AND IS_THUMB = 'N') as FILE_CODE
+				, (SELECT VCHKCODE FROM CMS_ATACH WHERE ATCKEY_1ST = 'MULTI_CMS' AND ATCKEY_2ND = MC_SEQ AND ATCKEY_3RD = 1  AND IS_THUMB = 'Y') as IMG_CODE
+				
+			FROM
+				CMS_MULTI
+				
+			WHERE 
+				MC_CATEGORY = #{mc_category}
+	  			<if test="searchKeyword != null and searchKeyword != ''">
+						AND MC_TITLE LIKE '%' + #{searchKeyword} + '%'
+				</if>			
+					
+		
+		) TB ) MORG  WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage} 
+		
+	</select>
+	
+	
+	
+	<!-- 페이지 나누기를 위한 총 개수 -->
+	<select id="selectMultiCmsListTotCnt" parameterType="multiCmsVO" resultType="int">
+	
+		SELECT
+			COUNT(*) AS totcnt
+		FROM
+			CMS_MULTI
+		WHERE 
+			MC_CATEGORY = #{mc_category} 	
+		<if test="searchKeyword != null and searchKeyword != ''">
+			AND MC_TITLE LIKE '%' + #{searchKeyword} + '%'
+		</if>
+			
+	</select>
+	
+	
+
+
+
+
+	<!-- 게시물목록 등록 -->
+	<insert id="insertMultiCms" parameterType="multiCmsVO">
+		<selectKey keyProperty="mc_seq" resultType="int" order="BEFORE">
+			SELECT ISNULL(MAX(MC_SEQ), 0) + 1 FROM CMS_MULTI
+		</selectKey>
+	
+		INSERT INTO CMS_MULTI(
+			MC_SEQ
+			, MC_TITLE
+			, MC_CONTENT
+			, MC_CATEGORY
+			, WDT
+		)
+		VALUES(
+			#{mc_seq}
+			, #{mc_title}
+			, #{mc_content}
+			, #{mc_category}
+			, GETDATE()
+		)	
+	</insert>
+	
+	
+	<!-- 게시물목록 수정 -->
+	<update id="updateMultiCms" parameterType="multiCmsVO">
+		UPDATE CMS_MULTI SET
+			  MC_TITLE = #{mc_title}
+			, MC_CONTENT = #{mc_content}
+		WHERE
+			MC_SEQ = #{mc_seq}
+	</update>
+	
+	<!-- 게시물목록 삭제 -->
+	<delete id="deleteMultiCms" parameterType="multiCmsVO">
+		
+		DELETE FROM 
+			CMS_MULTI 
+		WHERE 
+			MC_SEQ = #{mc_seq}
+			
+	</delete>
+	
+	<!-- 게시물목록 상세 -->
+	<select id="selectMultiCms" parameterType="multiCmsVO" resultType="multiCmsVO">
+		
+		SELECT
+			  MC_SEQ
+			, MC_TITLE
+			, MC_CONTENT
+			, MC_CATEGORY
+			, WDT
+		FROM
+			CMS_MULTI
+		WHERE
+			MC_SEQ = #{mc_seq}
+			
+	</select>
+	
+</mapper>
+

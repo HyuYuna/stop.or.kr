@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 
+	 <definition name="modeecDefinitionContent" template="/WEB-INF/jsp/layout/template/metsys/layout/modeecLayout.jsp">
+		 <put-attribute name="metsysMeta"	value="/WEB-INF/jsp/layout/template/metsys/meta/meta_type_content.jsp"/>
+		 <put-attribute name="metsysHeader"	value="/WEB-INF/jsp/layout/template/metsys/header.jsp"/>
+		 <put-attribute name="metsysMenu"	value="/WEB-INF/jsp/layout/template/metsys/menu.jsp"/>
+		 <put-attribute name="metsysSubmenu"	value="/WEB-INF/jsp/layout/template/metsys/submenu/submenu.jsp"/>
+		 <put-attribute name="metsysScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script.jsp"/>
+		 <put-attribute name="metsysFooter"	value="/WEB-INF/jsp/layout/template/metsys/footer.jsp"/>
+	 </definition>
+	 
+	 <definition name="modeecDefinitionEditor" template="/WEB-INF/jsp/layout/template/metsys/layout/modeecLayout.jsp">
+		 <put-attribute name="metsysMeta"	value="/WEB-INF/jsp/layout/template/metsys/meta/meta_type_editor.jsp"/>
+		 <put-attribute name="metsysHeader"	value="/WEB-INF/jsp/layout/template/metsys/header.jsp"/>
+		 <put-attribute name="metsysMenu"	value="/WEB-INF/jsp/layout/template/metsys/menu.jsp"/>
+		 <put-attribute name="metsysSubmenu"	value="/WEB-INF/jsp/layout/template/metsys/submenu/submenu.jsp"/>
+		 <put-attribute name="metsysScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script.jsp"/>
+		 <put-attribute name="metsysFooter"	value="/WEB-INF/jsp/layout/template/metsys/footer.jsp"/>
+	 </definition>
+	 
+	 <definition name="modeecUploaderContent" template="/WEB-INF/jsp/layout/template/metsys/layout/modeecLayout.jsp">
+		 <put-attribute name="metsysMeta"	value="/WEB-INF/jsp/layout/template/metsys/meta/meta_type_uploader.jsp"/>
+		 <put-attribute name="metsysHeader"	value="/WEB-INF/jsp/layout/template/metsys/header.jsp"/>
+		 <put-attribute name="metsysMenu"	value="/WEB-INF/jsp/layout/template/metsys/menu.jsp"/>
+		 <put-attribute name="metsysSubmenu"	value="/WEB-INF/jsp/layout/template/metsys/submenu/submenu.jsp"/>
+		 <put-attribute name="metsysScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script.jsp"/>
+		 <put-attribute name="metsysFooter"	value="/WEB-INF/jsp/layout/template/metsys/footer.jsp"/>
+	 </definition>
+	 
+	 <!-- 
+	 <definition name="/modeec/modeecPage" extends="modeecDefinitionContent">
+		 <put-attribute name="metsysTitle"	value="기타 관리" />
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/metsys/ec/modeecPage.jsp" />
+	 </definition>
+	 -->
+	 
+	 <definition name="/modeec/codeList" extends="modeecDefinitionContent">
+		 <put-attribute name="metsysTitle"	value="코드 관리" />
+ 		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_code.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/ec/codeList.jsp" />
+	 </definition>
+	 
+	 <definition name="/modeec/ctgryList" extends="modeecDefinitionContent">
+		 <put-attribute name="metsysTitle"	value="카테고리 관리" />
+ 		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_ctgry.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/ec/ctgryList.jsp" />
+	 </definition>
+
+	 <definition name="/modeec/authList" extends="metsysUserContent">
+		 <put-attribute name="metsysTitle"	value="권한 관리" />
+ 		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_auth.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/ec/authList.jsp" />
+	 </definition>
+
+	 <definition name="/modeatch/customAtchPage" extends="modeecUploaderContent">
+		 <put-attribute name="metsysTitle"	value="첨부파일 관리" />
+ 		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_atch.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/ec/customAtchPage.jsp" />
+	 </definition>
+	 
+	 <!-- <definition name="/popup/*" extends="modeecUploaderContent">
+		 <put-attribute name="metsysTitle"	value="팝업 관리" />
+ 		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_pp.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/pp/{1}.jsp" />
+	 </definition> -->
+	 <definition name="/popup/popupList" extends="modeecUploaderContent">
+		 <put-attribute name="metsysTitle"	value="팝업 관리" />
+ 		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_pp.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/pp/popupList.jsp" />
+	 </definition>
+	 
+	  <definition name="/popup/popupView" extends="modeecUploaderContent">
+		 <put-attribute name="metsysTitle"	value="팝업 관리" />
+ 		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_pp.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/pp/popupView.jsp" />
+	 </definition>
+	 
+	 <definition name="/popup/popupWrite" extends="modeecUploaderContent">
+		 <put-attribute name="metsysTitle"	value="팝업 관리" />
+ 		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_pp.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/pp/popupWrite.jsp" />
+	 </definition>
+	 
+	  <definition name="/popup/showPopup" extends="modeecUploaderContent">
+		 <put-attribute name="metsysTitle"	value="팝업 관리" />
+ 		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_pp.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/pp/showPopup.jsp" />
+	 </definition>
+
+	 <definition name="/modeec/logmanList" extends="metsysUserContent">
+		 <put-attribute name="metsysTitle"	value="로그 관리" />
+ 		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_log.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/ur/logmanPage.jsp" />
+	 </definition>
+
+	 <definition name="/modeec/withdrawalList" extends="metsysUserContent">
+		 <put-attribute name="metsysTitle"	value="탈퇴회원 조회" />
+ 		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_log.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/ur/withdrawalPage.jsp" />
+	 </definition>
+
+</tiles-definitions>
+

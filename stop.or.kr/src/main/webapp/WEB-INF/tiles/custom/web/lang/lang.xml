@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 
+	 <definition name="engDefinitionMain" template="/WEB-INF/jsp/layout/custom/web/eng/cmmn/layout/mainLayout.jsp">
+		 <put-attribute name="mainMeta"	value="/WEB-INF/jsp/layout/custom/web/eng/meta/meta_main.jsp"/>
+		 <put-attribute name="mainHeader"	value="/WEB-INF/jsp/layout/custom/web/eng/header.jsp"/>
+		 <put-attribute name="mainScript"	value="/WEB-INF/jsp/layout/custom/web/eng/cmmn/script/script_main.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/script.jsp"/>
+		 <put-attribute name="mainFooter"	value="/WEB-INF/jsp/layout/custom/web/eng/footer.jsp"/>
+	 </definition>
+	 
+	 <definition name="engDefinitionContent" template="/WEB-INF/jsp/layout/custom/web/eng/cmmn/layout/subLayout.jsp">
+		 <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/web/eng/meta/meta_cont.jsp"/>
+		 <put-attribute name="contHeader"	value="/WEB-INF/jsp/layout/custom/web/eng/header.jsp"/>
+		 <put-attribute name="contSidemenu"	value="/WEB-INF/jsp/layout/template/cmmn/sidemenu.jsp"/>
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/script/script_cont.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/script.jsp"/>
+		 <put-attribute name="contMenu"	value="/WEB-INF/jsp/layout/template/cmmn/menu.jsp"/>
+		 <put-attribute name="contFooter"	value="/WEB-INF/jsp/layout/custom/web/eng/footer.jsp"/>
+	 </definition>
+	 	 	 
+	 <definition name="chnDefinitionMain" template="/WEB-INF/jsp/layout/custom/web/eng/cmmn/layout/mainLayout.jsp">
+		 <put-attribute name="mainMeta"	value="/WEB-INF/jsp/layout/custom/web/eng/chn/meta/meta_main.jsp"/>
+		 <put-attribute name="mainHeader"	value="/WEB-INF/jsp/layout/custom/web/eng/chn/header.jsp"/>
+		 <put-attribute name="mainScript"	value="/WEB-INF/jsp/layout/custom/web/eng/cmmn/script/script_main.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/script.jsp"/>
+		 <put-attribute name="mainFooter"	value="/WEB-INF/jsp/layout/custom/web/eng/chn/footer.jsp"/>
+	 </definition>
+	 
+	 <definition name="chnDefinitionContent" template="/WEB-INF/jsp/layout/custom/web/eng/cmmn/layout/subLayout.jsp">
+		 <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/web/eng/chn/meta/meta_cont.jsp"/>
+		 <put-attribute name="contHeader"	value="/WEB-INF/jsp/layout/custom/web/eng/chn/header.jsp"/>
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/contents/script/script_cont.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/script.jsp"/>
+		 <put-attribute name="contMenu"	value="/WEB-INF/jsp/layout/template/cmmn/menu.jsp"/>
+		 <put-attribute name="contFooter"	value="/WEB-INF/jsp/layout/custom/web/eng/chn/footer.jsp"/>
+	 </definition>
+	 	 	 
+	 <definition name="jpnDefinitionMain" template="/WEB-INF/jsp/layout/custom/web/eng/cmmn/layout/mainLayout.jsp">
+		 <put-attribute name="mainMeta"	value="/WEB-INF/jsp/layout/custom/web/eng/jpn/meta/meta_main.jsp"/>
+		 <put-attribute name="mainHeader"	value="/WEB-INF/jsp/layout/custom/web/eng/jpn/header.jsp"/>
+		 <put-attribute name="mainScript"	value="/WEB-INF/jsp/layout/custom/web/eng/cmmn/script/script_main.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/script.jsp"/>
+		 <put-attribute name="mainFooter"	value="/WEB-INF/jsp/layout/custom/web/eng/jpn/footer.jsp"/>
+	 </definition>
+	 
+	 <definition name="jpnDefinitionContent" template="/WEB-INF/jsp/layout/custom/web/eng/cmmn/layout/subLayout.jsp">
+		 <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/web/eng/jpn/meta/meta_cont.jsp"/>
+		 <put-attribute name="contHeader"	value="/WEB-INF/jsp/layout/custom/web/eng/jpn/header.jsp"/>
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/contents/script/script_cont.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/script.jsp"/>
+		 <put-attribute name="contMenu"	value="/WEB-INF/jsp/layout/template/cmmn/menu.jsp"/>
+		 <put-attribute name="contFooter"	value="/WEB-INF/jsp/layout/custom/web/eng/jpn/footer.jsp"/>
+	 </definition>
+	 	 	 
+	 <definition name="/*/contents/mainView" extends="{1}DefinitionMain">
+		 <put-attribute name="mainTitle"	value="NYPI Main" />
+		 <put-attribute name="mainContent"	value="/WEB-INF/jsp/wpages/custom/web/{1}/main/siteMain.jsp" />
+	 </definition>
+
+	 <definition name="/*/contents/contentsView" extends="{1}DefinitionContent">
+		 <put-attribute name="contTitle"	value="Contents Page" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/{1}/contentspage/contentsPage.jsp" />
+	 </definition>
+
+	 <definition name="/lang/contents/sitemapView" extends="engDefinitionContent">
+		 <put-attribute name="contTitle"	value="SiteMap" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/eng/cmmn/siteMap.jsp" />
+	 </definition>
+
+	 
+</tiles-definitions>
+

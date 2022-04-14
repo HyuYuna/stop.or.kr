@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="Tablecrud">
+
+	<typeAlias  alias="tablecrudVO" type="egovframework.plani.template.man.metsys.vo.TablecrudVO"/>
+
+	<select id="tablecrudDAO.selectTableList" parameterClass="TablecrudVO" resultClass="tablecrudVO">
+	
+		SELECT 
+			TABLE_NAME  
+  		FROM 
+  			ALL_TABLES  
+ 		WHERE 
+ 			(
+ 				TABLE_NAME LIKE 'CMS_%'
+	 			<isNotEmpty property = "table_prefix_01" prepend="OR">
+	 				TABLE_NAME LIKE #table_prefix_01# || '%'
+	 			</isNotEmpty>
+	 			<isNotEmpty property = "table_prefix_02" prepend="OR">
+	 				TABLE_NAME LIKE #table_prefix_02# || '%'
+	 			</isNotEmpty>
+ 			)
+ 			<isNotEmpty property = "owner" prepend="AND">
+ 				OWNER = UPPER(#owner#)
+ 			</isNotEmpty>
+ 		ORDER BY TABLE_NAME
+	
+	</select>
+
+	<select id="tablecrudDAO.selectTablecolList" parameterClass="TablecrudVO" resultClass="tablecrudVO">
+		 
+ 
+		SELECT 
+			A.OWNER,
+			A.TABLE_NAME,
+			A.COLUMN_NAME,
+			A.DATA_TYPE,
+			A.DATA_LENGTH,
+			A.NULLABLE,         
+			A.COLUMN_ID,
+			B.COMMENTS,             
+			C.CONSTRAINT_TYPE
+		FROM 
+			ALL_TAB_COLUMNS A,
+			ALL_COL_COMMENTS B,
+			(
+				SELECT 
+					A.OWNER,
+					A.TABLE_NAME, 
+					B.COLUMN_NAME, 
+					B.POSITION,
+					'PK' CONSTRAINT_TYPE
+				FROM 
+					USER_CONSTRAINTS A, USER_CONS_COLUMNS B
+				WHERE 
+					A.CONSTRAINT_TYPE = 'P'
+					AND A.TABLE_NAME = B.TABLE_NAME
+					AND A.CONSTRAINT_NAME = B.CONSTRAINT_NAME
+					AND A.TABLE_NAME = #table_name#
+			) C
+		WHERE
+			A.OWNER = B.OWNER(+) AND
+			A.TABLE_NAME = B.TABLE_NAME(+) AND
+			A.COLUMN_NAME = B.COLUMN_NAME(+) AND
+			A.OWNER = C.OWNER(+) AND
+			A.TABLE_NAME = C.TABLE_NAME(+) AND
+			A.COLUMN_NAME = C.COLUMN_NAME(+) AND
+			A.TABLE_NAME = #table_name#
+		ORDER BY COLUMN_ID
+	
+	</select>
+	
+	<!--
+	<insert id="TablecrudDAO.insertTablecrud" parameterClass="TablecrudVO>
+	</insert>
+	
+	<update id="TablecrudDAO.updateTablecrud" parameterClass="TablecrudVO>
+	</update>
+	
+	<delete id="TablecrudDAO.deleteTablecrud" parameterClass="TablecrudVO>
+	</delete>
+	
+	<select id="TablecrudDAO.selectTablecrud" parameterClass="TablecrudVO" resultClass="TablecrudVO">
+	</select>
+	
+	
+	<select id="TablecrudDAO.selectTablecrudListTotCnt" parameterClass="TablecrudVO" resultClass="int">
+	</select>
+	
+	-->
+
+</sqlMap>
+

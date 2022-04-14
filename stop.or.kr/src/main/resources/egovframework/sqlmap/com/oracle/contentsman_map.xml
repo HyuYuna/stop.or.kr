@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="contentsman">
+
+	<typeAlias  alias="contentsmanVO" type="egovframework.plani.template.man.metsys.vo.ContentsmanVO"/>
+	
+	<resultMap id="contentsman" class="egovframework.plani.template.man.metsys.vo.ContentsmanVO"> 
+		<result property="ucont_id" column="ucont_id"/>
+		<result property="ucont_version" column="ucont_version"/>
+		<result property="ucont_subject" column="ucont_subject"/>
+		<result property="ucont_dft" column="ucont_dft"/>
+		<result property="ucont_css" column="ucont_css"/>
+		<result property="ucont_cont" column="ucont_cont" jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="ref_menu_nix" column="ref_menu_nix" nullValue=""/>
+		<result property="ref_menu_nm" column="ref_menu_nm" nullValue=""/>
+		<result property="mu_site" column="mu_site"/>
+		<result property="mu_lang" column="mu_lang"/>
+		<result property="writer" column="writer"/>
+		<result property="writer_nm" column="writer_nm"/>
+		<result property="wdt" column="wdt"/>
+		<result property="modifier" column="modifier"/>
+		<result property="mdt" column="mdt"/>
+	</resultMap> 
+	
+	
+	
+	<insert id="contentsmanDAO.insertContentsman" parameterClass="contentsmanVO">
+		<selectKey resultClass="java.lang.String" keyProperty="ucont_id">
+	   		SELECT 
+	   			CASE #mu_site#
+	   				WHEN 'CDIDX00002' THEN
+	   					CASE #mu_lang#
+	   						WHEN 'CDIDX00022' THEN
+					     		'CTX' || LPAD((NVL(MAX(TO_NUMBER(REPLACE(UCONT_ID, 'CTX', ''))), 0) + 1),  6,  '0')
+	   						WHEN 'CDIDX00023' THEN
+					     		'CTX' || LPAD((NVL(MAX(TO_NUMBER(REPLACE(UCONT_ID, 'CTX', ''))), 1000) + 1),  6,  '0') 
+	   						WHEN 'CDIDX00024' THEN
+					     		'CTX' || LPAD((NVL(MAX(TO_NUMBER(REPLACE(UCONT_ID, 'CTX', ''))), 2000) + 1),  6,  '0') 
+	   						WHEN 'CDIDX00025' THEN
+					     		'CTX' || LPAD((NVL(MAX(TO_NUMBER(REPLACE(UCONT_ID, 'CTX', ''))), 3000) + 1),  6,  '0') 
+					    END
+	   				WHEN 'CDIDX00003' THEN
+	   					CASE #mu_lang#
+	   						WHEN 'CDIDX00022' THEN
+					     		'CTX' || LPAD((NVL(MAX(TO_NUMBER(REPLACE(UCONT_ID, 'CTX', ''))), 10000) + 1),  6,  '0') 
+	   						WHEN 'CDIDX00023' THEN
+					     		'CTX' || LPAD((NVL(MAX(TO_NUMBER(REPLACE(UCONT_ID, 'CTX', ''))), 11000) + 1),  6,  '0') 
+	   						WHEN 'CDIDX00024' THEN
+					     		'CTX' || LPAD((NVL(MAX(TO_NUMBER(REPLACE(UCONT_ID, 'CTX', ''))), 12000) + 1),  6,  '0') 
+	   						WHEN 'CDIDX00025' THEN
+					     		'CTX' || LPAD((NVL(MAX(TO_NUMBER(REPLACE(UCONT_ID, 'CTX', ''))), 13000) + 1),  6,  '0') 
+					    END
+				END AS UCONT_ID
+	     	FROM 
+	     		CMS_USR_CONTENTS
+     		WHERE	
+     			MU_SITE = #mu_site# AND
+	     		MU_LANG = #mu_lang# 
+		</selectKey>
+
+		INSERT INTO CMS_USR_CONTENTS
+		(
+			UCONT_ID,
+			UCONT_VERSION,
+			UCONT_SUBJECT,
+			UCONT_DFT,
+			UCONT_CSS,
+			UCONT_CONT,
+			MU_SITE,
+			MU_LANG,
+			REF_MENU_NIX,
+			WRITER,
+			WDT 
+		)
+		VALUES
+		(
+			#ucont_id#,
+			1, 
+			#ucont_subject#,
+			#ucont_dft#,
+			#ucont_css#,
+			#ucont_cont:CLOB#,
+			#mu_site#,
+			#mu_lang#,
+			#ref_menu_nix#,
+			#writer#,
+			SYSDATE
+		)
+	</insert>
+
+	<insert id="contentsmanDAO.insertContentsmanNewver" parameterClass="contentsmanVO">
+
+		<selectKey resultClass="java.lang.Integer" keyProperty="ucont_version">
+	   		SELECT NVL(MAX(UCONT_VERSION), 0) + 1 FROM CMS_USR_CONTENTS WHERE UCONT_ID = #ucont_id#
+		</selectKey>
+
+		INSERT INTO CMS_USR_CONTENTS
+		(
+			UCONT_ID,
+			UCONT_VERSION,
+			UCONT_SUBJECT,
+			UCONT_DFT,
+			UCONT_CSS,
+			UCONT_CONT,
+			MU_SITE,
+			MU_LANG,
+			REF_MENU_NIX,
+			WRITER,
+			WDT 
+		)
+		VALUES
+		(
+			#ucont_id#,
+			#ucont_version#, 
+			#ucont_subject#,
+			#ucont_dft#,
+			#ucont_css#,
+			#ucont_cont:CLOB#,
+			#mu_site#,
+			#mu_lang#,
+			#ref_menu_nix#,
+			#writer#,
+			SYSDATE
+		)
+	</insert>
+	
+	<update id="contentsmanDAO.updateContentsman" parameterClass="contentsmanVO">
+
+		UPDATE CMS_USR_CONTENTS SET
+			MU_SITE = #mu_site#,
+			MU_LANG = #mu_lang#,
+			UCONT_SUBJECT = #ucont_subject#,
+			UCONT_DFT = #ucont_dft#,
+			UCONT_CSS = #ucont_css#,
+			UCONT_CONT = #ucont_cont:CLOB#,
+			<isNotEmpty property="ref_menu_nix">
+				REF_MENU_NIX = #ref_menu_nix#,
+			</isNotEmpty>
+			MODIFIER = #modifier#,
+			MDT = SYSDATE
+		WHERE
+			UCONT_ID = #ucont_id#
+			<isEqual property = "ucont_version" compareValue="0" prepend = "AND">
+				UCONT_VERSION = (SELECT MAX(UCONT_VERSION) FROM CMS_USR_CONTENTS WHERE UCONT_ID = #ucont_id#) 
+			</isEqual>
+			<isNotEqual property = "ucont_version" compareValue="0" prepend = "AND">
+				UCONT_VERSION = #ucont_version#
+			</isNotEqual>
+
+	</update>
+	
+	<update id="contentsmanDAO.updateContentsmanMenunix" parameterClass="contentsmanVO">
+
+		UPDATE CMS_USR_CONTENTS SET
+			REF_MENU_NIX = #ref_menu_nix#
+		WHERE
+			UCONT_ID = #ucont_id#
+			
+	</update>
+	
+	<update id="contentsmanDAO.updateContentsmanMenunixNull" parameterClass="contentsmanVO">
+
+		UPDATE CMS_USR_CONTENTS SET
+			REF_MENU_NIX = ''
+		WHERE
+			REF_MENU_NIX = #ref_menu_nix#
+			
+	</update>
+		
+	<delete id="contentsmanDAO.deleteContentsman" parameterClass="contentsmanVO">
+
+		DELETE FROM CMS_USR_CONTENTS
+		WHERE
+			UCONT_ID = #ucont_id# AND
+			UCONT_VERSION = #ucont_version#
+
+	</delete>
+	
+	<select id="contentsmanDAO.selectContentsman" parameterClass="contentsmanVO" resultMap="contentsman">
+
+		SELECT
+			UCONT_ID,
+			UCONT_VERSION,
+			UCONT_SUBJECT,
+			UCONT_DFT,
+			UCONT_CSS,
+			UCONT_CONT,
+			MU_SITE,
+			MU_LANG,
+			REF_MENU_NIX,
+			SF_MENU_NM(null, REF_MENU_NIX) REF_MENU_NM,
+			WRITER,
+			SF_USER_NM(WRITER) WRITER_NM,
+			TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+			MODIFIER,
+			TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+		FROM
+			CMS_USR_CONTENTS
+		WHERE
+			UCONT_ID = #ucont_id#
+			<isEqual property = "ucont_version" compareValue="0" prepend = "AND">
+				UCONT_VERSION = (SELECT MAX(UCONT_VERSION) FROM CMS_USR_CONTENTS WHERE UCONT_ID = #ucont_id#) 
+			</isEqual>
+			<isNotEqual property = "ucont_version" compareValue="0" prepend = "AND">
+				UCONT_VERSION = #ucont_version#
+			</isNotEqual>
+	</select>
+	
+	<select id="contentsmanDAO.selectContentsmanList" parameterClass="contentsmanVO" resultClass="contentsmanVO">
+
+		<isNotEmpty property="ucont_id">
+
+			SELECT
+				ROWNUM RN,
+				A.*
+			FROM
+			(
+				SELECT
+					UCONT_ID,
+					UCONT_VERSION,
+					UCONT_SUBJECT,
+					UCONT_DFT,
+					UCONT_CSS,
+					'' UCONT_CONT,
+					MU_SITE,
+					MU_LANG,
+					NVL(REF_MENU_NIX, '') REF_MENU_NIX,
+					WRITER,
+					SF_USER_NM(WRITER) WRITER_NM,
+					TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+					MODIFIER,
+					TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT,
+					RANK() OVER (PARTITION BY UCONT_ID ORDER BY UCONT_VERSION DESC) RANKORD
+				FROM
+					CMS_USR_CONTENTS 
+				WHERE			
+					UCONT_ID = #ucont_id#
+				ORDER BY UCONT_VERSION DESC
+			) A
+		</isNotEmpty>
+		
+		<isEmpty property="ucont_id">
+			SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+	
+				SELECT
+					UCONT_ID,
+					UCONT_VERSION,
+					UCONT_SUBJECT,
+					UCONT_DFT,
+					UCONT_CSS,
+					UCONT_CONT,
+					MU_SITE,
+					MU_LANG,
+					REF_MENU_NIX,
+					WRITER,
+					SF_USER_NM(WRITER) WRITER_NM,
+					WDT,
+					MODIFIER,
+					MDT
+				FROM
+					(
+						SELECT
+							UCONT_ID,
+							UCONT_VERSION,
+							UCONT_SUBJECT,
+							UCONT_DFT,
+							UCONT_CSS,
+							'' UCONT_CONT,
+							MU_SITE,
+							MU_LANG,
+							NVL(REF_MENU_NIX, '') REF_MENU_NIX,
+							WRITER,
+							TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+							MODIFIER,
+							TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT,
+							RANK() OVER (PARTITION BY UCONT_ID ORDER BY UCONT_VERSION DESC) RANKORD
+						FROM
+							CMS_USR_CONTENTS			
+						WHERE
+							1 = 1
+							<isNotEmpty property = "srch_mu_site" prepend="AND">
+								MU_SITE = #srch_mu_site#
+							</isNotEmpty>
+							<isNotEmpty property = "srch_mu_lang" prepend="AND">
+								MU_LANG = #srch_mu_lang#
+							</isNotEmpty>
+							<isNotEmpty property="searchKeyword" prepend="AND">
+								<isEqual property="searchCondition" compareValue="SC_ALL">
+									( UCONT_SUBJECT LIKE '%' || #searchKeyword# || '%' OR UCONT_CONT LIKE '%' || #searchKeyword# || '%' )
+								</isEqual>
+								<isNotEqual property="searchCondition" compareValue="SC_ALL">
+									$searchCondition$ LIKE '%' || #searchKeyword# || '%'
+								</isNotEqual>
+							</isNotEmpty>
+					)
+					WHERE RANKORD = 1
+				ORDER BY UCONT_ID ASC
+				
+			) TB )  WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		</isEmpty>
+
+	</select>
+	
+	<select id="contentsmanDAO.selectContentsmanmenuList" parameterClass="contentsmanVO" resultClass="contentsmanVO">
+		
+		SELECT
+			B.RN,
+			B.MENU_IDX,
+			B.UP_MENU_IDX,
+			B.MENU_NM,
+			B.MENU_LV,
+			B.USE_YN,
+			B.IS_LEAF,
+			UCONT_ID,
+	        NVL(UCONT_VERSION, 1) UCONT_VERSION, 
+			UCONT_SUBJECT,
+			UCONT_DFT,
+			UCONT_CSS,
+			UCONT_CONT,
+			A.MU_SITE,
+			A.MU_LANG,
+			REF_MENU_NIX,
+			A.WRITER,
+			SF_USER_NM(A.WRITER) WRITER_NM,
+			A.WDT,
+			A.MODIFIER,
+			A.MDT
+		FROM
+		(
+			
+			SELECT
+				UCONT_ID,
+				UCONT_VERSION,
+				UCONT_SUBJECT,
+				UCONT_DFT,
+				UCONT_CSS,
+				UCONT_CONT,
+				MU_SITE,
+				MU_LANG,
+				REF_MENU_NIX,
+				WRITER,
+				WDT,
+				MODIFIER,
+				MDT
+			FROM
+				(
+					SELECT
+						UCONT_ID,
+						UCONT_VERSION,
+						UCONT_SUBJECT,
+						UCONT_DFT,
+						UCONT_CSS,
+						'' UCONT_CONT,
+						MU_SITE,
+						MU_LANG,
+						NVL(REF_MENU_NIX, '') REF_MENU_NIX,
+						WRITER,
+						TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+						MODIFIER,
+						TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT,
+						RANK() OVER (PARTITION BY UCONT_ID ORDER BY UCONT_VERSION DESC) RANKORD
+					FROM
+						CMS_USR_CONTENTS			
+					WHERE
+						1 = 1
+						<isNotEmpty property = "srch_mu_site" prepend="AND">
+							MU_SITE = #srch_mu_site#
+						</isNotEmpty>
+						<isNotEmpty property = "srch_mu_lang" prepend="AND">
+							MU_LANG = #srch_mu_lang#
+						</isNotEmpty>
+						<isNotEmpty property="searchKeyword" prepend="AND">
+							<isEqual property="searchCondition" compareValue="SC_ALL">
+								( UCONT_SUBJECT LIKE '%' || #searchKeyword# || '%' OR UCONT_CONT LIKE '%' || #searchKeyword# || '%' )
+							</isEqual>
+							<isNotEqual property="searchCondition" compareValue="SC_ALL">
+								$searchCondition$ LIKE '%' || #searchKeyword# || '%'
+							</isNotEqual>
+						</isNotEmpty>
+				)
+			WHERE RANKORD = 1
+		) A,
+		(
+			SELECT
+				MN.*,
+				LEVEL MENU_LV,
+				CONNECT_BY_ISLEAF AS IS_LEAF,			
+				ROWNUM RN
+			FROM
+				CMS_SYS_MENU MN
+			WHERE
+				MENU_IDX IN (
+					SELECT
+						MENU_IDX
+					FROM
+						CMS_SYS_MENU
+					WHERE
+						1 = 1
+						<isNotEmpty property = "srch_mu_site" prepend="AND">
+							MU_SITE = #srch_mu_site#
+						</isNotEmpty>
+						<isNotEmpty property = "srch_mu_lang" prepend="AND">
+							MU_LANG = #srch_mu_lang#
+						</isNotEmpty>
+						CONNECT BY MENU_IDX = PRIOR UP_MENU_IDX START 
+						WITH MENU_NIX IN (
+							SELECT 
+								REF_MENU_NIX 
+							FROM 
+								CMS_USR_CONTENTS
+							WHERE
+								1 = 1
+						)  
+				)
+			CONNECT BY PRIOR MENU_IDX =  UP_MENU_IDX  
+			START WITH UP_MENU_IDX IS NULL 
+			ORDER SIBLINGS BY MENU_ORD 
+		) B
+		WHERE
+			A.REF_MENU_NIX(+) = B.MENU_NIX
+			
+		ORDER BY RN ASC
+		
+	</select>
+	
+	<select id="contentsmanDAO.selectContentsmanRefmenuList" parameterClass="contentsmanVO" resultClass="contentsmanVO">
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+			SELECT
+				ROWNUM RN,
+				A.*
+			FROM
+			(
+				SELECT
+					UCONT_ID,
+					UCONT_VERSION,
+					UCONT_SUBJECT,
+					UCONT_DFT,
+					UCONT_CSS,
+					UCONT_CONT,
+					MU_SITE,
+					MU_LANG,
+					REF_MENU_NIX,
+					WRITER,
+					SF_USER_NM(WRITER) WRITER_NM,		
+					TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+					MODIFIER,
+					TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT,
+					RANK() OVER (PARTITION BY UCONT_ID ORDER BY UCONT_VERSION DESC) RANKORD
+				FROM
+					CMS_USR_CONTENTS 
+				WHERE			
+					REF_MENU_NIX IN ($searchQuery$)
+				ORDER BY UCONT_VERSION DESC
+		) TB )  
+		
+	</select>
+	
+	
+	<select id="contentsmanDAO.selectContentsmanListTotCnt" parameterClass="contentsmanVO" resultClass="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			(
+				SELECT
+					UCONT_ID,
+					UCONT_VERSION,
+					UCONT_SUBJECT,
+					UCONT_CSS,
+					'' UCONT_CONT,
+					MU_LANG,
+					REF_MENU_NIX,
+					WRITER,
+					SF_USER_NM(WRITER) WRITER_NM,
+					WDT,
+					MODIFIER,
+					MDT
+				FROM
+					(
+						SELECT
+							UCONT_ID,
+							UCONT_VERSION,
+							UCONT_SUBJECT,
+							UCONT_CSS,
+							UCONT_CONT,
+							MU_LANG,
+							REF_MENU_NIX,
+							WRITER,
+							TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+							MODIFIER,
+							TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT,
+							RANK() OVER (PARTITION BY UCONT_ID ORDER BY UCONT_VERSION DESC) RANKORD
+						FROM
+							CMS_USR_CONTENTS		
+						WHERE
+							1 = 1
+							<isNotEmpty property = "srch_mu_site" prepend="AND">
+								MU_SITE = #srch_mu_site#
+							</isNotEmpty>
+							<isNotEmpty property = "srch_mu_lang" prepend="AND">
+								MU_LANG = #srch_mu_lang#
+							</isNotEmpty>
+							<isNotEmpty property="searchKeyword" prepend="AND">
+								<isEqual property="searchCondition" compareValue="SC_ALL">
+									( UCONT_SUBJECT LIKE '%' || #searchKeyword# || '%' OR UCONT_CONT LIKE '%' || #searchKeyword# || '%' )
+								</isEqual>
+								<isNotEqual property="searchCondition" compareValue="SC_ALL">
+									$searchCondition$ LIKE '%' || #searchKeyword# || '%'
+								</isNotEqual>
+							</isNotEmpty>
+					)
+					WHERE RANKORD = 1
+			)
+
+	</select>
+	
+	<delete id="contentsmanDAO.restoreContentsman" parameterClass="contentsmanVO" >
+	
+		DELETE FROM CMS_USR_CONTENTS WHERE
+			UCONT_ID = #ucont_id# AND
+			UCONT_VERSION <![CDATA[ > ]]> #ucont_version#
+	
+	</delete>
+	
+	<select id="contentsmanDAO.selectContentsmanRestorelist" parameterClass="contentsmanVO"  resultClass="contentsmanVO">
+	
+		SELECT
+			UCONT_ID,
+			UCONT_VERSION,
+			UCONT_SUBJECT,
+			UCONT_DFT,
+			UCONT_CSS,
+			MU_SITE,
+			MU_LANG,
+			REF_MENU_NIX,
+			WRITER,
+			SF_USER_NM(WRITER) WRITER_NM,
+			WDT,
+			MODIFIER,
+			MDT
+		FROM 
+			CMS_USR_CONTENTS 
+		WHERE
+			UCONT_ID = #ucont_id# AND
+			UCONT_VERSION <![CDATA[ > ]]> #ucont_version#
+	
+	</select>
+	
+
+</sqlMap>
+

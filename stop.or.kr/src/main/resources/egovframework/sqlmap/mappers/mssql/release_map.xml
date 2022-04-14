@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.release.dao.ReleaseDAO">
+
+		<!-- 정보공개목록 목록 -->
+	<select id="selectReleaseList" parameterType="releaseVO" resultType="releaseVO">
+		
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY REL_SEQ DESC) rn, TB.* FROM (
+	
+			SELECT
+				REL_SEQ
+				, REL_TITLE
+				, REL_CONTENT
+				, IS_NOTICE
+				, CONVERT(VARCHAR(10), WDT, 20) WDT
+				, VCHKCODE
+				, REL_PBLNTF_CYCLE
+				, REL_ERA
+				, REL_URL
+				, REL_DEPT
+				, REL_CHARGER
+				, REL_CTTPC
+				, REL_MTH
+			FROM
+				CMS_RELEASE A  
+				LEFT OUTER JOIN 
+	  			(
+	  				SELECT 
+	  					* 
+	  				FROM
+	  					CMS_ATACH
+	  				WHERE 
+			 			ATCKEY_1ST = 'release' AND
+			 			ATCKEY_3RD = 1 AND
+	        			ATCKEY_4TH = 1 AND
+	        			IS_THUMB = 'N'
+	  				 
+	  			) B 
+	  			ON A.REL_SEQ = B.ATCKEY_2ND	
+	  			WHERE A.IS_NOTICE = 'N'
+	  			<choose>
+	  				<when test="releaseBefore != null and releaseBefore != ''">
+	  					<![CDATA[AND CONVERT(DATE, WDT) <= CONVERT(DATE, '2021-04-20')]]>
+	  				</when>
+	  				<otherwise>
+	  					<![CDATA[AND CONVERT(DATE, WDT) >= CONVERT(DATE, '2021-04-20')]]>
+	  				</otherwise>
+	  			</choose>
+	  			<if test="searchKeyword != null and searchKeyword != ''">
+						AND A.REL_TITLE LIKE '%' + #{searchKeyword} + '%'
+				</if>
+						
+					
+		
+		) TB ) MORG  WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage} 
+		
+	</select>
+	
+	
+	<select id="selectNoticeReleaseList" parameterType="releaseVO" resultType="releaseVO">
+		
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY REL_SEQ DESC) rn, TB.* FROM (
+	
+			SELECT
+				REL_SEQ
+				, REL_TITLE
+				, REL_CONTENT
+				, IS_NOTICE
+				, CONVERT(VARCHAR(10), WDT, 20) WDT
+				, VCHKCODE
+				, REL_PBLNTF_CYCLE
+				, REL_ERA
+				, REL_URL
+				, REL_DEPT
+				, REL_CHARGER
+				, REL_CTTPC
+				, REL_MTH
+			FROM
+				CMS_RELEASE A  
+				LEFT OUTER JOIN 
+	  			(
+	  				SELECT 
+	  					* 
+	  				FROM
+	  					CMS_ATACH
+	  				WHERE 
+			 			ATCKEY_1ST = 'release' AND
+			 			ATCKEY_3RD = 1 AND
+	        			ATCKEY_4TH = 1 AND
+	        			IS_THUMB = 'N'
+	  				 
+	  			) B 
+	  			ON A.REL_SEQ = B.ATCKEY_2ND			
+					
+		
+		) TB ) MORG  WHERE IS_NOTICE = 'Y' ORDER BY WDT DESC, REL_SEQ DESC
+	</select>
+	
+	
+	
+	<!-- 페이지 나누기를 위한 총 개수 -->
+	<select id="selectReleaseListTotCnt" parameterType="releaseVO" resultType="int">
+	
+		SELECT
+			COUNT(*) AS totcnt
+		FROM
+			CMS_RELEASE
+			WHERE IS_NOTICE = 'N'
+		<choose>
+			<when test="releaseBefore != null and releaseBefore != ''">
+				<![CDATA[AND CONVERT(DATE, WDT) <= CONVERT(DATE, '2021-04-20')]]>
+			</when>
+			<otherwise>
+				<![CDATA[AND CONVERT(DATE, WDT) >= CONVERT(DATE, '2021-04-20')]]>
+			</otherwise>
+		</choose>
+		<if test="searchKeyword != null and searchKeyword != ''">
+			AND REL_TITLE LIKE '%' + #{searchKeyword} + '%'
+		</if>
+			
+	</select>
+	
+	
+
+
+
+
+	<!-- 정보공개목록 등록 -->
+	<insert id="insertRelease" parameterType="releaseVO">
+		<selectKey keyProperty="rel_seq" resultType="int" order="BEFORE">
+			SELECT ISNULL(MAX(REL_SEQ), 0) + 1 FROM CMS_RELEASE
+		</selectKey>
+	
+		INSERT INTO CMS_RELEASE(
+			REL_SEQ
+			, REL_TITLE
+			, REL_CONTENT
+			, IS_NOTICE
+			, WDT
+			, REL_PBLNTF_CYCLE
+			, REL_ERA
+			, REL_URL
+			, REL_DEPT
+			, REL_CHARGER
+			, REL_CTTPC
+			, REL_MTH
+		)
+		VALUES(
+			#{rel_seq}
+			, #{rel_title}
+			, #{rel_content}
+			, #{is_notice}
+			, GETDATE()
+			, #{rel_pblntf_cycle}
+			, #{rel_era}
+			, #{rel_url}
+			, #{rel_dept}
+			, #{rel_charger}
+			, #{rel_cttpc}
+			, #{rel_mth}
+		)	
+	</insert>
+	
+	
+	<!-- 정보공개목록 수정 -->
+	<update id="updateRelease" parameterType="releaseVO">
+		UPDATE CMS_RELEASE SET
+			  REL_TITLE = #{rel_title}
+			, REL_CONTENT = #{rel_content}
+			, IS_NOTICE = #{is_notice}
+			, REL_PBLNTF_CYCLE = #{rel_pblntf_cycle}
+			, REL_ERA = #{rel_era}
+			, REL_URL = #{rel_url}
+			, REL_DEPT = #{rel_dept}
+			, REL_CHARGER = #{rel_charger}
+			, REL_CTTPC = #{rel_cttpc}
+			, REL_MTH = #{rel_mth}
+		WHERE
+			REL_SEQ = #{rel_seq}
+	</update>
+	
+	<!-- 정보공개목록 삭제 -->
+	<delete id="deleteRelease" parameterType="releaseVO">
+		
+		DELETE FROM 
+			CMS_RELEASE 
+		WHERE 
+			REL_SEQ = #{rel_seq}
+			
+	</delete>
+	
+	<!-- 정보공개목록 상세 -->
+	<select id="selectRelease" parameterType="releaseVO" resultType="releaseVO">
+		
+		SELECT
+			  REL_SEQ
+			, REL_TITLE
+			, REL_CONTENT
+			, IS_NOTICE
+			, WDT
+			, REL_PBLNTF_CYCLE
+			, REL_ERA
+			, REL_URL
+			, REL_DEPT
+			, REL_CHARGER
+			, REL_CTTPC
+			, REL_MTH
+		FROM
+			CMS_RELEASE
+		WHERE
+			REL_SEQ = #{rel_seq}
+			
+	</select>
+	
+</mapper>
+

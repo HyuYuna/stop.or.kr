@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="boardthm">
+
+	<typeAlias  alias="boardthmVO" type="egovframework.plani.template.brdartcl.vo.BoardthmVO"/>
+	
+		
+	<resultMap id="boardthm" class="egovframework.plani.template.brdartcl.vo.BoardthmVO"> 
+		<result property="brd_id" column="brd_id"/>
+		<result property="cont_idx" column="cont_idx"/>
+		<result property="subject" column="subject"/>
+		<result property="brd_cont" column="brd_cont" jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="brd_utb" column="brd_utb"/>
+		<result property="hits" column="hits"/>
+		<result property="is_notice" column="is_notice"/>
+		<result property="img_idx" column="img_idx"/>
+		<result property="thm_img_idx" column="thm_img_idx"/>
+		<result property="writer" column="writer"/>
+		<result property="pre_atcl" column="pre_atcl"/>
+		<result property="pre_subj" column="pre_subj"/>
+		<result property="next_atcl" column="next_atcl"/>
+		<result property="next_subj" column="next_subj"/>
+		<result property="writer_nm" column="writer_nm"/>
+		<result property="wdt" column="wdt"/>
+		<result property="modifier" column="modifier"/>
+		<result property="mdt" column="mdt"/>
+	</resultMap> 
+	
+	
+	
+	<insert id="boardthmDAO.insertBoardthm" parameterClass="boardthmVO">
+
+		<selectKey resultClass="java.lang.Integer" keyProperty="cont_idx">
+		
+			SELECT NVL(MAX(CONT_IDX) + 1, 1) AS CONT_IDX FROM $tbl_nm$ WHERE
+				BRD_ID = #brd_id#
+		
+		</selectKey>
+
+		INSERT INTO $tbl_nm$
+		(
+			BRD_ID,
+			CONT_IDX,
+			SUBJECT,
+			BRD_CONT, 
+			BRD_UTB,
+			IMG_IDX,
+			THM_IMG_IDX,
+			HITS,
+			WRITER,
+			WDT
+		)
+		VALUES
+		(
+			#brd_id#,
+			#cont_idx#,
+			#subject#,
+			#brd_cont:CLOB#,
+			#brd_utb#,
+			0,
+			0,
+			#hits#,
+			#writer#,
+			SYSDATE
+		)
+
+	</insert>
+	
+	<update id="boardthmDAO.updateBoardthm" parameterClass="boardthmVO">
+
+		UPDATE $tbl_nm$ SET
+			<isNotEmpty property="subject">
+				SUBJECT = #subject#,
+				BRD_CONT = #brd_cont:CLOB#,
+			</isNotEmpty>
+			<isNotEmpty property="brd_utb">
+				BRD_UTB = #brd_utb#,
+			</isNotEmpty>
+			<isNotEmpty property="wdt">
+				WDT = TO_DATE(#wdt#, 'YYYY-MM-DD HH24:MI:SS'),
+			</isNotEmpty>
+			MODIFIER = #modifier#,
+			MDT = SYSDATE
+		WHERE
+			BRD_ID = #brd_id# AND
+			CONT_IDX = #cont_idx#
+	</update>
+	
+	
+	<update id="boardthmDAO.updateBoardxcount" parameterClass="boardthmVO" >
+		UPDATE $tbl_nm$ SET
+			<isNotEqual property="hits" compareValue="0">
+				HITS = #hits#,
+			</isNotEqual>
+			MDT = MDT
+		WHERE
+			BRD_ID = #brd_id# AND
+			CONT_IDX = #cont_idx#
+	</update>
+	
+	<delete id="boardthmDAO.deleteBoardthm" parameterClass="boardthmVO">
+
+		DELETE FROM $tbl_nm$
+		WHERE
+			BRD_ID = #brd_id# AND
+			CONT_IDX = #cont_idx#
+
+	</delete>
+	
+	<select id="boardthmDAO.selectBoardthm" parameterClass="boardthmVO" resultMap="boardthm">
+
+		SELECT
+			A.BRD_ID,
+			A.CONT_IDX,
+			SUBJECT,
+			BRD_CONT,
+			BRD_UTB,
+			IMG_IDX,
+			THM_IMG_IDX,
+			HITS,
+			IS_NOTICE,
+			PRE_ATCL,
+			PRE_SUBJ,
+			NEXT_ATCL,
+			NEXT_SUBJ,
+			A.WRITER,
+			TO_CHAR(A.WDT, 'YYYY-MM-DD') WDT,
+			A.MODIFIER,
+			TO_CHAR(A.MDT, 'YYYY-MM-DD') MDT,
+			NVL(IMG_WIDTH, 1) IMG_WIDTH,
+			NVL(IMG_HEIGHT, 1) IMG_HEIGHT,
+			NVL(SF_USER_NM(A.WRITER), 'GUEST') WRITER_NM
+		FROM
+			(
+					SELECT
+						X.*,
+				    	LAG(CONT_IDX, 1, '') OVER (ORDER BY CONT_IDX ) PRE_ATCL,
+				    	LAG(SUBJECT, 1, '') OVER (ORDER BY CONT_IDX ) PRE_SUBJ,
+				    	LEAD(CONT_IDX, 1, '') OVER (ORDER BY CONT_IDX) NEXT_ATCL,
+				    	LEAD(SUBJECT, 1, '') OVER (ORDER BY CONT_IDX) NEXT_SUBJ
+				    FROM 
+				    	$tbl_nm$ X
+				    WHERE
+				    	BRD_ID = #brd_id#
+				    	
+			)  A, 
+			(
+				SELECT 
+					* 
+				FROM 
+					CMS_ATACH
+				WHERE
+					ATCKEY_1ST = #brd_id# AND
+					ATCKEY_2ND = #cont_idx# AND
+					ATCKEY_3RD = 1 AND
+					ATCKEY_4TH = 1 AND
+					IS_THUMB = 'N'
+			) B 
+		WHERE
+			A.BRD_ID = B.ATCKEY_1ST (+) AND
+			A.CONT_IDX = B.ATCKEY_2ND (+) AND
+			A.BRD_ID = #brd_id# AND
+			A.CONT_IDX = #cont_idx#
+
+	</select>
+	
+	<select id="boardthmDAO.selectBoardthmList" parameterClass="boardthmVO" resultClass="boardthmVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+
+			SELECT
+				BRD_ID,
+				CONT_IDX,
+				SUBJECT,
+				BRD_CONT,
+				BRD_UTB,
+				IMG_IDX,   
+				THM_IMG_IDX,
+				HITS,
+				SF_ATCFILE_INFO(BRD_ID, TO_CHAR(CONT_IDX), 0, 0, 'N', 'COUNT') IMG_CNT,
+                SF_ATCFILE_INFO(BRD_ID, TO_CHAR(CONT_IDX), 0, 0, 'N', 'VCODE') VCHKCODE,
+				PRE_ATCL,
+				PRE_SUBJ,
+				NEXT_ATCL,
+				NEXT_SUBJ,
+				<isEqual property="reply_gb" compareValue="R">
+                	(SELECT COUNT(*) FROM $reply_tbl_nm$ WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX) REPLY_CNT,
+                </isEqual>        
+                <isEqual property="reply_gb" compareValue="B">
+                	(SELECT COUNT(*) FROM $reply_tbl_nm$ WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX) REPLY_CNT,
+                </isEqual>
+                <isEqual property="reply_gb" compareValue="A">
+                 	0 REPLY_CNT,
+                </isEqual>
+                <isEqual property="reply_gb" compareValue="N">
+                	0 REPLY_CNT,
+                </isEqual>  
+				WRITER,
+				NVL(SF_USER_NM(WRITER), 'GUEST') WRITER_NM,
+				TO_CHAR(WDT, 'YYYY-MM-DD') WDT,
+				MODIFIER,
+				TO_CHAR(MDT, 'YYYY.MM.DD') MAIN_MDT,
+				TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+			FROM
+		    	(
+					SELECT
+						X.*,
+				    	LAG(CONT_IDX, 1, '') OVER (ORDER BY CONT_IDX ) PRE_ATCL,
+				    	LAG(SUBJECT, 1, '') OVER (ORDER BY CONT_IDX ) PRE_SUBJ,
+				    	LEAD(CONT_IDX, 1, '') OVER (ORDER BY CONT_IDX) NEXT_ATCL,
+				    	LEAD(SUBJECT, 1, '') OVER (ORDER BY CONT_IDX) NEXT_SUBJ
+				    FROM 
+				    	$tbl_nm$ X
+				    WHERE
+				    	BRD_ID = #brd_id# 
+				)  A 
+			WHERE
+				1 = 1 
+				<isNotEmpty property="searchKeyword" prepend="AND">
+					<isEqual property="searchCondition" compareValue="SC_ALL">
+						( SUBJECT LIKE '%' || #searchKeyword# || '%' OR BRD_CONT LIKE '%' || #searchKeyword# || '%' )
+					</isEqual>
+					<isNotEqual property="searchCondition" compareValue="SC_ALL">
+						$searchCondition$ LIKE '%' || #searchKeyword# || '%'
+					</isNotEqual>
+				</isNotEmpty>
+				
+			ORDER BY CONT_IDX DESC
+		) TB )  WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+		
+	</select>
+	
+	<select id="boardthmDAO.selectBoardthmListTotCnt" parameterClass="boardthmVO" resultClass="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			(
+				SELECT 
+					A.*,
+					SF_USER_NM(WRITER) WRITER_NM 
+				FROM
+					$tbl_nm$ A
+			) A
+		WHERE
+			BRD_ID = #brd_id# 
+			<isNotEmpty property="searchKeyword" prepend="AND">
+				<isEqual property="searchCondition" compareValue="SC_ALL">
+					( SUBJECT LIKE '%' || #searchKeyword# || '%' OR BRD_CONT LIKE '%' || #searchKeyword# || '%' )
+				</isEqual>
+				<isNotEqual property="searchCondition" compareValue="SC_ALL">
+					$searchCondition$ LIKE '%' || #searchKeyword# || '%'
+				</isNotEqual>
+			</isNotEmpty>			
+			<isNotEmpty property="srch_ctgry_idx" prepend="AND">
+				CTGRY_IDX = #srch_ctgry_idx#
+			</isNotEmpty>
+
+	</select>
+	
+
+</sqlMap>
+

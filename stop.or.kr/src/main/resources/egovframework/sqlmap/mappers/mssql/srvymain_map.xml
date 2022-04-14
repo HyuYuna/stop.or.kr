@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.survey.dao.SrvymainDAO">	
+
+	<resultMap id="srvymain" type="srvymainVO"> 
+		<result property="srvy_idx" column="srvy_idx"/>
+		<result property="srvy_nm" column="srvy_nm"/>
+		<result property="srvy_cont" column="srvy_cont"  />
+		<result property="srvy_open_yn" column="srvy_open_yn"/>
+		<result property="srvy_start" column="srvy_start"/>
+		<result property="srvy_end" column="srvy_end"/>
+		<result property="srvy_allow_dup" column="srvy_allow_dup"/>
+		<result property="srvy_max_ans" column="srvy_max_ans"/>
+		<result property="srvy_act_yn" column="srvy_act_yn"/>
+		<result property="srvy_appl_cnt" column="srvy_appl_cnt"/>
+		<result property="srvy_part_cnt" column="srvy_part_cnt"/>
+		<result property="srvy_pop_type" column="srvy_pop_type"/>
+		<result property="writer" column="writer"/>
+		<result property="wdt" column="wdt"/>
+		<result property="modifier" column="modifier"/>
+		<result property="mdt" column="mdt"/>
+	</resultMap>
+	
+	<sql id="srchSrvymainStmtcond">
+		
+		<if test="srch_srvy_act_yn != null and srch_srvy_act_yn != ''">
+			AND SRVY_ACT_YN = #{srch_srvy_act_yn}	
+		</if>
+		<if test="searchKeyword != null and searchKeyword != ''">
+			<if test="searchCondition == null or searchCondition == ''">
+				AND	SRVY_NM LIKE '%' + #{searchKeyword} + '%'
+			</if>
+			<if test="searchCondition == '01'.toString()">
+				AND	SRVY_NM LIKE '%' + #{searchKeyword} + '%'
+			</if>
+			<if test="searchCondition == '02'.toString()">
+				AND	SRVY_CONT LIKE '%' + #{searchKeyword} + '%'
+			</if>
+		</if>
+		
+	</sql>
+
+	
+	<insert id="insertSrvymain" parameterType="srvymainVO">
+
+		<selectKey resultType="java.lang.Integer" keyProperty="srvy_idx" order="BEFORE">
+			SELECT ISNULL(MAX(SRVY_IDX) + 1, 1) AS SRVY_IDX FROM CMS_SURVEY_MAIN 
+		</selectKey>
+
+		INSERT INTO CMS_SURVEY_MAIN
+		(
+			SRVY_IDX,
+			SRVY_NM,
+			SRVY_CONT,
+			SRVY_OPEN_YN,
+			SRVY_START,
+			SRVY_END,
+			SRVY_ALLOW_DUP,
+			SRVY_MAX_ANS,
+			SRVY_X,
+			SRVY_Y,
+			SRVY_W,
+			SRVY_H,
+			SRVY_POP_TYPE,
+			WRITER,
+			WDT
+		)
+		VALUES
+		(
+			#{srvy_idx},
+			#{srvy_nm},
+			#{srvy_cont},
+			#{srvy_open_yn},
+			CONVERT(DATETIME, #{srvy_start}),
+			CONVERT(DATETIME, #{srvy_end}),
+			#{srvy_allow_dup},
+			#{srvy_max_ans},
+			#{srvy_x},
+			#{srvy_y},
+			#{srvy_w},
+			#{srvy_h},
+			#{srvy_pop_type},
+			#{writer},
+			GETDATE()
+		)
+
+	</insert>
+	
+	
+	<update id="updateSrvymain" parameterType="srvymainVO">
+
+		UPDATE CMS_SURVEY_MAIN SET
+			SRVY_IDX = #{srvy_idx},
+			SRVY_NM = #{srvy_nm},
+			SRVY_CONT = #{srvy_cont},
+			SRVY_OPEN_YN = #{srvy_open_yn},
+			SRVY_START = CONVERT(DATETIME, #{srvy_start}),
+			SRVY_END = CONVERT(DATETIME, #{srvy_end}),
+			SRVY_ALLOW_DUP = #{srvy_allow_dup},
+			SRVY_MAX_ANS = #{srvy_max_ans},
+			SRVY_X = #{srvy_x},
+			SRVY_Y = #{srvy_y},
+			SRVY_W = #{srvy_w},
+			SRVY_H = #{srvy_h},
+			SRVY_POP_TYPE = #{srvy_pop_type},
+			MODIFIER = #{modifier},
+			MDT = GETDATE()
+		WHERE
+			SRVY_IDX = #{srvy_idx}
+
+	</update>
+	
+	
+	<delete id="deleteSrvymain" parameterType="srvymainVO">
+
+		DELETE FROM CMS_SURVEY_MAIN
+		WHERE
+			SRVY_IDX = #{srvy_idx}
+
+	</delete>
+	
+	
+	<select id="selectSrvymain" parameterType="srvymainVO" resultMap="srvymain">
+
+	
+			SELECT
+				SRVY_IDX,
+				SRVY_NM,
+				SRVY_CONT,
+				SRVY_OPEN_YN,
+				CONVERT(VARCHAR(10), SRVY_START, 20) SRVY_START,
+				CONVERT(VARCHAR(10), SRVY_END, 20) SRVY_END,
+				SRVY_ALLOW_DUP,
+				SRVY_MAX_ANS,
+				CASE SRVY_OPEN_YN 
+	                WHEN 'Y' THEN 
+	                    (
+	                        CASE 
+	                           WHEN CONVERT(VARCHAR(8), GETDATE(), 112) BETWEEN CONVERT(VARCHAR(8), SRVY_START, 112) AND CONVERT(VARCHAR(8), SRVY_END, 112) THEN 'Y'
+	                           WHEN (SRVY_START IS NULL OR SRVY_START = '' OR SRVY_END IS NULL OR SRVY_END = '') THEN 'Y'
+	                           ELSE 'N' 
+	                        END
+	                    )
+	                ELSE 'N'
+				END SRVY_ACT_YN,
+				(SELECT COUNT(*) FROM (SELECT DISTINCT DATA_IDX, SRVY_IDX FROM CMS_SURVEY_DATA) INNA WHERE SRVY_IDX = A.SRVY_IDX) SRVY_APPL_CNT,
+				(SELECT COUNT(*) FROM CMS_SURVEY_PART  WHERE SRVY_IDX = A.SRVY_IDX) SRVY_PART_CNT,
+				SRVY_X,
+				SRVY_Y,
+				SRVY_W,
+				SRVY_H,
+				SRVY_POP_TYPE,
+				WRITER,
+				CONVERT(VARCHAR(19), WDT, 20) WDT,
+				MODIFIER,
+				CONVERT(VARCHAR(19), MDT, 20) MDT
+			FROM
+				CMS_SURVEY_MAIN A
+			WHERE
+				SRVY_IDX = #{srvy_idx}
+	</select>
+	
+	
+	<select id="selectSrvymainList" parameterType="srvymainVO" resultType="srvymainVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY SRVY_IDX DESC) rn, TB.* FROM (
+			
+			SELECT
+				SRVY_IDX,
+				SRVY_NM,
+				SRVY_CONT,
+				SRVY_OPEN_YN,
+				CONVERT(VARCHAR(10), SRVY_START, 20) SRVY_START,
+				CONVERT(VARCHAR(10), SRVY_END, 20) SRVY_END,
+				SRVY_ALLOW_DUP,
+				SRVY_MAX_ANS,
+				SRVY_ACT_YN,
+				SRVY_APPL_CNT,
+				SRVY_PART_CNT,
+				VCHKCODE,
+				SRVY_X,
+				SRVY_Y,
+				SRVY_W,
+				SRVY_H,
+				SRVY_POP_TYPE,
+				WRITER,
+				CONVERT(VARCHAR(19), WDT, 20) WDT,
+				MODIFIER,
+				CONVERT(VARCHAR(19), MDT, 20) MDT
+			FROM
+				(
+					SELECT
+						SRVY_IDX,
+						SRVY_NM,
+						SRVY_CONT,
+						SRVY_OPEN_YN,
+						SRVY_START,
+						SRVY_END,
+						SRVY_ALLOW_DUP,
+						SRVY_MAX_ANS,
+						CASE SRVY_OPEN_YN 
+		                    WHEN 'Y' THEN 
+		                        (
+		                            CASE 
+		                               WHEN CONVERT(VARCHAR(8), GETDATE(), 112) BETWEEN CONVERT(VARCHAR(8), SRVY_START, 112) AND CONVERT(VARCHAR(8), SRVY_END, 112) THEN 'Y'
+		                               WHEN (SRVY_START IS NULL OR SRVY_START = '' OR SRVY_END IS NULL OR SRVY_END = '') THEN 'Y'
+		                               ELSE 'N' 
+		                            END
+		                        )
+		                    ELSE 'N'
+						END SRVY_ACT_YN,
+						(SELECT COUNT(*) FROM (SELECT DISTINCT DATA_IDX, SRVY_IDX FROM CMS_SURVEY_DATA) INNA WHERE SRVY_IDX = A.SRVY_IDX) SRVY_APPL_CNT,
+						(SELECT COUNT(*) FROM CMS_SURVEY_PART  WHERE SRVY_IDX = A.SRVY_IDX) SRVY_PART_CNT,
+						dbo.SF_ATCFILE_INFO('SRVYPOP', CAST(SRVY_IDX AS VARCHAR), 1, 1, 'N', 'VCODE') VCHKCODE,
+						SRVY_X,
+						SRVY_Y,
+						SRVY_W,
+						SRVY_H,
+						SRVY_POP_TYPE,
+						WRITER,
+						WDT,
+						MODIFIER,
+						MDT
+					FROM
+						CMS_SURVEY_MAIN A
+				) INNB
+				WHERE
+					1 = 1
+				<include refid="srchSrvymainStmtcond"/>
+			
+				
+		
+		) TB ) MORG   WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+
+	</select>
+	
+	
+	<select id="selectSrvymainListTotCnt" parameterType="srvymainVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_SURVEY_MAIN
+		WHERE
+			1 = 1
+			<include refid="srchSrvymainStmtcond"/>
+	</select>
+	
+	
+	<select id="xlsSrvymainList" parameterType="srvymainVO" resultType="srvymainVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY SRVY_OPEN_YN DESC, WDT ASC) rn, TB.* FROM (
+	
+			SELECT
+				SRVY_IDX,
+				SRVY_NM,
+				SRVY_CONT,
+				SRVY_OPEN_YN,
+				CONVERT(VARCHAR(19), SRVY_START, 20) SRVY_START,
+				CONVERT(VARCHAR(19), SRVY_END, 20) SRVY_END,
+				SRVY_ALLOW_DUP,
+				SRVY_MAX_ANS,
+				SRVY_X,
+				SRVY_Y,
+				SRVY_W,
+				SRVY_H,
+				SRVY_POP_TYPE,
+				WRITER,
+				CONVERT(VARCHAR(19), WDT, 20) WDT,
+				MODIFIER,
+				CONVERT(VARCHAR(19), MDT, 20) MDT
+			FROM
+				CMS_SURVEY_MAIN
+			WHERE
+				1 = 1
+				<include refid="srchSrvymainStmtcond"/>
+		) TB ) MORG  
+
+	</select>
+	
+	
+
+</mapper>
+
+

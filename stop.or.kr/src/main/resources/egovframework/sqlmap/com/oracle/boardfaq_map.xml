@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="boardfaq">
+
+	<typeAlias  alias="boardfaqVO" type="egovframework.plani.template.brdartcl.vo.BoardfaqVO"/>
+	
+
+	<insert id="boardfaqDAO.insertBoardfaq" parameterClass="boardfaqVO">
+		
+		<selectKey resultClass="java.lang.Integer" keyProperty="cont_idx">
+		
+			SELECT NVL(MAX(CONT_IDX) + 1, 1) AS CONT_IDX FROM $tbl_nm$ WHERE
+				BRD_ID = #brd_id#
+		
+		</selectKey>
+		
+		INSERT INTO $tbl_nm$
+		(
+			BRD_ID,
+			CONT_IDX,
+			CTGRY_IDX,
+			SUBJECT,
+			BRD_CONT,
+			HITS,
+			WRITER,
+			WDT
+		)
+		VALUES
+		(
+			#brd_id#,
+			#cont_idx#,
+			#ctgry_idx#,
+			#subject#,
+			#brd_cont:CLOB#,
+			#hits#,
+			#writer#,
+			SYSDATE
+		)
+	
+	</insert>
+		
+	<update id="boardfaqDAO.updateBoardfaq" parameterClass="boardfaqVO">
+		
+		UPDATE $tbl_nm$ SET
+			<isNotEmpty property="subject">
+				CTGRY_IDX = #ctgry_idx#,
+				SUBJECT = #subject#,
+				BRD_CONT = #brd_cont:CLOB#,
+			</isNotEmpty>
+			MODIFIER = #modifier#,
+			MDT = SYSDATE
+		WHERE
+			BRD_ID = #brd_id# AND
+			CONT_IDX = #cont_idx#
+	
+	</update>
+	
+	<update id="boardfaqDAO.updateBoardxcount" parameterClass="boardfaqVO" >
+		UPDATE $tbl_nm$ SET
+			HITS = HITS + 1,
+			MDT = MDT
+		WHERE
+			BRD_ID = #brd_id# AND
+			CONT_IDX = #cont_idx#
+	</update>
+	
+	
+	<delete id="boardfaqDAO.deleteBoardfaq" parameterClass="boardfaqVO">
+	
+		DELETE FROM
+			$tbl_nm$
+		WHERE
+			BRD_ID = #brd_id# AND
+			CONT_IDX = #cont_idx#	
+	
+	</delete>
+	
+	<select id="boardfaqDAO.selectBoardfaq" parameterClass="boardfaqVO" resultClass="boardfaqVO">
+	
+		SELECT
+			BRD_ID,
+			CONT_IDX,
+			CTGRY_IDX,
+			SF_CTGRY_NM(CTGRY_IDX) CTGRY_NM,
+			SUBJECT,
+			BRD_CONT,
+			HITS,
+			PRE_ATCL,
+			PRE_SUBJ,
+			NEXT_ATCL,
+			NEXT_SUBJ,
+			A.WRITER,
+			TO_CHAR(A.WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+			A.MODIFIER,
+			TO_CHAR(A.MDT, 'YYYY-MM-DD HH24:MI:SS') MDT,
+			NVL(SF_USER_NM(WRITER), 'GUEST') WRITER_NM,
+			ROUND(SYSDATE - A.WDT) DFR_WDT  
+		FROM
+			(
+		    	SELECT
+				    Y.*,
+			    	LAG(CONT_IDX, 1, '') OVER (ORDER BY CONT_IDX ) PRE_ATCL,
+			    	LAG(SUBJECT, 1, '') OVER (ORDER BY CONT_IDX ) PRE_SUBJ,
+			    	LEAD(CONT_IDX, 1, '') OVER (ORDER BY CONT_IDX) NEXT_ATCL,
+			    	LEAD(SUBJECT, 1, '') OVER (ORDER BY CONT_IDX) NEXT_SUBJ
+			      FROM
+			  	  	$tbl_nm$ Y
+			    	WHERE
+				    	BRD_ID = #brd_id#
+			) A
+		WHERE
+			BRD_ID = #brd_id# AND
+			CONT_IDX = #cont_idx#	
+
+	
+	</select>
+	
+	<select id="boardfaqDAO.selectBoardfaqList" parameterClass="boardfaqVO" resultClass="boardfaqVO">
+		
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+		
+			SELECT
+				BRD_ID,
+				CONT_IDX,
+				CTGRY_IDX,
+				SF_CTGRY_NM(CTGRY_IDX) CTGRY_NM,
+				SUBJECT,
+				BRD_CONT,
+				HITS,
+                A.WRITER,
+                TO_CHAR(A.WDT, 'YYYY-MM-DD') WDT,
+                A.MODIFIER,
+                TO_CHAR(A.MDT, 'YYYY-MM-DD') MDT,
+				NVL(SF_USER_NM(WRITER), 'GUEST') WRITER_NM,
+				ROUND(SYSDATE - A.WDT) DFR_WDT
+			FROM
+		        $tbl_nm$ A
+			WHERE
+				BRD_ID = #brd_id#
+				<isNotEmpty property="searchKeyword" prepend="AND">
+					<isEqual property="searchCondition" compareValue="SC_ALL">
+						( SUBJECT LIKE '%' || #searchKeyword# || '%' OR BRD_CONT LIKE '%' || #searchKeyword# || '%' )
+					</isEqual>
+					<isNotEqual property="searchCondition" compareValue="SC_ALL">
+						$searchCondition$ LIKE '%' || #searchKeyword# || '%'
+					</isNotEqual>
+				</isNotEmpty>
+				<isNotEmpty property="ctgry_idx" prepend="AND">
+					CTGRY_IDX = #ctgry_idx#
+				</isNotEmpty>
+			ORDER BY 
+				CONT_IDX DESC
+				
+		) TB )  WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+			
+	</select>
+	
+	<select id="boardfaqDAO.selectBoardfaqListTotCnt" parameterClass="boardfaqVO" resultClass="int">
+
+		SELECT
+			COUNT(*) AS "totcnt"
+		FROM
+			(
+				SELECT 
+					A.*,
+					SF_USER_NM(WRITER) WRITER_NM 
+				FROM
+					$tbl_nm$ A
+			)
+		WHERE
+			BRD_ID = #brd_id#
+			<isNotEmpty property="searchKeyword" prepend="AND">
+				<isEqual property="searchCondition" compareValue="SC_ALL">
+					( SUBJECT LIKE '%' || #searchKeyword# || '%' OR BRD_CONT LIKE '%' || #searchKeyword# || '%' )
+				</isEqual>
+				<isNotEqual property="searchCondition" compareValue="SC_ALL">
+					$searchCondition$ LIKE '%' || #searchKeyword# || '%'
+				</isNotEqual>
+			</isNotEmpty>			
+			<isNotEmpty property="ctgry_idx" prepend="AND">
+				CTGRY_IDX = #ctgry_idx#
+			</isNotEmpty>	
+			
+	</select>
+
+</sqlMap>
+

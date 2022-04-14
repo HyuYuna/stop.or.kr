@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.cmm.dao.MessageDAO">
+
+	<insert id="insertSms" parameterType="messageVO">
+		INSERT INTO SC_TRAN
+		(
+			TR_NUM,
+			TR_SENDDATE,
+			TR_SENDSTAT,
+			TR_MSGTYPE,
+			TR_PHONE,
+			TR_CALLBACK,
+			TR_MSG
+		) VALUES (
+			SC_TRAN_SEQ.NEXTVAL,
+			NOW(),
+			#{send_stat},
+			#{msg_type},
+			#{phone},
+			#{callback},
+			#{msg}
+		)
+	</insert>
+	
+	<insert id="insertMms" parameterType="messageVO">
+		INSERT INTO MMS_MSG
+		(
+			MSGKEY,
+			SUBJECT,
+			PHONE,
+			CALLBACK,
+			STATUS,
+			REQDATE,
+			MSG,
+			FILE_CNT,
+			FILE_PATH1,
+			TYPE
+		) VALUES (
+			MMS_MSG_SEQ.NEXTVAL,
+			#{subject},
+			#{phone},
+			#{callback},
+			#{send_stat},
+			NOW(),
+			#{msg},
+			#{file_cnt},
+			#{file_path},
+			#{msg_type}
+		)
+	</insert>
+	
+</mapper>

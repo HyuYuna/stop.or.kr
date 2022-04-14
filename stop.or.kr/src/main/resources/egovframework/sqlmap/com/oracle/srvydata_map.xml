@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="srvydata">
+
+	<typeAlias  alias="srvydataVO" type="egovframework.plani.template.survey.vo.SrvydataVO"/>
+	
+	
+	<!-- if use clob column
+	<resultMap id="srvydata" class="egovframework.plani.template.survey.vo.SrvydataVO"> 
+		<result property="data_idx" column="data_idx"/>
+				<result property="ques_idx" column="ques_idx"/>
+				<result property="srvy_idx" column="srvy_idx"/>
+				<result property="data_cont" column="data_cont"/>
+				<result property="data_spl" column="data_spl"/>
+				<result property="data_addr" column="data_addr"/>
+				<result property="writer" column="writer"/>
+				<result property="wdt" column="wdt"/>
+				<result property="modifier" column="modifier"/>
+				<result property="mdt" column="mdt"/>
+	</resultMap>
+	-->
+	
+	
+	<sql id="srvydataDAO.srchSrvydataStmtcond">
+		<isNotEqual property="srvy_idx" prepend="AND" compareValue="0">
+			SRVY_IDX = #srvy_idx#	
+			
+		</isNotEqual>
+	</sql>
+	
+
+	<insert id="srvydataDAO.mergeSrvydata" parameterClass="srvydataVO">
+
+		MERGE INTO CMS_SURVEY_DATA USING DUAL
+	    ON (
+	    	DATA_IDX = #data_idx# AND
+			QUES_IDX = #ques_idx#
+			QUESSUB_IDX = #quessub_idx#
+	    )
+	    WHEN MATCHED THEN UPDATE SET
+			SRVY_IDX = #srvy_idx#,
+			DATA_CONT = #data_cont#,
+			DATA_SPL = #data_spl#,
+			DATA_ADDR = #data_addr#
+	    WHEN NOT MATCHED THEN
+	    	INSERT
+	        (
+				DATA_IDX,
+				QUES_IDX,
+				QUESSUB_IDX,
+				SRVY_IDX,
+				DATA_CONT,
+				DATA_SPL,
+				DATA_ADDR,
+				WDT
+	        )
+	        VALUES
+	        (
+				#data_idx#,
+				#ques_idx#,
+				#quessub_idx#,
+				#srvy_idx#,
+				#data_cont#,
+				#data_spl#,
+				#data_addr#,
+				SYSDATE
+	        )
+
+	</insert>
+	
+	<insert id="srvydataDAO.insertSrvydata" parameterClass="srvydataVO">
+
+		<!--
+		<selectKey resultClass="java.lang.Integer" keyProperty="######">
+			SELECT NVL(MAX(######) + 1, 1) AS ###### FROM CMS_SURVEY_DATA 
+		</selectKey>
+		-->
+
+		INSERT INTO CMS_SURVEY_DATA
+		(
+			DATA_IDX,
+			QUES_IDX,
+			QUESSUB_IDX,
+			SRVY_IDX,
+			DATA_CONT,
+			DATA_SPL,
+			DATA_ADDR,
+			WDT
+		)
+		VALUES
+		(
+			#data_idx#,
+			#ques_idx#,
+			#quessub_idx#,
+			#srvy_idx#,
+			#data_cont#,
+			#data_spl#,
+			#data_addr#,
+			SYSDATE
+		)
+
+	</insert>
+	
+	<delete id="srvydataDAO.deleteSrvydata" parameterClass="srvydataVO">
+
+		DELETE FROM CMS_SURVEY_DATA
+		WHERE
+			DATA_IDX = #data_idx# AND
+			QUES_IDX = #ques_idx# AND
+			QUESSUB_IDX = #quessub_idx#
+
+	</delete>
+	
+	
+	<select id="srvydataDAO.selectSrvydataKey" parameterClass="srvydataVO" resultClass="int">
+		SELECT SEQ_SRVYDATA_IDX.NEXTVAL FROM DUAL
+	</select>
+	
+	
+	<!-- if use clob column
+	<select id="srvydataDAO.selectSrvydata" parameterClass="srvydataVO" resultMap="srvydata">
+	-->
+	<select id="srvydataDAO.selectSrvydata" parameterClass="srvydataVO" resultClass="srvydataVO">
+
+		SELECT
+			DATA_IDX,
+			QUES_IDX,
+			QUESSUB_IDX,
+			SRVY_IDX,
+			DATA_CONT,
+			DATA_SPL,
+			DATA_ADDR,
+			TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT
+		FROM
+			CMS_SURVEY_DATA
+		WHERE
+			DATA_IDX = #data_idx# AND
+			QUES_IDX = #ques_idx# AND
+			QUESSUB_IDX = #quessub_idx#
+		
+	</select>
+	
+	
+	<select id="srvydataDAO.selectSrvydataList" parameterClass="srvydataVO" resultClass="srvydataVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+	
+			SELECT
+				DATA_IDX,
+				QUES_IDX,
+				QUESSUB_IDX,
+				SRVY_IDX,
+				DATA_CONT,
+				DATA_SPL,
+				DATA_ADDR,
+				TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT
+			FROM
+				CMS_SURVEY_DATA
+			WHERE
+				1 = 1
+				<include refid="srvydataDAO.srchSrvydataStmtcond"/>
+
+		) TB )  
+
+	</select>
+	
+	
+	<select id="srvydataDAO.selectSrvydataListTotCnt" parameterClass="srvydataVO" resultClass="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_SURVEY_DATA
+		WHERE
+			1 = 1
+			<!--
+			<include refid="srvydataDAO.srchSrvydataStmtcond"/>
+			-->	
+	</select>
+	
+	
+<!-- 	<select id="srvydataDAO.xlsSrvydataList" parameterClass="srvydataVO" resultClass="srvydataVO"> -->
+
+<!-- 		SELECT * FROM ( SELECT rownum rn, TB.* FROM ( -->
+	
+<!-- 			SELECT  -->
+<!-- 			    DATA_IDX, -->
+<!-- 			    QUES_IDX, -->
+<!-- 				QUESSUB_IDX, -->
+<!-- 			    (SELECT PART_TYPE FROM CMS_SURVEY_PART WHERE SRVY_IDX = A.SRVY_IDX AND PART_IDX = A.PART_IDX) PART_TYPE, -->
+<!-- 			    REF_CONT, -->
+<!-- 			    SRVY_IDX, -->
+<!-- 			    DATA_CONT, -->
+<!-- 			    DATA_SPL, -->
+<!-- 			    DATA_ADDR, -->
+<!-- 			    WDT -->
+<!-- 			FROM -->
+<!-- 			( -->
+			
+<!-- 				SELECT -->
+<!-- 			        DATA_IDX, -->
+<!-- 			        A.QUES_IDX, -->
+<!-- 					QUESSUB_IDX, -->
+<!-- 			        (SELECT PART_IDX FROM CMS_SURVEY_QUESANS WHERE QUES_IDX = A.QUES_IDX AND QUESANS_TYPE = 'Q') PART_IDX, -->
+<!-- 	                (SELECT QUESANS_CONT FROM CMS_SURVEY_QUESANS WHERE QUES_IDX = A.QUES_IDX AND TO_CHAR(ANS_ORD) = DATA_CONT AND QUES_TYPE = 'CDIDX00082') REF_CONT, -->
+<!-- 			        A.SRVY_IDX, -->
+<!-- 			        DATA_CONT, -->
+<!-- 			        DATA_SPL, -->
+<!-- 			        DATA_ADDR, -->
+<!-- 			        A.WDT -->
+<!-- 			    FROM -->
+<!-- 			        CMS_SURVEY_DATA A -->
+<!-- 				WHERE -->
+<!-- 					1 = 1 -->
+<!-- 					<include refid="srvydataDAO.srchSrvydataStmtcond"/> -->
+					
+<!-- 			 ) A   							 -->
+
+<!--  			 ORDER BY DATA_IDX ASC, PART_TYPE DESC, QUES_IDX ASC -->
+
+	
+	
+<!-- 		) TB )  -->
+
+<!-- 	</select> -->
+	
+	<select id="srvydataDAO.xlsSrvydataList" parameterClass="srvydataVO" resultClass="srvydataVO">
+	
+	SELECT *
+	FROM
+	(
+		SELECT
+			ROWNUM RN,
+			W.*
+		FROM
+		(
+			SELECT *
+			FROM
+			(
+				SELECT 
+					DATA_IDX,
+					QUES_IDX,
+					QUESSUB_IDX,
+					(SELECT PART_TYPE FROM CMS_SURVEY_PART WHERE SRVY_IDX = A.SRVY_IDX AND PART_IDX = A.PART_IDX) PART_TYPE,
+					REF_CONT,
+					SRVY_IDX,
+					(CASE
+						WHEN QUES_TYPE = 'CDIDX00085' AND DATA_CONT = '7' THEN '매우만족'
+						WHEN QUES_TYPE = 'CDIDX00085' AND DATA_CONT = '6' THEN '만족'
+						WHEN QUES_TYPE = 'CDIDX00085' AND DATA_CONT = '5' THEN '약간만족'
+						WHEN QUES_TYPE = 'CDIDX00085' AND DATA_CONT = '4' THEN '보통'
+						WHEN QUES_TYPE = 'CDIDX00085' AND DATA_CONT = '3' THEN '약간불만족'
+						WHEN QUES_TYPE = 'CDIDX00085' AND DATA_CONT = '2' THEN '불만족'
+						WHEN QUES_TYPE = 'CDIDX00085' AND DATA_CONT = '1' THEN '매우불만족'
+						WHEN QUES_TYPE = 'CDIDX00086' AND TRANSLATE(DATA_CONT,'A1234567890','A') IS NULL THEN DATA_CONT || '위'
+						ELSE DATA_CONT
+					END) DATA_CONT,
+					DATA_SPL,
+					DATA_ADDR,
+					WDT
+				FROM
+				(
+					SELECT
+						DATA_IDX,
+						A.QUES_IDX,
+						QUESSUB_IDX,
+						(SELECT PART_IDX FROM CMS_SURVEY_QUESANS WHERE QUES_IDX = A.QUES_IDX AND QUESANS_TYPE = 'Q') PART_IDX,
+						(SELECT QUESANS_CONT FROM CMS_SURVEY_QUESANS WHERE QUES_IDX = A.QUES_IDX AND TO_CHAR(ANS_ORD) = DATA_CONT AND QUES_TYPE = 'CDIDX00082') REF_CONT,
+						A.SRVY_IDX,
+						DATA_CONT,
+						DATA_SPL,
+						DATA_ADDR,
+						(SELECT DISTINCT QUES_TYPE FROM CMS_SURVEY_QUESANS WHERE QUES_IDX = A.QUES_IDX) QUES_TYPE,
+						A.WDT
+					FROM
+						CMS_SURVEY_DATA A
+					WHERE
+						1 = 1
+					<include refid="srvydataDAO.srchSrvydataStmtcond"/>
+				) A
+				WHERE
+					QUES_TYPE != 'CDIDX00083'
+				ORDER BY
+					DATA_IDX ASC, PART_TYPE DESC, QUES_IDX ASC
+			) TB 
+
+			UNION
+
+			SELECT
+				DATA_IDX,
+				QUES_IDX,
+				1 QUESSUB_IDX,
+				PART_TYPE,
+				REF_CONT,
+				SRVY_IDX,
+				WM_CONCAT(SUM_DATA) DATA_CONT,
+				DATA_SPL,
+				DATA_ADDR,
+				WDT
+			FROM
+			(
+				SELECT 
+					A.*,
+					(SELECT PART_TYPE FROM CMS_SURVEY_PART WHERE SRVY_IDX = A.SRVY_IDX AND PART_IDX = A.PART_IDX) PART_TYPE,
+					(SELECT QUESANS_CONT FROM CMS_SURVEY_QUESANS WHERE QUES_IDX = A.QUES_IDX AND QUESANS_TYPE = 'A' AND  A.QUESSUB_IDX = QUESANS_IDX -1 AND A.DATA_CONT = 'Y') SUM_DATA
+				FROM
+				(
+					SELECT
+						DATA_IDX,
+						QUES_IDX,
+						QUESSUB_IDX,
+						(SELECT PART_IDX FROM CMS_SURVEY_QUESANS WHERE QUES_IDX = B.QUES_IDX AND QUESANS_TYPE = 'Q') PART_IDX,
+						(SELECT QUESANS_CONT FROM CMS_SURVEY_QUESANS WHERE QUES_IDX = B.QUES_IDX AND TO_CHAR(ANS_ORD) = DATA_CONT AND QUES_TYPE = 'CDIDX00082') REF_CONT,
+						(SELECT DISTINCT QUES_TYPE FROM CMS_SURVEY_QUESANS WHERE QUES_IDX = B.QUES_IDX) QUES_TYPE,
+						SRVY_IDX,
+						DATA_CONT,
+						DATA_SPL,
+						DATA_ADDR,
+						WDT
+					FROM
+						CMS_SURVEY_DATA B
+					WHERE
+						1 = 1
+						<include refid="srvydataDAO.srchSrvydataStmtcond"/>
+				) A
+				WHERE
+					QUES_TYPE = 'CDIDX00083'
+			) TB
+			GROUP BY
+				DATA_IDX, QUES_IDX, REF_CONT, SRVY_IDX, PART_TYPE, DATA_SPL, DATA_ADDR, WDT
+		) W
+	)
+	</select>
+	
+	<select id="srvydataDAO.selectSrvydataCont" parameterClass="srvydataVO" resultClass="srvydataVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+	
+			SELECT 
+			    DATA_IDX,
+			    QUES_IDX,
+				QUESSUB_IDX,
+			    SRVY_IDX,
+			    DATA_CONT,
+			    DATA_ADDR,
+			    DATA_SPL,
+			    WDT
+			FROM
+		        CMS_SURVEY_DATA A
+			WHERE
+				QUES_IDX IN (SELECT QUES_IDX FROM CMS_SURVEY_QUESANS WHERE SRVY_IDX = #srvy_idx# AND QUES_TYPE IN ('CDIDX00084', 'CDIDX00082')) 
+
+ 			ORDER BY QUES_IDX ASC, DATA_IDX ASC
+	
+		) TB ) 
+
+	</select>
+	
+	
+	
+	<select id="srvydataDAO.selectSrvydataDupCnt" parameterClass="srvydataVO" resultClass="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_SURVEY_DATA
+		WHERE
+			SRVY_IDX = #srvy_idx# AND
+			DATA_ADDR = #data_addr#
+			
+	</select>
+	
+
+</sqlMap>
+
+

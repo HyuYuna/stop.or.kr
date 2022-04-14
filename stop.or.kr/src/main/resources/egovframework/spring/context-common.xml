@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+				http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+	
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<!--
+					2018-04-26(pigcos) : <value>가 상위에 정의되는 경우 우선순위가 있는 것으로 보임
+					
+					- message-board
+					- message-common
+					
+					message-common 에 A변수가 정의 되어있는 경우
+					message-board에 같은 A변수가 정의되어 있으면 message-board A변수가 표시됨. 
+				 -->
+				<value>classpath:/egovframework/message/message-validation</value>
+				 
+				<value>classpath:/egovframework/message/message-srvydata</value>
+				<value>classpath:/egovframework/message/message-svcmem</value>
+				<value>classpath:/egovframework/message/message-popup</value>
+				<value>classpath:/egovframework/message/message-modeur</value>
+				<value>classpath:/egovframework/message/message-atchfile</value>
+				<value>classpath:/egovframework/message/message-content</value>
+				<value>classpath:/egovframework/message/message-member</value>
+				<value>classpath:/egovframework/message/message-board</value>
+				<value>classpath:/egovframework/message/message-controller</value>
+				<value>classpath:/egovframework/message/message-error</value>
+				<value>classpath:/egovframework/message/message-common</value>
+				
+				<value>classpath:/egovframework/rte/fdl/idgnr/messages/idgnr</value>
+				<value>classpath:/egovframework/rte/fdl/property/messages/properties</value>
+			</list>
+		</property>
+		<property name="cacheSeconds"><value>60</value></property>
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+	
+	<!-- 2018-04-25(pigcos) : Locale 설정 적용 --> 
+	<!-- 세션을 이용한 Locale 이용시-->
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+		<property name="defaultLocale" value="${Globals.locale}"></property>
+	</bean>
+	<!-- 쿠키를 이용한 Locale 이용시  
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver"/>
+	-->	
+	
+	<!-- 2018-05-02(pigcos) : MessageHelper 사용을 위한 설정 추가 -->
+	<bean id="messageSourceAccessor" class="org.springframework.context.support.MessageSourceAccessor">
+		<constructor-arg>
+			 <ref local="messageSource" />
+		</constructor-arg>
+	</bean>
+	
+	<!-- 2018-05-02(pigcos) : MessageHelper 사용을 위한 설정 추가 -->
+	<bean id="message" class="egovframework.plani.template.cmm.utils.MessageHelper">
+		<property name="messageSourceAccessor" ref="messageSourceAccessor" />
+	</bean>
+	
+	
+	<bean id="leaveaTrace" class="egovframework.rte.fdl.cmmn.trace.LeaveaTrace">
+		<property name="traceHandlerServices">
+			<list>
+				<ref bean="traceHandlerService" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="traceHandlerService"
+		class="egovframework.rte.fdl.cmmn.trace.manager.DefaultTraceHandleManager">
+		<property name="reqExpMatcher">
+			<ref bean="antPathMater" />
+		</property>
+		<property name="patterns">
+			<list>
+				<value>*</value>
+			</list>
+		</property>
+		<property name="handlers">
+			<list>
+				<ref bean="defaultTraceHandler" />
+			</list>
+		</property>
+	</bean>
+	
+	<!-- ych gson bean 등록 -->
+	<bean id="gson" class="com.google.gson.Gson"/>
+	
+	<bean id="antPathMater" class="org.springframework.util.AntPathMatcher" />
+
+	<bean id="defaultTraceHandler"
+		class="egovframework.rte.fdl.cmmn.trace.handler.DefaultTraceHandler" />
+	 
+    <context:component-scan base-package="egovframework">
+       <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+      
+</beans>

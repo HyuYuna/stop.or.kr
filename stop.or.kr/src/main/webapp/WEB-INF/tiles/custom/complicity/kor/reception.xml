@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 
+	 <definition name="ComplicityReceptionDefinitionContent" template="/WEB-INF/jsp/layout/custom/complicity/kor/contents/layout/contentsLayout.jsp">
+		 <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/complicity/kor/contents/meta/meta_content.jsp"/>
+		 <put-attribute name="contHeader"	value="/WEB-INF/jsp/layout/template/complicity/header.jsp"/>
+		 <put-attribute name="contSidemenu"	value="/WEB-INF/jsp/layout/template/complicity/sidemenu.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/complicity/script.jsp"/>
+		 <put-attribute name="contQuicklink"	value="/WEB-INF/jsp/layout/custom/complicity/kor/contents/quickLink.jsp"/>
+		 <put-attribute name="contFooter"	value="/WEB-INF/jsp/layout/template/complicity/footer.jsp"/>
+	 </definition>
+
+	 <definition name="/complicity/reception/agree" extends="ComplicityReceptionDefinitionContent">
+		 <put-attribute name="contTitle"	value="공모전 접수 약관 동의" />
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/complicity/kor/contents/script/script_cont.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/template/cmmn/complicity/reception/agree.jsp" />
+	 </definition>
+	 
+	 <definition name="/complicity/reception/application" extends="ComplicityReceptionDefinitionContent">
+		 <put-attribute name="contTitle"	value="공모전 접수" />
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/complicity/kor/contents/script/script_cont.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/template/cmmn/complicity/reception/application.jsp" />
+	 </definition>
+
+	 <definition name="/complicity/reception/complete" extends="ComplicityReceptionDefinitionContent">
+		 <put-attribute name="contTitle"	value="공모전 접수완료" />
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/complicity/kor/contents/script/script_cont.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/template/cmmn/complicity/reception/complete.jsp" />
+	 </definition>
+	 
+	 <definition name="/complicity/reception/confirm" extends="ComplicityReceptionDefinitionContent">
+		 <put-attribute name="contTitle"	value="공모전 접수확인" />
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/complicity/kor/contents/script/script_cont.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/template/cmmn/complicity/reception/confirm.jsp" />
+	 </definition>
+
+	 <definition name="/complicity/reception/list" extends="ComplicityReceptionDefinitionContent">
+		 <put-attribute name="contTitle"	value="공모전 접수확인  리스트" />
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/complicity/kor/contents/script/script_cont.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/template/cmmn/complicity/reception/list.jsp" />
+	 </definition>
+
+	 <definition name="/complicity/reception/none" extends="ComplicityReceptionDefinitionContent">
+		 <put-attribute name="contTitle"	value="공모전 접수기간이 아닙니다." />
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/complicity/kor/contents/script/script_cont.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/template/cmmn/complicity/reception/none.jsp" />
+	 </definition>
+
+
+</tiles-definitions>
+

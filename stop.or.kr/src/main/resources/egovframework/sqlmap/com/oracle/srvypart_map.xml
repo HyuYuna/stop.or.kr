@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="srvypart">
+
+	<typeAlias  alias="srvypartVO" type="egovframework.plani.template.survey.vo.SrvypartVO"/>
+	
+	<sql id="srvypartDAO.srchSrvypartStmtcond">
+		<isNotEmpty property="srvy_idx" prepend="AND">
+			SRVY_IDX = #srvy_idx#	
+		</isNotEmpty>
+	</sql>
+	
+	<insert id="srvypartDAO.insertSrvypart" parameterClass="srvypartVO">
+
+		<selectKey resultClass="java.lang.Integer" keyProperty="part_idx">
+			SELECT NVL(MAX(PART_IDX) + 1, 1) AS PART_IDX FROM CMS_SURVEY_PART
+			WHERE SRVY_IDX = #srvy_idx# 
+		</selectKey>
+
+		INSERT INTO CMS_SURVEY_PART
+		(
+			SRVY_IDX,
+			PART_IDX,
+			PART_NM,
+			PART_TYPE,
+			PART_PSN_INFO,
+			WRITER,
+			WDT
+		)
+		VALUES
+		(
+			#srvy_idx#,
+			#part_idx#,
+			#part_nm#,
+			#part_type#,
+			#part_psn_info#,
+			#writer#,
+			SYSDATE
+		)
+
+	</insert>
+	
+	
+	<update id="srvypartDAO.updateSrvypart" parameterClass="srvypartVO">
+
+		UPDATE CMS_SURVEY_PART SET
+			SRVY_IDX = #srvy_idx#,
+			PART_IDX = #part_idx#,
+			PART_NM = #part_nm#,
+			PART_TYPE = #part_type#,
+			PART_PSN_INFO = #part_psn_info#,
+			MODIFIER = #modifier#,
+			MDT = SYSDATE
+		WHERE
+			SRVY_IDX = #srvy_idx# AND
+			PART_IDX = #part_idx#
+
+	</update>
+	
+	
+	<delete id="srvypartDAO.deleteSrvypart" parameterClass="srvypartVO">
+
+		DELETE FROM CMS_SURVEY_PART
+		WHERE
+			SRVY_IDX = #srvy_idx# AND
+			PART_IDX = #part_idx#
+
+	</delete>
+	
+
+	<select id="srvypartDAO.selectSrvypart" parameterClass="srvypartVO" resultClass="srvypartVO">
+
+		SELECT
+			SRVY_IDX,
+			PART_IDX,
+			PART_NM,
+			PART_TYPE,
+			PART_PSN_INFO,
+			(SELECT SRVY_NM FROM CMS_SURVEY_MAIN WHERE SRVY_IDX = A.SRVY_IDX) SRVY_NM,
+			WRITER,
+			TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+			MODIFIER,
+			TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+		FROM
+			CMS_SURVEY_PART A
+		WHERE
+			SRVY_IDX = #srvy_idx# AND
+			PART_IDX = #part_idx#
+		
+	</select>
+	
+	
+	<select id="srvypartDAO.selectSrvypartList" parameterClass="srvypartVO" resultClass="srvypartVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+	
+			SELECT
+				SRVY_IDX,
+				PART_IDX,
+				PART_NM,
+				PART_TYPE,
+				PART_PSN_INFO,
+				(SELECT COUNT(*) FROM CMS_SURVEY_QUESANS WHERE SRVY_IDX = A.SRVY_IDX AND PART_IDX = A.PART_IDX AND QUESANS_TYPE = 'Q') PART_QUES_CNT,
+				WRITER,
+				TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+				MODIFIER,
+				TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+			FROM
+				CMS_SURVEY_PART A
+			WHERE
+				1 = 1
+				<include refid="srvypartDAO.srchSrvypartStmtcond"/>
+
+			ORDER BY PART_TYPE DESC, PART_IDX ASC
+
+		) TB )
+
+	</select>
+	
+	
+	<select id="srvypartDAO.xlsSrvypartList" parameterClass="srvypartVO" resultClass="srvypartVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+	
+			SELECT
+				SRVY_IDX,
+				PART_IDX,
+				PART_NM,
+				PART_TYPE,
+				PART_PSN_INFO,
+				WRITER,
+				TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+				MODIFIER,
+				TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+			FROM
+				CMS_SURVEY_PART
+			WHERE
+				1 = 1
+				<include refid="srvypartDAO.srchSrvypartStmtcond"/>
+		) TB ) 
+
+	</select>
+	
+	
+
+</sqlMap>
+
+

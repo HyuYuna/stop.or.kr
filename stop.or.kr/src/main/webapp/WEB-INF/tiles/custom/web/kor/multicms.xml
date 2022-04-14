@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 
+	 <definition name="/multicms/pp/multiCmsUsrList" extends="ContDefinitionContent">
+		 <put-attribute name="contTitle"	value="정기간행물 목록페이지" />
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/script/script_cont.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/multicms/multiCmsUsrList_pp.jsp" />
+	 </definition>
+	 
+	 <definition name="/multicms/pd/multiCmsUsrList" extends="ContDefinitionContent">
+		 <put-attribute name="contTitle"	value="발간자료 목록페이지" />
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/script/script_cont.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/multicms/multiCmsUsrList_pd.jsp" />
+	 </definition>
+	 
+	 <definition name="/multicms/ck/multiCmsUsrList" extends="ContDefinitionContent">
+		 <put-attribute name="contTitle"	value="캠페인KIT 목록페이지" />
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/script/script_cont.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/multicms/multiCmsUsrList_ck.jsp" />
+	 </definition>
+	 
+	 
+</tiles-definitions>
+

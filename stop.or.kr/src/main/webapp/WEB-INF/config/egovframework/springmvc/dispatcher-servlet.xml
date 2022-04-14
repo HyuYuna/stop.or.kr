@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    - DispatcherServlet application context for Application's web tier.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+    <!--
+        - The controllers are autodetected POJOs labeled with the @Controller annotation.
+    -->
+    <context:component-scan base-package="egovframework">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+    </context:component-scan>
+    
+    
+	<bean id="egov.propertyConfigurer"
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:/egovframework/egovProps/globals.properties</value>
+            </list>
+        </property>
+    </bean>
+    
+ 	<mvc:annotation-driven>
+	 	<mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" /> 
+         <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+             <property name="supportedMediaTypes">
+                 <list>
+                     <value>text/html;charset=UTF-8</value>
+                 </list>
+             </property>
+         </bean>
+        </mvc:message-converters>
+	</mvc:annotation-driven> 
+
+	<mvc:interceptors>
+	
+		<bean id="webContentInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+	        <property name="cacheSeconds" value="0" />
+	        <property name="useExpiresHeader" value="true" />
+	        <property name="useCacheControlHeader" value="true" />
+	        <property name="useCacheControlNoStore" value="true" />
+	    </bean>
+	
+		<!-- 2018-04-25(pigcos) : Locale 설정 적용 --> 
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+			<property name="paramName" value="${Globals.locale.paramName}"/>
+		</bean>
+		
+		<bean id="authenticInterceptor" class="egovframework.plani.template.cmm.interceptor.AuthenticInterceptor">
+			<property name="permittedURL">
+				<set>
+					<!-- 로그인하지 않고 들어갈 수 있는 페이지 정의 -->
+					<value>/widgets/*.*</value><!-- 위젯 -->
+					<value>/svcmem/siteLogin.*</value><!-- 사용자로그인 -->
+					<value>/svcmem/memJoinForm.*</value><!-- 회원가입 -->
+					<value>/svcmem/memUserInfo.*</value><!-- 회원정보수정 -->
+					<value>/metsys/metsysLogin.*</value><!-- 관리자 로그인 -->					
+					
+					
+					
+					
+					<!-- 아래 정리 필요 -->
+					<value>/WEB-INF/jsp/layout/.*</value>
+					<value>/metsys/metsysLogin.*</value>
+					<value>/metsys/metsysLoginProc.*</value>
+					<value>/modedv/selectTableList.*</value>
+					<value>/modedg/contentsView.*</value>
+					<value>/modeur/modeurScrtcheck.*</value>
+					<!-- 
+					<value>/memuser/successGpin.*</value>
+					<value>/memuser/successHpAndCert.*</value>
+					<value>/memuser/failHpAndCert.*</value>
+					<value>/memuser/preCheckMember.*</value>
+					<value>/memuser/sendPinCode.*</value>
+					<value>/memuser/checkPinCode.*</value>
+					 -->
+					<value>/memuser/chkdupMember.*</value>  
+					<value>/memuser/sysmemInputmove.*</value>
+					<value>/memuser/addMember.*</value>
+					<value>/memuser/recoverMember.*</value>
+					<value>/memuser/parentAuthInfo.*</value>
+					<value>/memuser/changePwForm.*</value>
+					<value>/memuser/changePw.*</value>
+					<value>/memuser/checkMemberScrt.*</value>
+					<value>/memuser/authPageView.*</value>
+					
+					<value>/menuctgry/mainmenuList.*</value>
+					<value>/menuctgry/leftmenuList.*</value>
+					<value>/menuctgry/bannerList.*</value>
+					<value>/svcmem/siteLoginProc.*</value>
+					<value>/svcmem/sysmemPagemove.*</value>
+					
+					<value>/contents/*.*</value>
+					
+					<value>/brdthm/boardthmList.*</value>
+					<value>/brdthm/boardthmView.*</value>
+					<value>/brdartcl/boardarticleList.*</value>
+					<value>/brdartcl/boardarticleView.*</value>
+					<value>/brdanm/*.*</value>
+	
+					<value>/brdfaq/boardfaqList.*</value>
+					<value>/brdnws/boardnewsList.*</value>
+					<value>/brddry/boarddryList.*</value>
+					<value>/brddry/boarddryJsonList.*</value>
+					<value>/brddry/holidaySolarJsonList.*</value>
+					<value>/brddry/loadScheduleJson.*</value>
+									
+					<value>/images/.*</value>
+					<value>/atchfile/imageAtchfile.*</value>
+					<value>/atchfile/downloadAtchfile.*</value>
+					<value>/atchfile/binaryAtchfile.*</value>
+					
+					<value>/jcaptcha</value>
+					<value>/usract/surveySrvydata/*.*</value>
+
+					<value>/SiteMenuWidget/.*</value>
+					
+					<value>/release/*.*</value>
+					<value>/release/*</value>
+					
+					<value>/sch/.*</value>
+					<value>/newsletter/.*</value>
+					<value>/map/.*</value>
+					
+					<value>/cardnews/*.*</value>
+					<value>/multicms/*.*</value>
+					
+					
+				</set>
+			</property>
+			<property name="managedURL">
+				<set>
+					<!-- 관리자가 아니면 들어갈 수 없는 페이지 정의  -->
+					<value>/metsys/.*</value> <!-- 2018-07-17 pigcos 추가 -->
+					
+					<value>/metsys/metsysMain.*</value>
+					<value>/modedv/.*</value>
+					<value>/modeur/.*</value>
+					<value>/modedg/.*</value>
+					<value>/modebd/.*</value>
+					<value>/modest/.*</value>
+					<value>/modeip/.*</value>
+					<value>/menuctgry/.*</value>
+					<value>/modeec/.*</value>
+					<value>/popup/.*</value>
+					<value>/modeatch/.*</value>
+					<value>/manlog/.*</value>
+					<value>/manact/.*</value>
+					<value>/mansch/.*</value>
+					<value>/mannewsletter/.*</value>
+					<value>/metsys/release/.*</value>
+					<value>/metsys/cardnews/.*</value>
+					<value>/metsys/multicms/.*</value>
+					<value>/metsys/webtoon/.*</value>
+					<value>/metsys/webtooncategory/.*</value>
+					<value>/project/.*</value>
+				</set>
+			</property>
+		</bean>
+	
+		<bean id="sslInterceptor" class="egovframework.plani.template.cmm.interceptor.SslInterceptor">
+			<property name="sslURL">
+				<set>
+				<value>.*</value>
+					<!-- 
+					<value>/brdrpt/boardreportMoveView.*</value>
+					<value>/brdrpt/addBoardreport.*</value>
+					<value>/brdartcl/boardarticleMoveView.*</value>
+					<value>/brdartcl/addBoardarticle.*</value>
+					<value>/brdartcl/mdfBoardarticle.*</value>
+					-->
+					
+					<!-- <value>/brdartcl/boardarticleMoveView.*</value> -->
+					
+					<!-- <value>/svcmem/sysmemPagemove.*</value>
+					<value>/memuser/sysmemInputmove.*</value>
+					<value>/memuser/addMember.*</value>
+					<value>/memuser/mdfMember.*</value>
+					<value>/memuser/preCheckMember.*</value>
+					<value>/memuser/recoverMember.*</value>
+					<value>/memuser/chkdupMember.*</value>
+					<value>/memuser/sendPinCode.*</value>
+					<value>/memuser/checkPinCode.*</value>
+					<value>/memuser/changePwForm.*</value>
+					<value>/memuser/changePw.*</value>
+					<value>/metsys/siteLoginProc.*</value>
+					<value>/metsys/metsysLogin.*</value>
+					<value>/metsys/metsysLoginProc.*</value>
+					<value>/modeur/modeurScrtcheck.*</value> -->
+					
+					<!-- 
+					<value>/modeur/modeurList.*</value>
+					<value>/modeur/modeurView.*</value>
+					<value>/modeur/mdfModeur.*</value>
+					<value>/modeur/addModeur.*</value>
+					-->				
+				</set>
+			</property>
+		</bean>
+		
+		<!-- 2018-05-30 pigcos :  validation post 참조 -->
+		<bean id="commonInterceptor" class="egovframework.plani.template.cmm.interceptor.CommonInterceptor"></bean>
+
+
+				
+	</mvc:interceptors>     	
+	
+    <!--
+        - This bean resolves specific types of exceptions to corresponding logical 
+        - view names for error views. The default behaviour of DispatcherServlet 
+        - is to propagate all exceptions to the servlet container: this will happen 
+        - here with all other types of exceptions.
+    -->
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="defaultErrorView" value="/template/cmmn/error/error"/>
+        <!-- <property name="defaultStatusCode" value="500"/>-->
+        <property name="exceptionMappings">
+            <props>
+                <prop key="org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException">/template/cmmn/error/error</prop>
+                <prop key="egovframework.plani.template.cmm.exceptions.AjaxException">/template/cmmn/error/ajaxError</prop>
+                <prop key="egovframework.plani.template.cmm.exceptions.UnknownBoardException">/template/cmmn/error/unknownBoardError</prop>
+                <prop key="egovframework.plani.template.cmm.exceptions.CmmnException">/template/cmmn/error/error</prop>
+                <prop key="egovframework.plani.template.cmm.exceptions.NoAvailableThesisdefException">/template/cmmn/error/nothessdef</prop>
+                <prop key="egovframework.plani.template.cmm.exceptions.DataNotFoundException">/template/cmmn/error/error</prop>
+                <prop key="com.ibatis.sqlmap.client.SqlMapException">/template/cmmn/error/error</prop>
+                <prop key="java.sql.SQLException">/template/cmmn/error/error</prop>
+                <!-- <prop key="defaultErrorView">/cmmn/error/error</prop> -->
+            </props>
+        </property>
+        
+    </bean>
+    
+    <!--
+        - This bean configures the 'prefix' and 'suffix' properties of 
+        - InternalResourceViewResolver, which resolves logical view names 
+        - returned by Controllers. For example, a logical view name of "vets" 
+        - will be mapped to "/WEB-INF/jsp/vets.jsp".
+    -->
+    <bean id="ViewResolver_Internal" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+    	<property name="order" value="2"/>
+    	<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+    	<property name="prefix" value="/WEB-INF/jsp/wpages"/>
+    	<property name="suffix" value=".jsp"/>
+    	<property name="redirectHttp10Compatible" value="false" />
+    </bean>
+
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="50000000"/>
+	</bean>
+
+     <!-- <bean id="ViewResolver_Tiles" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+    	<property name="order" value="1"/>
+    	<property name="viewClass">
+    		<value>org.springframework.web.servlet.view.tiles2.TilesView</value>
+    	</property>
+    	<property name="redirectHttp10Compatible" value="false" />
+    </bean>
+    <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+    	<property name="definitions">
+    	<list>
+    		<value>/WEB-INF/tiles/**/*.xml</value>
+    	</list>
+    	</property>
+    </bean> -->
+	<!-- Tiles -->
+  	<bean id="tilesViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver" p:order="1">
+		<property name="viewClass" value="org.springframework.web.servlet.view.tiles3.TilesView" />
+	</bean>
+	<bean id="tilesConfigurer"  class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+		<property name="definitions">
+			<list>
+				<value>/WEB-INF/tiles/**/*.xml</value>
+			</list>
+		</property>
+		<property name="definitionsFactoryClass" value="egovframework.plani.template.cmm.utils.CustomLocaleDefinitionsFactory" />
+		<!-- <property name="preparerFactoryClass" value="org.springframework.web.servlet.view.tiles3.SpringBeanPreparerFactory" /> -->
+	</bean>
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/jsp/ directory -->
+<!-- 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" p:order="2">
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+ -->    
+ 
+ 
+    <!-- For Pagination Tag -->
+	<bean class="egovframework.plani.template.cmm.pagination.DftPaginationRenderer" id="imageRenderer"/>
+	<bean class="egovframework.plani.template.cmm.pagination.TextPaginationRenderer" id="textRenderer" />
+	<bean class="egovframework.plani.template.cmm.pagination.PlaniPaginationRenderer" id="planiRenderer" />
+	<bean class="egovframework.plani.template.cmm.pagination.UserPaginationRenderer" id="userRenderer" />
+    <bean id="paginationManager" class="egovframework.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationManager">
+        <property name="rendererType">
+            <map>
+                <entry key="image" value-ref="imageRenderer"/> 
+                <entry key="text" value-ref="textRenderer"/> 
+                <entry key="plani" value-ref="planiRenderer"/> 
+                <entry key="user" value-ref="userRenderer"/> 
+            </map>
+        </property>
+    </bean>
+	<!-- /For Pagination Tag -->
+	
+	
+	<!-- 2016.09.12. bhhan. quartz scheduler set 	
+	<bean id="cronQuartz" class="org.springframework.scheduling.quartz.JobDetailBean">
+	    <property name="jobClass" value="egovframework.plani.template.man.quartz.cronTrigger"/>
+	    <property name="applicationContextJobDataKey" value="applicationContext"/>
+	</bean>
+		
+	<bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="cronQuartz"/>
+	    <property name="cronExpression" value="0/5 * * * * ?"/>
+	</bean>
+	 
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	    <property name="triggers">
+	        <list>
+	            <ref bean="cronTrigger"/>
+	        </list>
+	    </property>
+	    <property name="quartzProperties">
+	        <props>
+	            <prop key="org.quartz.threadPool.class">org.quartz.simpl.SimpleThreadPool</prop>
+	            <prop key="org.quartz.threadPool.threadCount">3</prop>
+	            <prop key="org.quartz.threadPool.threadPriority">4</prop>
+	            <prop key="org.quartz.jobStore.class">org.quartz.simpl.RAMJobStore</prop>
+	            <prop key="org.quartz.jobStore.misfireThreshold">60000</prop>
+	        </props>
+	    </property>
+	</bean>
+	-->	
+
+    <!-- 스프링 스케쥴러
+	<task:annotation-driven scheduler="messageScheduler" />
+	<task:scheduler id="messageScheduler" pool-size="5" />		
+    -->
+	
+</beans>

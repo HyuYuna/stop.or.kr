@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.atchfile.dao.AtchfileDAO">
+
+	
+	<insert id="insertAtchfile" parameterType="atchfileVO">
+		<selectKey resultType="java.lang.Integer" keyProperty="atckey_4th" order="BEFORE">
+			SELECT NVL(MAX(ATCKEY_4TH) + 1, 1) ATCKEY_4TH FROM CMS_ATACH 
+			WHERE
+				ATCKEY_1ST = #{atckey_1st} AND
+				ATCKEY_2ND = #{atckey_2nd} AND
+				ATCKEY_3RD = #{atckey_3rd} 
+		</selectKey>
+		
+		INSERT INTO CMS_ATACH
+		(
+			ATCKEY_1ST,
+			ATCKEY_2ND,
+			ATCKEY_3RD,
+			ATCKEY_4TH,
+			IS_THUMB,
+			VCHKCODE,
+			FPATH,
+			FNAME,
+			RNAME,
+			FEXT,
+			SIZE_KB,
+			IMG_WIDTH,
+			IMG_HEIGHT
+		)
+		VALUES
+		(
+			#{atckey_1st},
+			#{atckey_2nd},
+			#{atckey_3rd},
+			#{atckey_4th},
+			'N',
+			#{vchkcode},
+			#{fpath},
+			#{fname},
+			replace(#{rname}, ',', ' '),
+			#{fext},
+			#{size_kb},
+			#{img_width},
+			#{img_height}
+		)
+	
+	</insert>
+
+	<insert id="insertAtchfileDrct" parameterType="atchfileVO">
+		
+		INSERT INTO CMS_ATACH
+		(
+			ATCKEY_1ST,
+			ATCKEY_2ND,
+			ATCKEY_3RD,
+			ATCKEY_4TH,
+			IS_THUMB,
+			VCHKCODE,
+			FPATH,
+			FNAME,
+			RNAME,
+			FEXT,
+			SIZE_KB,
+			IMG_WIDTH,
+			IMG_HEIGHT
+		)
+		VALUES
+		(
+			#{atckey_1st},
+			#{atckey_2nd},
+			#{atckey_3rd},
+			#{atckey_4th},
+			'N',
+			#{vchkcode},
+			#{fpath},
+			#{fname},
+			replace(#{rname}, ',', ' '),
+			#{fext},
+			#{size_kb},
+			#{img_width},
+			#{img_height}
+		)
+	
+	</insert>
+
+	<insert id="insertAtchThumb" parameterType="atchfileVO">
+
+		INSERT INTO CMS_ATACH
+		(
+			ATCKEY_1ST,
+			ATCKEY_2ND,
+			ATCKEY_3RD,
+			ATCKEY_4TH,
+			IS_THUMB,
+			VCHKCODE,
+			FPATH,
+			FNAME,
+			RNAME,
+			FEXT,
+			SIZE_KB,
+			IMG_WIDTH,
+			IMG_HEIGHT
+		)
+		VALUES
+		(
+			#{atckey_1st},
+			#{atckey_2nd},
+			#{atckey_3rd},
+			#{atckey_4th},
+			'Y',
+			#{vchkcode},
+			#{fpath},
+			#{fname},
+			#{rname},
+			#{fext},
+			#{size_kb},
+			#{img_width},
+			#{img_height}
+		)
+	
+	</insert>
+	
+	<delete id="deleteBoardAtchfiles" parameterType="atchfileVO">
+	
+		DELETE FROM
+			CMS_ATACH
+		WHERE
+			ATCKEY_1ST = #{atckey_1st}
+			
+	</delete>
+	
+	<delete id="deleteAtchOnefile" parameterType="atchfileVO">
+	
+		DELETE FROM
+			CMS_ATACH
+		WHERE
+			ATCKEY_1ST = #{atckey_1st} AND
+			ATCKEY_2ND = #{atckey_2nd} AND
+			ATCKEY_3RD = #{atckey_3rd} AND
+			ATCKEY_4TH = #{atckey_4th} AND
+			IS_THUMB = #{is_thumb}
+			
+	</delete>
+
+	<delete id="deleteAtchOnefileByVchkcode" parameterType="atchfileVO">
+		DELETE FROM
+			CMS_ATACH
+		WHERE
+			VCHKCODE = #{vchkcode}	
+	</delete>
+
+	<delete id="deleteAtchGrpfile" parameterType="atchfileVO">
+	
+		DELETE FROM
+			CMS_ATACH
+		WHERE
+			ATCKEY_1ST = #{atckey_1st} AND
+			ATCKEY_2ND = #{atckey_2nd} AND
+			ATCKEY_3RD = #{atckey_3rd}
+	
+	</delete>
+	
+	<select id="selectAtchfilePair" parameterType="atchfileVO" resultType="atchfileVO">
+	
+		SELECT
+			ATCKEY_1ST,
+			ATCKEY_2ND,
+			ATCKEY_3RD,
+			ATCKEY_4TH,
+			IS_THUMB,
+			VCHKCODE,
+			FPATH,
+			FNAME,
+			RNAME,
+			FEXT,
+			SIZE_KB
+		FROM
+			CMS_ATACH
+		WHERE
+			ATCKEY_1ST = #{atckey_1st} AND
+			ATCKEY_2ND = #{atckey_2nd} AND
+			ATCKEY_3RD = #{atckey_3rd} AND
+			ATCKEY_4TH = #{atckey_4th}
+	
+	</select>
+	
+	
+	<select id="selectAtchfile" parameterType="atchfileVO" resultType="atchfileVO">
+	
+		SELECT
+			ATCKEY_1ST,
+			ATCKEY_2ND,
+			ATCKEY_3RD,
+			ATCKEY_4TH,
+			IS_THUMB,
+			VCHKCODE,
+			FPATH,
+			FNAME,
+			RNAME,
+			FEXT,
+			SIZE_KB
+		FROM
+			CMS_ATACH
+		WHERE
+			ATCKEY_1ST = #{atckey_1st} AND
+			ATCKEY_2ND = #{atckey_2nd} AND
+			ATCKEY_3RD = #{atckey_3rd} AND
+			ATCKEY_4TH = #{atckey_4th} AND 
+			VCHKCODE = #{vchkcode}
+	
+	</select>
+	
+	<select id="selectAtchfileByVchkcode" parameterType="atchfileVO" resultType="atchfileVO">
+	
+		SELECT
+			ATCKEY_1ST,
+			ATCKEY_2ND,
+			ATCKEY_3RD,
+			ATCKEY_4TH,
+			IS_THUMB,
+			VCHKCODE,
+			FPATH,
+			FNAME,
+			RNAME,
+			FEXT,
+			SIZE_KB
+		FROM
+			CMS_ATACH
+		WHERE
+			VCHKCODE = #{vchkcode}
+	
+	</select>
+
+	<select id="selectAtchfileByFilename" parameterType="atchfileVO" resultType="atchfileVO">
+	
+		SELECT
+			ATCKEY_1ST,
+			ATCKEY_2ND,
+			ATCKEY_3RD,
+			ATCKEY_4TH,
+			IS_THUMB,
+			VCHKCODE,
+			FPATH,
+			FNAME,
+			RNAME,
+			FEXT,
+			SIZE_KB,
+			IMG_WIDTH,
+			IMG_HEIGHT
+		FROM
+			CMS_ATACH
+		WHERE
+			ATCKEY_1ST = #{atckey_1st} AND
+			ATCKEY_2ND = #{atckey_2nd} AND
+			ATCKEY_3RD = #{atckey_3rd} AND
+			RNAME = #{rname} AND
+			IS_THUMB = 'N'
+	
+	</select>
+	
+	<select id="selectAtchfileListWithThumb" parameterType="atchfileVO" resultType="atchfileVO">
+
+		SELECT
+			ATCKEY_1ST,
+			ATCKEY_2ND,
+			ATCKEY_3RD,
+			ATCKEY_4TH,
+			IS_THUMB,
+			VCHKCODE,
+			FPATH,
+			FNAME,
+			RNAME,
+			FEXT,
+			SIZE_KB,
+			IMG_WIDTH,
+			IMG_HEIGHT
+		FROM
+			CMS_ATACH
+		WHERE
+			ATCKEY_1ST = #{atckey_1st} AND
+			ATCKEY_2ND = #{atckey_2nd} AND
+			ATCKEY_3RD = #{atckey_3rd}
+			
+	</select>
+	
+	<select id="selectAtchfileList" parameterType="atchfileVO" resultType="atchfileVO">
+
+		SELECT
+			ATCKEY_1ST,
+			ATCKEY_2ND,
+			ATCKEY_3RD,
+			ATCKEY_4TH,
+			IS_THUMB,
+			VCHKCODE,
+			FPATH,
+			FNAME,
+			RNAME,
+			FEXT,
+			SIZE_KB,
+			IMG_WIDTH,
+			IMG_HEIGHT
+		FROM
+			CMS_ATACH
+		WHERE
+			ATCKEY_1ST = #{atckey_1st} AND
+			ATCKEY_2ND = #{atckey_2nd} AND
+			ATCKEY_3RD = #{atckey_3rd} AND
+			IS_THUMB = 'N'
+			
+		ORDER BY ATCKEY_1ST ASC, ATCKEY_2ND ASC, ATCKEY_3RD ASC, ATCKEY_4TH ASC
+	</select>
+	
+	<select id="selectAtchfileListTotCnt" parameterType="atchfileVO" resultType="int">
+	
+		SELECT
+			COUNT(*) AS "totcnt"
+		FROM
+			CMS_ATACH
+		WHERE
+			ATCKEY_1ST = #{atckey_1st} AND
+			ATCKEY_2ND = #{atckey_2nd} AND
+			ATCKEY_3RD = #{atckey_3rd} AND
+			IS_THUMB = 'N'
+			
+	</select>
+	
+	<select id="selectAtchfileThmCnt" parameterType="atchfileVO" resultType="int">
+	
+		SELECT
+			COUNT(*) AS "totcnt"
+		FROM
+			CMS_ATACH
+		WHERE
+			ATCKEY_1ST = #{atckey_1st} AND
+			ATCKEY_2ND = #{atckey_2nd} AND
+			ATCKEY_3RD = #{atckey_3rd} AND
+			IS_THUMB = 'Y'
+	</select>
+
+	<select id="selectCustomAtchfileList" parameterType="atchfileVO" resultType="atchfileVO">
+		
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+			SELECT
+				ATCKEY_1ST,
+				ATCKEY_2ND,
+				ATCKEY_3RD,
+				ATCKEY_4TH,
+				IS_THUMB,
+				VCHKCODE,
+				(SELECT VCHKCODE FROM CMS_ATACH WHERE ATCKEY_1ST = A.ATCKEY_1ST AND  ATCKEY_2ND = A.ATCKEY_2ND AND  
+					ATCKEY_3RD = A.ATCKEY_3RD AND  ATCKEY_4TH = A.ATCKEY_4TH AND IS_THUMB = 'Y') THUMBCODE,
+				FPATH,
+				FNAME,
+				RNAME,
+				FEXT,
+				SIZE_KB,
+				IMG_WIDTH,
+				IMG_HEIGHT
+			FROM
+				CMS_ATACH A
+			WHERE
+				ATCKEY_1ST = #{atckey_1st} AND
+				IS_THUMB = 'N'
+			ORDER BY ATCKEY_2ND DESC, ATCKEY_3RD DESC, ATCKEY_4TH DESC
+				
+		) TB )  WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+		
+	</select>
+	
+	<select id="selectCustomAtchfileListTotCnt" parameterType="atchfileVO" resultType="int">
+	
+		SELECT
+			COUNT(*) AS "totcnt" 
+		FROM
+			CMS_ATACH
+		WHERE
+			ATCKEY_1ST = #{atckey_1st}
+			
+	</select>
+	
+	<select id="selectMaxAtchkey2nd" parameterType="atchfileVO" resultType="int">
+	
+		SELECT
+			NVL(MAX(ATCKEY_2ND), 0)
+		FROM
+			CMS_ATACH
+		WHERE
+			ATCKEY_1ST = #{atckey_1st}
+			
+	</select>
+		
+</mapper>
+

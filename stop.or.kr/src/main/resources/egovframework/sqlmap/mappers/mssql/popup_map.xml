@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.man.popup.dao.PopupDAO">
+
+	<sql id="incSelectWhere">
+		<if test="searchCondition != null and searchCondition != ''">
+			<if test="searchKeyword != null and searchKeyword != ''">
+				AND ${searchCondition} like '%${searchKeyword}%'
+			</if>
+		</if>
+		<if test="searchPopType != null and searchPopType != ''">
+			AND POP_TYPE = #{searchPopType}
+		</if>
+		<if test="searchUseYn != null and searchUseYn != ''">
+			AND USE_YN = #{searchUseYn}
+		</if>
+		
+		<if test="searchFrom != null and searchFrom != ''">
+			<if test="searchTo != null and searchTo != ''">
+				<![CDATA[
+					AND ( (POP_FROM <= #{searchFrom} AND POP_TO >= #{searchFrom}) OR (POP_FROM <= #{searchTo} AND POP_TO >= #{searchTo}) )
+				]]>
+			</if>
+			<if test="searchTo == null or searchTo == ''">
+				<![CDATA[
+					AND (POP_FROM >= #{searchFrom} OR POP_TO >= #{searchFrom})
+				]]>
+			</if>
+		</if>
+		
+		
+		<if test="searchFrom == null or searchFrom == ''">
+			<if test="searchTo != null and searchTo != ''">
+				<![CDATA[
+					AND (POP_FROM <= #{searchTo} OR POP_TO <= #{searchTo})
+				]]>
+			</if>
+		</if>
+	</sql>
+
+	<!-- 팝업 목록 -->
+	<select id="selectPopupList" parameterType="popupVO" resultType="popupVO">
+		
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY POP_SORT DESC) rn, TB.* FROM (
+	
+			SELECT
+				POP_SEQ
+				, POP_TITLE
+				, POP_TYPE
+				, POP_FROM
+				, POP_TO
+				, POP_W
+				, POP_H
+				, POP_CONTENT
+				, POP_IMAGE
+				, POP_LINK
+				, POP_TARGET
+				, USE_YN
+				, WRITER
+				, CONVERT(VARCHAR(19), WDT, 20) WDT
+				, POP_SORT
+	            , VCHKCODE
+			FROM
+				CMS_POPUP A  
+				LEFT OUTER JOIN 
+	  			(
+	  				SELECT 
+	  					* 
+	  				FROM
+	  					CMS_ATACH
+	  				WHERE 
+			 			ATCKEY_1ST = 'POPUP' AND
+			 			ATCKEY_3RD = 1 AND
+	        			ATCKEY_4TH = 1 AND
+	        			IS_THUMB = 'N'
+	  				 
+	  			) B 
+	  			ON A.POP_SEQ = B.ATCKEY_2ND
+				<include refid="incSelectWhere"/>				
+					
+		
+		) TB ) MORG  WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+	</select>
+	
+	<!-- 페이지 나누기를 위한 총 개수 -->
+	<select id="selectPopupListTotCnt" parameterType="popupVO" resultType="int">
+	
+		SELECT
+			COUNT(*) AS totcnt
+		FROM
+			CMS_POPUP
+		WHERE
+			1=1
+		<include refid="incSelectWhere"/>	
+		
+	</select>
+
+
+
+
+	<!-- 팝업 등록 -->
+	<insert id="insertPopup" parameterType="popupVO">
+		<selectKey keyProperty="pop_seq" resultType="int" order="BEFORE">
+			SELECT ISNULL(MAX(POP_SEQ), 0) + 1 FROM CMS_POPUP	
+		</selectKey>
+	
+		INSERT INTO CMS_POPUP(
+			POP_SEQ
+			, POP_TITLE
+			, POP_TYPE
+			, POP_FROM
+			, POP_TO
+			, POP_W, POP_H
+			, POP_X, POP_Y
+			, POP_ALT
+			, POP_CONTENT
+			, POP_IMAGE
+			, POP_LINK
+			, POP_TARGET
+			, USE_YN
+			, WRITER
+			, WDT
+			, POP_SORT
+		)
+		VALUES(
+			#{pop_seq}
+			, #{pop_title}
+			, #{pop_type}
+			, #{pop_from}
+			, #{pop_to}
+			, #{pop_w}, #{pop_h}
+			, #{pop_x}, #{pop_y}
+			, #{pop_alt}
+			, #{pop_content}
+			, #{pop_image}
+			, #{pop_link}
+			, #{pop_target}
+			, 'Y'
+			, 'tmp'
+			, GETDATE()
+			, #{pop_seq}
+		)
+		
+
+	</insert>
+	
+	
+	<!-- 팝업 수정 -->
+	<update id="updatePopup" parameterType="popupVO">
+		UPDATE CMS_POPUP SET
+			POP_TITLE = #{pop_title}
+			, POP_TYPE = #{pop_type}
+			, POP_FROM = #{pop_from}
+			, POP_TO = #{pop_to}
+			, POP_W = #{pop_w}, POP_H = #{pop_h}
+			, POP_X = #{pop_x}, POP_Y = #{pop_y}
+			, POP_CONTENT = #{pop_content}
+			, POP_IMAGE = #{pop_image}
+			, POP_LINK = #{pop_link}
+			, POP_TARGET = #{pop_target}
+			, POP_ALT = #{pop_alt}
+			, POP_SORT = #{pop_sort}
+		WHERE
+			POP_SEQ = #{pop_seq}
+	</update>
+	
+	<!-- 팝업 삭제 -->
+	<delete id="deletePopup" parameterType="popupVO">
+		
+		DELETE FROM 
+			CMS_POPUP 
+		WHERE 
+			POP_SEQ = #{pop_seq}
+			
+	</delete>
+	
+	<!-- 팝업 상세 -->
+	<select id="selectPopup" parameterType="popupVO" resultType="popupVO">
+		
+		SELECT
+			POP_SEQ
+			, POP_TITLE
+			, POP_TYPE
+			, POP_FROM
+			, POP_TO
+			, POP_W
+			, POP_H
+			, POP_X
+			, POP_Y
+			, POP_ALT
+			, POP_CONTENT
+			, POP_IMAGE
+			, POP_LINK
+			, POP_TARGET
+			, USE_YN
+			, WRITER
+			, CONVERT(VARCHAR(19), WDT, 20) WDT
+			, POP_SORT
+		FROM
+			CMS_POPUP
+		WHERE
+			POP_SEQ = #{pop_seq}
+			
+	</select>
+	
+	<!-- 정렬 변경 대상 조회 -->
+	<select id="selectTargetReplaced" parameterType="popupVO" resultType="popupVO">
+		
+		<!-- SELECT POP_SEQ, POP_SORT FROM(
+			SELECT ROWNUM RN, t.* FROM( 
+				SELECT POP_SEQ, POP_SORT FROM CMS_POPUP WHERE 1=1 <include refid="incSelectWhere"/> ORDER BY POP_SORT DESC
+		    ) t
+		)
+		WHERE RN = (
+		
+		  SELECT RN FROM(
+		      SELECT ROWNUM RN, t.* FROM(
+		          SELECT SEQ, POP_SORT FROM CMS_POPUP WHERE 1=1 <include refid="incSelectWhere"/> ORDER BY POP_SORT DESC
+		      ) t
+		  )
+		  WHERE POP_SEQ = #{pop_seq}
+		
+		) -->
+		
+		SELECT POP_SEQ, POP_SORT FROM(
+			SELECT ROW_NUMBER() OVER(ORDER BY POP_SORT DESC) RN, t.* FROM( 
+				SELECT POP_SEQ, POP_SORT FROM CMS_POPUP WHERE 1=1 <include refid="incSelectWhere"/>
+		    ) t
+		)INNA
+		WHERE RN = (
+		
+		  SELECT RN FROM(
+		      SELECT ROW_NUMBER() OVER(ORDER BY POP_SORT DESC) RN, t.* FROM(
+		          SELECT POP_SEQ, POP_SORT FROM CMS_POPUP WHERE 1=1 <include refid="incSelectWhere"/>
+		      ) t
+		  )INNA
+		  WHERE POP_SEQ = #{pop_seq}
+		
+		)
+		<if test="sort_dir == 'up'.toString()">-1</if>
+		<if test="sort_dir == 'down'.toString()">+1</if>
+		
+	</select>
+	
+	<!-- 정렬 변경 -->
+	<update id="updatePopupSort" parameterType="popupVO">
+		
+		UPDATE CMS_POPUP SET
+			POP_SORT = #{pop_sort}
+		WHERE 
+			POP_SEQ = #{pop_seq}
+		
+	</update>
+	
+	<!-- 유효 팝업 쿼리 -->
+	<select id="selectValidPopupList" parameterType="popupVO" resultType="popupVO">
+		
+		SELECT  
+			POP_SEQ, 
+	        POP_TITLE, 
+	        POP_TYPE, 
+	        POP_FROM, 
+	        POP_TO, 
+	        POP_W, 
+	        POP_H, 
+	        POP_X, 
+	        POP_Y, 
+	        POP_ALT, 
+	        POP_CONTENT, 
+	        POP_IMAGE, 
+	        POP_LINK, 
+	        POP_TARGET, 
+	        USE_YN, 
+	        POP_SORT,
+	        dbo.SF_ATCFILE_INFO('POPUP', A.POP_SEQ, 1, 1, 'N', 'VCODE') VCHKCODE
+  		FROM  
+  			CMS_POPUP A
+ 		WHERE
+			USE_YN = 'Y' AND
+			POP_TYPE = #{pop_type}
+			<if test="pop_type == 'W'.toString()">AND
+				CONVERT(VARCHAR(10), GETDATE(), 20) BETWEEN POP_FROM AND POP_TO
+			</if>
+			<if test="pop_type == 'Z'.toString()">AND
+				CONVERT(VARCHAR(10), GETDATE(), 20) BETWEEN POP_FROM AND POP_TO
+			</if>
+			
+		ORDER BY POP_SORT DESC
+		
+	</select>
+	
+	<!-- 사용/미사용 toggle -->
+	<update id="updatePopupUseYn" parameterType="java.lang.String">
+		
+		UPDATE CMS_POPUP SET 
+			USE_YN = 
+				CASE USE_YN 
+				WHEN 'Y' THEN 'N' 
+				ELSE 'Y' END 
+		WHERE 
+			POP_SEQ = #{pop_seq}
+			
+	</update>
+</mapper>
+

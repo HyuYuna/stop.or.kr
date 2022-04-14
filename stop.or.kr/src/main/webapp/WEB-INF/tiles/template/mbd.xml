@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 
+	 <definition name="metsysBoardmanContent" template="/WEB-INF/jsp/layout/template/metsys/layout/modeecLayout.jsp">
+		 <put-attribute name="metsysMeta"	value="/WEB-INF/jsp/layout/template/metsys/meta/meta_type_content.jsp"/>
+		 <put-attribute name="metsysHeader"	value="/WEB-INF/jsp/layout/template/metsys/header.jsp"/>
+		 <put-attribute name="metsysMenu"	value="/WEB-INF/jsp/layout/template/metsys/menu.jsp"/>
+		 <put-attribute name="metsysSubmenu"	value="/WEB-INF/jsp/layout/template/metsys/submenu/submenu.jsp"/>
+		 <put-attribute name="metsysScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script.jsp"/>
+		 <put-attribute name="metsysFooter"	value="/WEB-INF/jsp/layout/template/metsys/footer.jsp"/>
+	 </definition>
+	 
+	 <definition name="metsysBoardContent" template="/WEB-INF/jsp/layout/template/metsys/layout/modebdLayout.jsp">
+		 <put-attribute name="metsysMeta"	value="/WEB-INF/jsp/layout/template/metsys/meta/meta_type_content.jsp"/>
+		 <put-attribute name="metsysHeader"	value="/WEB-INF/jsp/layout/template/metsys/header.jsp"/>
+		 <put-attribute name="metsysMenu"	value="/WEB-INF/jsp/layout/template/metsys/menu.jsp"/>
+		 <put-attribute name="metsysSubmenu"	value="/WEB-INF/jsp/layout/template/metsys/submenu/submenu.jsp"/>
+		 <put-attribute name="metsysScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script.jsp"/>
+		 <put-attribute name="metsysFooter"	value="/WEB-INF/jsp/layout/template/metsys/footer.jsp"/>
+	 </definition>
+
+	 <definition name="metsysBoardEditor" template="/WEB-INF/jsp/layout/template/metsys/layout/modebdLayout.jsp">
+		 <put-attribute name="metsysMeta"	value="/WEB-INF/jsp/layout/template/metsys/meta/meta_type_editor.jsp"/>
+		 <put-attribute name="metsysHeader"	value="/WEB-INF/jsp/layout/template/metsys/header.jsp"/>
+		 <put-attribute name="metsysMenu"	value="/WEB-INF/jsp/layout/template/metsys/menu.jsp"/>
+		 <put-attribute name="metsysSubmenu"	value="/WEB-INF/jsp/layout/template/metsys/submenu/submenu.jsp"/>
+		 <put-attribute name="metsysScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script.jsp"/>
+		 <put-attribute name="metsysFooter"	value="/WEB-INF/jsp/layout/template/metsys/footer.jsp"/>
+	 </definition>
+	 	 
+	 <definition name="/metsys/modebdList" extends="metsysBoardmanContent">
+		 <put-attribute name="metsysTitle"	value="게시판 관리" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_brd.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/bd/modebdList.jsp" />
+	 </definition>
+	 
+	 <definition name="/metsys/modebdmenuList" extends="metsysBoardmanContent">
+		 <put-attribute name="metsysTitle"	value="게시판 관리" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_brd.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/bd/modebdmenuList.jsp" />
+	 </definition>
+	 
+	 <definition name="/metsys/modebdView" extends="metsysBoardmanContent">
+		 <put-attribute name="metsysTitle"	value="게시판 관리" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_brd.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/bd/modebdView.jsp" />
+	 </definition>
+
+	 	 
+	 	 
+	 <definition name="/metsys/brdartcl/boardarticleList" extends="metsysBoardContent">
+		 <put-attribute name="metsysTitle"	value="일반 게시판 목록" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_content.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/bd/boardarticleList.jsp" />
+	 </definition>
+	 
+	 <definition name="/metsys/brdartcl/boardarticleWrite" extends="metsysBoardEditor">
+		 <put-attribute name="metsysTitle"	value="일반 게시판 글쓰기" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_editor.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/bd/boardarticleWrite.jsp" />
+	 </definition>
+	 
+	 <definition name="/metsys/brdartcl/boardarticleView" extends="metsysBoardEditor">
+		 <put-attribute name="metsysTitle"	value="일반 게시판 보기" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_editor.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/bd/boardarticleView.jsp" />
+	 </definition>
+	 
+	 <definition name="/metsys/brdartcl/boardarticleUpdate" extends="metsysBoardEditor">
+		 <put-attribute name="metsysTitle"	value="일반 게시판 수정" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_editor.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/bd/boardarticleWrite.jsp" />
+	 </definition>
+	 
+
+
+	 <definition name="/metsys/brdanm/boardanonimList" extends="metsysBoardContent">
+		 <put-attribute name="metsysTitle"	value="익명 게시판 목록" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_content.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/bd/boardanonimList.jsp" />
+	 </definition>
+	 
+	 <definition name="/metsys/brdanm/boardanonimWrite" extends="metsysBoardEditor">
+		 <put-attribute name="metsysTitle"	value="익명 게시판 글쓰기" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_editor.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/bd/boardanonimWrite.jsp" />
+	 </definition>
+	 
+	 <definition name="/metsys/brdanm/boardanonimView" extends="metsysBoardEditor">
+		 <put-attribute name="metsysTitle"	value="익명 게시판 보기" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_editor.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/bd/boardanonimView.jsp" />
+	 </definition>
+	 
+	 <definition name="/metsys/brdanm/boardanonimUpdate" extends="metsysBoardEditor">
+		 <put-attribute name="metsysTitle"	value="익명 게시판 수정" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_editor.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/bd/boardanonimWrite.jsp" />
+	 </definition>
+	 
+	 	 
+	 	 
+	 
+
+	 <definition name="/metsys/brdfaq/boardfaqList" extends="metsysBoardContent">
+		 <put-attribute name="metsysTitle"	value="FAQ 게시판 목록" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_content.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/bd/boardfaqList.jsp" />
+	 </definition>
+	 
+	 <definition name="/metsys/brdfaq/boardfaqWrite" extends="metsysBoardEditor">
+		 <put-attribute name="metsysTitle"	value="FAQ 게시판 글쓰기" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_editor.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/bd/boardfaqWrite.jsp" />
+	 </definition>
+	 
+	 <definition name="/metsys/brdfaq/boardfaqView" extends="metsysBoardEditor">
+		 <put-attribute name="metsysTitle"	value="FAQ 게시판 보기" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_editor.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/bd/boardfaqView.jsp" />
+	 </definition>
+	 
+	 <definition name="/metsys/brdfaq/boardfaqUpdate" extends="metsysBoardEditor">
+		 <put-attribute name="metsysTitle"	value="FAQ 게시판 수정" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_editor.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/bd/boardfaqWrite.jsp" />
+	 </definition>
+	 
+	 
+	 
+	 
+	 
+	 
+	 <definition name="/metsys/brdthm/boardthmList" extends="metsysBoardContent">
+		 <put-attribute name="metsysTitle"	value="이미지 게시판 목록" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_content.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/bd/boardthmList.jsp" />
+	 </definition>
+	 
+	 <definition name="/metsys/brdthm/boardthmWrite" extends="metsysBoardEditor">
+		 <put-attribute name="metsysTitle"	value="이미지 게시판 글쓰기" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_editor.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/bd/boardthmWrite.jsp" />
+	 </definition>
+	 
+	 <definition name="/metsys/brdthm/boardthmView" extends="metsysBoardEditor">
+		 <put-attribute name="metsysTitle"	value="이미지 게시판 보기" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_editor.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/bd/boardthmView.jsp" />
+	 </definition>
+	 
+	 <definition name="/metsys/brdthm/boardthmUpdate" extends="metsysBoardEditor">
+		 <put-attribute name="metsysTitle"	value="이미지 게시판 수정" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_editor.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/bd/boardthmWrite.jsp" />
+	 </definition>
+	 
+	 
+	 
+	 <definition name="/metsys/brddry/boarddryList" extends="metsysBoardContent">
+		 <put-attribute name="metsysTitle"	value="일정 게시판 보기" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_dry.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boarddryList.jsp" />
+	 </definition>
+	 
+	 <definition name="/metsys/brddry/boarddryWrite" extends="modeecDefinitionContent">
+		 <put-attribute name="metsysTitle"	value="전체일정등록" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_dry.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boarddryWrite.jsp" />
+	 </definition>
+	 
+	 <definition name="/metsys/brddry/boarddryView" extends="modeecDefinitionContent">
+		 <put-attribute name="metsysTitle"	value="전체일정상세보기" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_dry.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boarddryWrite.jsp" />
+	 </definition>
+	 
+	 <definition name="/metsys/brddry/boardPreview" extends="BoardPreviewDefinition">
+		 <put-attribute name="metsysTitle"	value="게시판 미리 보기" />
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardPreview.jsp" />
+	 </definition>
+	 
+	 
+</tiles-definitions>
+

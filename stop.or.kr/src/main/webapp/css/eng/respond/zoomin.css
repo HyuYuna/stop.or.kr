@@ -1,0 +1,284 @@
+@charset "utf-8";
+@import url("layout.css");
+@import url("sub.css");
+/*-------------------------------------------------
+Author : ㅈㅁㅈ
+Create date : 2018-07-13
+-------------------------------------------------*/
+
+@media screen and (max-width:1250px)
+{
+	/* 비주얼 */
+	#spot .item {width:980px;}
+	#spot .desc {width:350px; padding-right:30px;}
+	#spot .desc p {right:-630px;}
+	#spot .txt {padding-right:30px;}
+	
+	/* 서브메뉴 */
+	#snb {display:block; overflow:hidden; overflow-x:auto; width:auto; margin-top:-30px;}
+	#snb:before {left:0; width:100%; margin:0;}
+	#snb.fixed + #contents {padding-top:100px;}
+	
+	/* 피해지원현황 */
+	.cont-top + .cont-mid .state {margin-top:-95px;}
+	.state {margin-top:-30px;}
+	
+	/* 바로가기 */
+	.know {margin-bottom:-50px;}
+	
+	/* 여성폭력 바로알기 */
+	.knowing .group {padding:50px 0;}
+	.knowing .group h2 {position:relative; width:100%; margin-bottom:30px;}
+	.knowing .group h2 br {display:none;}
+	.knowing .group h2 span {margin-top:5px;}
+}
+
+@media screen and (max-width:1024px)
+{
+	/* 상단 검색 */
+	.util div.search .control {top:-43px;}
+	.util div.search .form {top:-1px; width:100%;}
+	.util div.search.active .form {height:40px;}
+	#header.active .util .search .control {top:-58px;}
+	
+	/* 주메뉴 */
+	#gnb {margin-top:0; padding-right:0;}
+	#gnb a:after {left:auto; content:'';}
+	
+	/* 콘텐츠 */
+	.cont-wrap {margin-top:0; padding-top:90px;}
+	
+	/* 비주얼 */
+	#spot {height:auto; padding:100px 0 40px;}
+	#spot .item {display:block; height:auto; padding:0 40px 25px; border-left:10px solid rgba(255, 255, 255, .25); border-top:0 none;}
+	#spot .desc {display:block; top:-10px; width:100%; padding:0;}
+	#spot .desc:before {left:-40px; top:10px; width:25px; height:10px;}
+	#spot .desc:after {bottom:auto; top:10px; left:auto; right:-40px; width:25px; height:10px;}
+	#spot .desc strong {margin:10px 0 20px;}
+	#spot .txt {display:block; padding:0;}
+	#spot .txt p {display:block;}
+	
+	/* 서브메뉴 */
+	#snb {margin-top:-90px; margin-bottom:30px;}
+	#snb + #contents .cont-title {margin-bottom:30px;}
+	#snb.fixed + #contents {padding-top:0;}
+	
+	/* 피해지원현황 */
+	.state {height:auto; margin-top:-30px;}
+	.state .desc {display:block; width:100%; padding-top:50px; text-align:center;}
+	.state .desc h2 {margin-bottom:0;}
+	.state .btns a {max-width:46%; background-color:#fff; white-space:nowrap;}
+	.state .list {display:block; width:auto; margin:0 -30px;}
+	.state .list:after {display:block; clear:both; width:100%; height:0; content:'';}
+	.state .list li {width:25%; text-align:center;}
+	.state .list p strong {font-size:5rem;}
+	.state .list:before {width:100%; height:350px;}
+	
+	/* 바로가기 */
+	.know a {padding:30px 0;}
+	.know span {height:35px; margin-top:10px; padding:0 10px; font-size:1.6rem; line-height:35px;}
+	
+	/* 차트6 */
+	.chart6 .chart.type1 .depth2 {margin-top:-20px;}
+	.chart6 .chart.type1 .depth4 {width:100%;}
+	
+	/* 여성폭력동향 */
+	.trend .group {height:auto;}
+	.trend .title {display:block; width:100%; padding:20px;}
+	.trend .title:after {display:none;}
+	.trend .title h2 {margin-bottom:15px; padding-bottom:10px;}
+	.trend .item {display:block; padding:20px;}
+	
+	/* 여성폭력동향 피해통계 */
+	.damage .list li {width:48%;}
+}
+
+@media screen and (max-width:768px)
+{
+	/* 콘텐츠 */
+	.cont-wrap {margin-bottom:20px; padding-top:80px;}
+	.cont-title {padding-bottom:0;}
+	.cont-txt {display:block; top:0; margin:10px 0 20px;}
+	
+	/* 서브메뉴 */
+	#snb {margin-top:-80px;}
+	#snb ul {table-layout:auto;}
+	
+	/* 피해지원현황 */
+	.cont-top + .cont-mid .state {margin-top:-110px;}
+	.state {margin-top:-20px;}
+	.state .desc {padding:30px 0;}
+	.state .list li {width:50%; padding:0 0 20px; white-space:nowrap;}
+	.state .list p strong {font-size:4rem;}
+	
+	/* 바로가기 */
+	.know {margin-bottom:-20px;}
+	.know li {width:50%;}
+	.know li:nth-child(3) {border-left:0 none;}
+	.know li:nth-child(n+3) {width:33.333%; border-top:1px solid rgba(255, 255, 255, .07);}
+	.know a {padding:10px 0 20px;}
+	.know span {margin-top:5px;}
+	
+	/* 여성폭력 바로알기 */
+	.knowing .group {padding:30px 0;}
+	.knowing .group .box1 {word-break:keep-all;}
+	.knowing .group .box1 br {display:none;}
+	
+	/* 차트1 */
+	.chart1 h3 {position:relative; left:0; top:0; width:100%; height:auto; margin:0; padding:30px 10px;}
+	.chart1 li {clear:both !important; float:left !important; top:0 !important; width:49%; height:140px; margin-top:20px !important; padding:20px 15px !important;}
+	.chart1 li:nth-child(2n) {clear:none !important; float:right !important;}
+	
+	/* 차트2 */
+	.chart2 {display:block; margin-bottom:20px;}
+	.chart2 li {display:block; clear:both; float:left; width:50%; height:auto; padding:10px 0 20px;}
+	.chart2 li:before {display:none;}
+	.chart2 li:after {height:auto; bottom:0;}
+	.chart2 li:nth-child(3):before {left:100%; margin-left:-20px;}
+	.chart2 li:last-child:before {display:block; top:-10px; z-index:1;}
+	.chart2 li:nth-child(2n) {clear:none; float:right;}
+	.chart2 li:nth-child(2n + 1) {padding-left:0;}
+	.chart2 li:nth-child(2n + 1):after {left:0;}
+	.chart2 li:nth-child(n+3) {margin-top:15px;}
+	.chart2 p {height:50px;}
+	
+	/* 차트3 */
+	.chart3 {overflow:hidden; margin-top:40px; padding:0;}
+	.chart3 h3 {position:relative; top:0; z-index:1; width:100%; height:auto; margin:0 auto 20px; padding:30px 0; background-color:#fff; transform:translate(0, 0); -webkit-transform:translate(0, 0);}
+	.chart3 .list {padding-left:50px;}
+	.chart3 .list:before {left:30px; top:60px; bottom:60px; width:20px;}
+	.chart3 .list:after {left:10px; width:20px; height:60%; border-left:1px dashed #5c2e98;}
+	.chart3 .list > li {height:120px;}
+	.chart3 .list > li + li {margin-top:10px;}
+	.chart3 .list > li p {width:110px; padding:0 10px; word-break:keep-all;}
+	.chart3 .list .bul1 {padding-left:30px;}
+	.chart3 .list .bul1:before {left:10px; top:12px; bottom:12px;}
+	.chart3 .list .bul1:after {width:10px;}
+	.chart3 .list .bul1 > li:first-child:after,
+	.chart3 .list .bul1 > li:last-child:after {left:-20px; width:10px;}
+	
+	/* 차트4 */
+	.chart4 > p {margin-bottom:20px;}
+	.chart4 .chart {margin-top:20px;}
+	
+	/* 차트5 */
+	.chart5 .chart {padding-left:280px;}
+	.chart5 .chart h3 {width:250px;}
+	.chart5 .chart span {width:110px;}
+	.chart5 .chart span img {width:60px;}
+	
+	/* 차트6 차트1 */
+	.chart6 .chart.type1 .depth1.label {max-width:90%; height:100px;}
+	.chart6 .chart.type1 .depth2 {margin-top:-50px; padding-left:20px; padding-top:70px;}
+	.chart6 .chart.type1 .depth2:before {left:0; right:50%; border-right:0 none;}
+	.chart6 .chart.type1 .depth2 li {float:none !important; width:100%; max-width:100%; margin-bottom:20px;}
+	.chart6 .chart.type1 .depth2 .label:before {left:-8px; top:50%; margin:-8px 0 0;}
+	.chart6 .chart.type1 .depth2 .label:after {position:absolute; left:-20px; top:50%; z-index:-1; width:20px; height:1px; border-top:1px dotted #000; content:'';}
+	.chart6 .chart.type1 .depth4:before,
+	.chart6 .chart.type1 .depth4:after {display:none;}
+	.chart6 .chart.type1 .depth4 {margin-top:0;}
+	.chart6 .chart.type1 .depth4 li {float:none; width:100%; padding-top:10px;}
+	.chart6 .chart.type1 .depth4 li:last-child .label {margin-bottom:0;}
+	
+	/* 차트6 차트2 */
+	.chart6 .chart.type2 {margin-top:30px; padding-top:30px;}
+	.chart6 .chart.type2 .depth1 li {width:100px;}
+	.chart6 .chart.type2 .depth1 .label {left:0; width:100px; height:100px; line-height:1;}
+	.chart6 .chart.type2 .depth1 .type2 span {float:right;}
+	.chart6 .chart.type2 .depth1 .txt {left:100px; right:100px; height:90px; white-space:nowrap;}
+	.chart6 .chart.type2 .depth1 .txt .type1:after {bottom:0;}
+	.chart6 .chart.type2 .depth3:before {left:40px;}
+	.chart6 .chart.type2 .depth3:after {left:0; width:100%;}
+	.chart6 .chart.type2 .depth3 .label {margin:0;}
+	.chart6 .chart.type2 .depth3 span {padding:5px 10px;}
+	.chart6 .chart.type2 .depth4 {padding-left:60px;}
+	.chart6 .chart.type2 .depth4 .label {position:relative;}
+	.chart6 .chart.type2 .depth4 .label:after {position:absolute; left:-20px; top:50%; width:20px; height:1px; border-bottom:1px dotted #000; content:'';}
+	.chart6 .chart.type2 .depth4 .type3 .label:before {position:absolute; left:-20px; bottom:50%; width:1px; height:10000%; border-left:1px dotted #000; content:'';}
+	.chart6 .chart.type2 .depth4 > li {float:none; width:100%;}
+	.chart6 .chart.type2 .depth4 > li + li {margin-top:20px; padding:0;}
+	.chart6 .chart.type2 .depth4 > li + li:before {margin:0;}
+	.chart6 .chart.type2 .depth4 .label1,
+	.chart6 .chart.type2 .depth4 .label2 {margin-top:10px;}
+	.chart6 .chart.type2 .depth4 .type2 li + li .label2:before {left:-23%; margin-top:2px;}
+		
+	/* 체계1 */
+	.step1 {display:block;}
+	.step1 .step {display:block; position:relative; min-height:100px; padding:0 0 0 150px !important;}
+	.step1 .step + .step {margin-top:10px;}
+	.step1 .step + .step .title strong::before {left:50%; top:-20px; margin:0 0 0 -20px; content:'▼';}
+	.step1 .title {position:absolute; left:0; top:0; bottom:0; width:120px;}
+	.step1 .etc .label {display:block; height:auto;}
+	.step1 .etc .label br {display:none;}
+	.step1 .etc .label span {display:block; padding:10px 10px 10px 20px; line-height:20px;}
+	.step1 .etc .label span::before {left:0; top:50%; margin-top:-20px;}
+	
+	/* 체계2 */
+	.step2 li {display:block; padding-left:120px !important;}
+	.step2 li:before {left:0; top:50%; width:100%; height:1px;}
+	.step2 li + li {margin-top:10px; padding:0;}
+	.step2 .label {position:absolute !important; left:0 !important; top:0 !important; bottom:auto; width:100px !important; height:120px; word-break:keep-all;}
+	.step2 div {height:120px; margin:0; word-break:break-all;}
+	
+	/* 여성폭력동향 */
+	.trend .title {padding-top:10px;}
+	.trend .title ul {width:160px; margin:0 auto -10px;}
+	.trend .title li {display:block; margin-bottom:10px; line-height:23px;}
+	.trend .title span {height:25px;}
+	
+	/* 여성폭력동향 피해통계 */
+	.damage h2 {margin-bottom:0;}
+	.damage .list li,
+	.damage .list .list2:before {height:200px;}
+	.damage .list .list3 p {height:130px;}
+	.damage .list .list4 {padding-left:150px;}
+	.damage .list .list4 p:before {width:150px; background-size:80px auto;}
+	.damage .box1 {margin:10px 0 20px;}
+}
+
+@media screen and (max-width:525px)
+{
+	/* 비주얼 */
+	#spot {padding-bottom:30px;}
+	#spot .item {padding:0 30px 20px; border-width:5px;}
+	#spot .desc:before {left:-30px; width:20px; height:5px;}	
+	#spot .desc:after {right:-30px; width:20px; height:5px;}
+	#spot .desc strong {margin:5px 0 10px;}
+	
+	/* 차트1 */
+	.chart1 h3 {padding:20px;}
+	.chart1 li {width:100%; height:auto !important; margin-top:10px !important;}
+	
+	/* 차트2 */
+	.chart2 li img {height:80px;}
+	.chart2 p {width:90%;}
+	
+	/* 차트3 */
+	.chart3 h3 {padding:20px;}
+	.chart3 .list {padding-left:0;}
+	.chart3 .list > li p {display:block; width:100%; margin-bottom:10px; padding:10px;}
+	.chart3 .list .item {display:block;}
+	.chart3 .list .bul1 {padding:0;}
+	.chart3 .list:before,
+	.chart3 .list:after,
+	.chart3 .list .bul1:before,
+	.chart3 .list .bul1:after,
+	.chart3 .list .bul1 > li:after {display:none;}
+	
+	/* 차트5 */
+	.chart5 .chart {padding-left:0;}
+	.chart5 .chart h3 {display:block; position:relative; width:100%; height:60px; margin-bottom:10px;}
+	.chart5 .chart div {height:auto;}
+	
+	/* 체계1 */
+	.step1 .etc .label span br {display:block;}
+	
+	/* 여성폭력동향 피해통계 */
+	.damage {margin-top:30px;}
+	.damage .list {width:100%;}
+	.damage .list li {float:none; width:100%; height:180px; margin:10px 0 0;}
+	.damage .list .list2:before {height:180px;}
+	.damage .list .list3 p {height:115px;}
+	.damage .list .list4 {padding-left:100px;}
+	.damage .list .list4 p:before {width:100px; background-size:50px auto;}
+}

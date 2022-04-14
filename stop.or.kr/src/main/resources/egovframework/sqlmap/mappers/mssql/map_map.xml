@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.custom.man.map.dao.MapDAO">
+	
+	<select id="selectMapSidoList" parameterType="ZipcodeVO" resultType="ZipcodeVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY SIDO ASC) rn, TB.* FROM (
+	
+			SELECT
+				SIDO
+			FROM
+				CMS_ZIPCODE
+			WHERE
+				1 = 1
+			GROUP BY SIDO	
+
+		) TB ) MORG 
+
+	</select>
+	
+	<select id="selectMapGugunList" parameterType="ZipcodeVO" resultType="ZipcodeVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY GUGUN ASC) rn, TB.* FROM (
+	
+			SELECT
+				SIDO,
+				GUGUN
+			FROM
+				CMS_ZIPCODE
+			WHERE
+				1 = 1
+				<if test="sido != null and sido != ''">AND
+					SIDO = #{sido}
+				</if>
+		) TB ) MORG
+
+	</select>
+	
+	<select id="selectMapList" parameterType="MapVO" resultType="MapVO">
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY NAME DESC) rn, TB.* FROM (
+	
+			SELECT
+				MAP_IDX,
+				SIDO,
+				GUGUN,
+				CATEGORY,
+				NAME,
+				ADDR,
+				TEL,
+				URLX,
+				URLY,
+				CONVERT(VARCHAR(19), WDT, 23) WDT,
+				CONVERT(VARCHAR(19), MDT, 23) MDT
+			FROM
+				CMS_MAP
+			WHERE
+				1 = 1
+				<if test="sido != null and sido != ''">AND
+					SIDO = #{sido}
+				</if>
+				<if test="gugun != null and gugun != ''">AND
+					GUGUN = #{gugun}
+				</if>
+				<if test="name != null and name != ''">AND
+					NAME LIKE '%' + #{name} + '%'
+				</if>
+				<if test="category != null and category != ''">AND
+					CATEGORY = #{category}
+				</if>
+				<if test="searchKeyword != null and searchKeyword != ''">AND
+					NAME LIKE '%' + #{searchKeyword} + '%' OR CATEGORY LIKE '%' + #{searchKeyword} + '%'
+				</if>
+		) TB ) MORG <if test="srch_mu_gub == 'MAN'.toString()"> WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}</if>
+		
+	</select>
+	
+	<select id="selectMidMap" parameterType="MapVO" resultType="MapVO">
+
+			SELECT
+				MAP_IDX,
+				SIDO,
+				GUGUN,
+				CATEGORY,
+				NAME,
+				ADDR,
+				TEL,
+				URLX,
+				URLY,
+				CONVERT(VARCHAR(19), WDT, 23) WDT,
+				CONVERT(VARCHAR(19), MDT, 23) MDT
+			FROM
+				CMS_MAP
+			WHERE
+				1 = 1
+				AND MAP_IDX = #{map_idx}
+<!-- 				<if test="sido != null and sido != ''">AND
+					SIDO = #{sido}
+				</if>
+				<if test="gugun != null and gugun != ''">AND
+					GUGUN = #{gugun}
+				</if>
+				<if test="name != null and name != ''">AND
+					NAME LIKE '%' + #{name} + '%'
+				</if>
+				<if test="category != null and category != ''">AND
+					CATEGORY = #{category}
+				</if> -->
+
+	</select>
+	
+	<select id="selectMapListTotCnt" parameterType="MapVO" resultType="int">
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_MAP
+		WHERE
+			1=1
+		 	<if test="sido != null and sido != ''">AND
+					SIDO = #{sido}
+			</if>
+			<if test="gugun != null and gugun != ''">AND
+					GUGUN = #{gugun}
+			</if>
+			<if test="name != null and name != ''">AND
+					NAME LIKE '%' + #{name} + '%'
+			</if>
+			<if test="category != null and category != ''">AND
+					CATEGORY = #{category}
+			</if>
+			<if test="searchKeyword != null and searchKeyword != ''">AND
+					NAME LIKE '%' + #{searchKeyword} + '%' OR CATEGORY LIKE '%' + #{searchKeyword} + '%'
+			</if>
+	</select>
+	
+	<insert id="insertMap" parameterType="MapVO">
+		<selectKey resultType="java.lang.Integer" keyProperty="map_idx" order="BEFORE">
+		
+			SELECT ISNULL(MAX(MAP_IDX) + 1, 1) AS MAP_IDX FROM CMS_MAP
+		</selectKey>
+		
+		INSERT INTO CMS_MAP
+		(
+			MAP_IDX,
+			CATEGORY,
+			SIDO,
+			GUGUN,
+			NAME,
+			ADDR,
+			TEL,
+			URLX,
+			URLY,
+			WDT
+		)
+		VALUES
+		(
+			#{map_idx},
+			#{category},
+			#{sido},
+			#{gugun},
+			#{name},
+			#{addr},
+			#{tel},
+			#{urlx},
+			#{urly},
+			GETDATE()
+		)
+		
+		
+	</insert>
+	
+	<update id="updateMap" parameterType="MapVO">
+		UPDATE CMS_MAP SET
+			CATEGORY = #{category},
+			SIDO = #{sido},
+			GUGUN =#{gugun},
+			NAME = #{name},
+			ADDR = #{addr},
+			TEL = #{tel},
+			URLX = #{urlx},
+			URLY = #{urly},
+			MDT	 = GETDATE()
+		WHERE
+			MAP_IDX = #{map_idx}
+	</update>
+	
+	
+		<!-- 삭제 -->
+	<delete id="deleteMap" parameterType="MapVO">
+		
+		DELETE FROM 
+			CMS_MAP 
+		WHERE 
+			MAP_IDX = #{map_idx}
+		
+			
+	</delete>
+	
+	
+</mapper>

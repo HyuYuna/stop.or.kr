@@ -1,0 +1,93 @@
+package {##PKG_NM##};
+
+
+import java.util.List;
+import org.springframework.stereotype.Repository;
+import egovframework.plani.template.cmm.dao.EgovComAbstractDAO;
+import {##IMPT_BIZVO##};
+
+@Repository("{##BIZNM##}DAO")
+public class {##BIZNM_UP1##}DAO extends EgovComAbstractDAO {
+
+	/**
+	 * {##BIZKR##}을/를 등록한다.
+	 * @param vo - 등록할 조건이 담긴 VO
+	 * @exception Exception
+	 */
+	public Integer merge{##BIZNM_UP1##}({##BIZNM_UP1##}VO vo) throws Exception {
+		// TODO Auto-generated method stub
+		return (Integer) insert("{##BIZNM##}DAO.merge{##BIZNM_UP1##}", vo);
+	}
+
+	/**
+	 * {##BIZKR##}을/를 등록한다.
+	 * @param vo - 등록할 조건이 담긴 VO
+	 * @exception Exception
+	 */
+	public Integer insert{##BIZNM_UP1##}({##BIZNM_UP1##}VO vo) throws Exception {
+		// TODO Auto-generated method stub
+		return (Integer) insert("{##BIZNM##}DAO.insert{##BIZNM_UP1##}", vo);
+	}
+	
+	/**
+	 * {##BIZKR##}을/를 수정한다.
+	 * @param vo - 수정할 조건이 담긴 VO
+	 * @exception Exception
+	 */
+	public void update{##BIZNM_UP1##}({##BIZNM_UP1##}VO vo) throws Exception {
+		// TODO Auto-generated method stub
+		update("{##BIZNM##}DAO.update{##BIZNM_UP1##}", vo);
+	}
+	
+	/**
+	 * {##BIZKR##}을/를 삭제한다.
+	 * @param vo - 삭제할 조건이 담긴 VO
+	 * @exception Exception
+	 */
+	public void delete{##BIZNM_UP1##}({##BIZNM_UP1##}VO vo) throws Exception {
+		// TODO Auto-generated method stub
+		delete("{##BIZNM##}DAO.delete{##BIZNM_UP1##}", vo);
+	}
+	
+	/**
+	 * {##BIZKR##}항목을 상세조회 한다.
+	 * @param vo - 조회할 조건이 담긴 VO
+	 * @exception Exception
+	 */
+	public {##BIZNM_UP1##}VO select{##BIZNM_UP1##}({##BIZNM_UP1##}VO vo) throws Exception {
+		// TODO Auto-generated method stub
+		return ({##BIZNM_UP1##}VO) selectByPk("{##BIZNM##}DAO.select{##BIZNM_UP1##}", vo);
+	}
+	
+	/**
+	 * {##BIZKR##} 목록을 조회한다.
+	 * @param vo - 조회할 조건이 담긴 VO
+	 * @exception Exception
+	 */
+	public List select{##BIZNM_UP1##}List({##BIZNM_UP1##}VO vo) throws Exception {
+		// TODO Auto-generated method stub
+		return list("{##BIZNM##}DAO.select{##BIZNM_UP1##}List", vo);
+	}
+	
+	/**
+	 * {##BIZKR##}목록의 총 개수를 구한다.
+	 * @param vo - 조회할 조건이 담긴 VO
+	 * @exception Exception
+	 */
+	public int select{##BIZNM_UP1##}ListTotCnt({##BIZNM_UP1##}VO vo) throws Exception {
+		// TODO Auto-generated method stub
+		return (Integer)selectByPk("{##BIZNM##}DAO.select{##BIZNM_UP1##}ListTotCnt", vo);
+	}
+	
+	/**
+	 * {##BIZKR##} 목록의 엑셀 다운로드를 처리한다.
+	 * @param vo - 조회할 조건이 담긴 VO
+	 * @exception Exception
+	 */
+	public List xls{##BIZNM_UP1##}List({##BIZNM_UP1##}VO vo) throws Exception {
+		// TODO Auto-generated method stub
+		return list("{##BIZNM##}DAO.xls{##BIZNM_UP1##}List", vo);
+	}
+	
+}
+

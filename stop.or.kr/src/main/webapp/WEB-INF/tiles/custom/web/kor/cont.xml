@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 
+	 <definition name="ContDefinitionContent" template="/WEB-INF/jsp/layout/custom/web/kor/contents/layout/contentsLayout.jsp">
+		 <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/meta/meta_content.jsp"/>
+		 <put-attribute name="contHeader"	value="/WEB-INF/jsp/layout/template/cmmn/kor/header.jsp"/>
+		 <put-attribute name="contSidemenu"	value="/WEB-INF/jsp/layout/template/cmmn/kor/sidemenu.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/kor/script.jsp"/>
+		 <put-attribute name="contQuicklink"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/quickLink.jsp"/>
+		 <put-attribute name="contFooter"	value="/WEB-INF/jsp/layout/template/cmmn/kor/footer.jsp"/>
+	 </definition>
+
+	 <definition name="ContDefinitionEditor" template="/WEB-INF/jsp/layout/custom/web/kor/contents/layout/contentsLayout.jsp">
+		 <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/meta/meta_editor.jsp"/>
+		 <put-attribute name="contHeader"	value="/WEB-INF/jsp/layout/template/cmmn/kor/header.jsp"/>
+		 <put-attribute name="contSidemenu"	value="/WEB-INF/jsp/layout/template/cmmn/kor/sidemenu.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/kor/script.jsp"/>
+		 <put-attribute name="contFooter"	value="/WEB-INF/jsp/layout/template/cmmn/kor/footer.jsp"/>
+	 </definition>
+
+	 <definition name="/contents/contentsView" extends="ContDefinitionContent">
+		 <put-attribute name="contTitle"	value="컨텐츠페이지" />
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/script/script_cont.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/template/cmmn/contentspage/contentsPage.jsp" />
+	 </definition>
+
+	 <definition name="/contents/staticContentsView" extends="ContDefinitionContent">
+		 <put-attribute name="contTitle"	value="컨텐츠페이지" />
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/script/script_cont.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/template/cmmn/contentspage/contentsPage.jsp" />
+	 </definition>
+
+	 <definition name="/contents/sitemapView" extends="ContDefinitionContent">
+		 <put-attribute name="contTitle"	value="사이트맵" />
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/script/script_cont.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/sitemap/siteMap.jsp" />
+	 </definition>
+	
+	
+	<definition name="/release/*" extends="ContDefinitionContent">
+		 <put-attribute name="contTitle"	value="정보공개목록페이지" />
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/script/script_cont.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/release/{1}.jsp" />
+	 </definition>
+	 
+	 
+	 
+</tiles-definitions>
+

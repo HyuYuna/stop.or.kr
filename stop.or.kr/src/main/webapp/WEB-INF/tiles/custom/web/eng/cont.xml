@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 
+	 <definition name="ContDefinitionContentEng" template="/WEB-INF/jsp/layout/custom/web/eng/contents/layout/contentsLayout.jsp">
+		 <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/web/eng/contents/meta/meta_content.jsp"/>
+		 <put-attribute name="contHeader"	value="/WEB-INF/jsp/layout/template/cmmn/eng/header.jsp"/>
+		 <put-attribute name="contSidemenu"	value="/WEB-INF/jsp/layout/template/cmmn/eng/sidemenu.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/eng/script.jsp"/>
+		 <put-attribute name="contQuicklink"	value="/WEB-INF/jsp/layout/custom/web/eng/contents/quickLink.jsp"/>
+		 <put-attribute name="contFooter"	value="/WEB-INF/jsp/layout/template/cmmn/eng/footer.jsp"/>
+	 </definition>
+
+	 <definition name="ContDefinitionEditorEng" template="/WEB-INF/jsp/layout/custom/web/eng/contents/layout/contentsLayout.jsp">
+		 <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/web/eng/contents/meta/meta_editor.jsp"/>
+		 <put-attribute name="contHeader"	value="/WEB-INF/jsp/layout/template/cmmn/eng/header.jsp"/>
+		 <put-attribute name="contSidemenu"	value="/WEB-INF/jsp/layout/template/cmmn/eng/sidemenu.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/eng/script.jsp"/>
+		 <put-attribute name="contFooter"	value="/WEB-INF/jsp/layout/template/cmmn/eng/footer.jsp"/>
+	 </definition>
+
+	 <definition name="/*/contents/contentsView" extends="ContDefinitionContentEng">
+		 <put-attribute name="contTitle"	value="컨텐츠페이지" />
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/web/eng/contents/script/script_cont.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/template/cmmn/contentspage/contentsPage.jsp" />
+	 </definition>
+
+	 <definition name="/*/contents/staticContentsView" extends="ContDefinitionContentEng">
+		 <put-attribute name="contTitle"	value="컨텐츠페이지" />
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/web/eng/contents/script/script_cont.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/template/cmmn/contentspage/contentsPage.jsp" />
+	 </definition>
+
+	 <definition name="/*/contents/sitemapView" extends="ContDefinitionContentEng">
+		 <put-attribute name="contTitle"	value="사이트맵" />
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/web/eng/contents/script/script_cont.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/eng/contents/sitemap/siteMap.jsp" />
+	 </definition>
+	
+	 
+	 
+</tiles-definitions>
+

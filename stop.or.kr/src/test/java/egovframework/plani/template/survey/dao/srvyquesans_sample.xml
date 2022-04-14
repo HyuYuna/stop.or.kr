@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<CMS_SURVEY_QUESANS QUES_IDX="1" QUESANS_IDX="1" SRVY_IDX="1" PART_IDX="3" QUESANS_TYPE="A"
+					 QUESANS_CONT="ych_test" QUES_TYPE="CDIDX00084" ANS_NEED_SPL="N" ANS_ORD="1"/>
+</dataset>

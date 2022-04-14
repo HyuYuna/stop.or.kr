@@ -1,0 +1,266 @@
+
+/* 기본 검색 */
+.basic_searchForm {
+	/*overflow: hidden;*/
+	}
+		
+/* 기본 검색 */
+.basic_searchForm {
+	overflow: hidden;
+	}
+	
+a.input_smallBlack,	
+button.input_smallBlack,
+input.input_smallBlack,
+.input_smallBlack a {
+	height: 26px;
+	margin: 0;
+	padding: 0 12px 2px;
+	background: #565b71;
+	border: solid 1px #474c64;
+	color: #fff;
+	text-align: center;
+	font: bold 0.95em "맑은 고딕";
+	letter-spacing: -0.1em;
+	cursor: pointer;
+	}	
+a.input_smallBlack {
+	display: inline-block;
+    box-sizing: border-box;
+    line-height: 1.9;
+    vertical-align: top;
+	}		
+button.input_smallBlack {
+	height: 23px;
+	}
+
+/* 게시물 수 STYLE
+-------------------------------------------------*/
+.articles {	
+	margin-bottom: 5px;
+	letter-spacing: -1px;
+	}
+.articles .total {
+	color: #ff0000;
+	font-weight: bold;
+	}
+.articles .current {
+	color: #0f79b8;
+	}		
+	
+.articles_search {
+	overflow: hidden;
+	font-size: 0.929em;
+	height : 35px;
+	}
+.articles_search .articles {
+	float: left;
+	margin-top: 6px;
+	}	
+.articles_search .basic_searchForm {
+	float: right;
+	}	
+
+.articles_search select,	
+.articles_search input{
+	height : 21px;
+	}
+ 
+.btn_area,
+.btn_area_center,	
+.btn_area_right	 {
+	clear: both;
+	display: block;
+	margin-top: 20px;
+	vertical-align: top;
+	font-size: 0.929em;
+	/*overflow: hidden;*/
+	}
+.btn_area_right {
+	text-align: right;
+	margin-bottom:5px;
+	}	
+.btn_area_center {
+	text-align: center;
+	}	
+.btn_area_center button {
+	margin-left: 4px;
+	}
+.btn_area_center button:first-child {
+	margin-left: 0;
+	}
+.btn_area_rightCenter {
+	margin: 10px 0 18px;
+	text-align: right;
+	}		
+	
+/* 버튼 */
+.btn_line,
+.btn_lineSmall,
+.btn_linebold {
+	display: inline-block; 
+	height: 35px; 
+	padding: 0 20px;
+	background-color: #fff;
+	border: solid 1px #313131; 
+	box-sizing: border-box;
+	font-size: 0.929em;
+	line-height: 31px; 
+	vertical-align: top;
+	}
+.btn_linebold { 
+	border-width: 2px; 
+	font-weight: bold;
+	}
+.btn_lineSmall {
+	height: 25px;
+	line-height: 1.9; 
+	margin-bottom:5px;
+	}	
+button.btn_line,
+input.btn_line,
+button.btn_linebold,
+input.btn_linebold {
+	height: 35px; 
+	line-height: 100%;
+	}
+
+.display_none {
+	display : none;
+}
+
+
+
+
+/* 이전 다음 페이지 이동 */
+.nextPrev_list {
+	clear: both;
+	margin-top: 9px;
+	border-top: solid 1px #eee;
+	border-bottom: solid 1px #eee;
+	overflow: hidden;
+	}
+.nextPrev_list li {
+	padding: 6px 10px 6px 5px;
+	border-top: solid 1px #eee; 
+	}
+.nextPrev_list li:first-child {
+	border-top: none;
+	}
+.nextPrev_list li strong {
+	display: block;
+	float: left;
+	padding: 2px 30px 2px 30px;
+	background: url(../../../images/template/cmm/nextPrev_bg.gif) no-repeat 0 -9px;
+	color: #333;
+	line-height: 1.2; 
+	}
+.nextPrev_list li strong.next_list {
+	background-position: 0 -50px;
+	}	
+.nextPrev_list li a {
+	display: block;
+	text-overflow: ellipsis; 
+	white-space: nowrap;
+	overflow : hidden;
+	}
+	
+.tstyle_list td.ellipsis {
+	text-align: left;
+	text-overflow: ellipsis; 
+	white-space: nowrap;
+	overflow : hidden;
+	}
+.tstyle_list td.ellipsis a {	
+	overflow: hidden;
+	}
+	
+.txt_bold  {
+	font-style: normal;
+	font-weight: bold;
+	}
+	
+	/* point color STYLE */
+.point01,
+.point01_bold  {/* 빨강 */
+	color: #da3d00;
+	}
+.point02,
+.point02_bold,
+.point02 a {/*파랑 */
+	color: #5671a7;
+	}	
+.point03,
+.point03_bold {	/* 하늘 */
+	color: #009cd6;
+	}
+.black_txt,
+.black_bold {
+	color: #313131;
+	}	
+.black_bold {
+	font-weight: bold;
+	}	
+.gray_txt {
+	color: #555;
+	}		
+.point01_bold,	
+.point02_bold,
+.point03_bold,
+
+.txt_normal,
+.txt_normal a	 {
+	font-weight: normal !important;
+	}	
+.letter_spacing {
+	letter-spacing: 0;
+	}
+	
+	/* border pager STYLE */
+.board_pager {
+	clear: both;
+	height: 30px;
+	margin-top: 20px;
+	text-align: center;	
+	font-size: 0.929em;
+	}
+.board_pager span {
+	display: inline-block;
+	height: 27px;
+	border: solid 1px #e9e9e9;
+	vertical-align: top;
+	}	
+.board_pager a	{
+	display: inline-block;
+	color: #757577;
+	}
+.board_pager span > a {
+	display: block;
+	float: left;
+	min-width: 27px;
+	padding: 5px 0;
+	font: bold 1em Verdana;
+	} 	
+.board_pager .active {	
+	margin-bottom: -4px;
+	border: solid 1px #e9e9e9;
+	border-top: none;	
+	border-bottom: solid 2px #5a6273;
+	color: #000;
+	}
+.board_pager a:first-child.active {
+	border-left: none;
+	}
+.board_pager a:last-child.active {
+	border-right: none;
+	}  		
+.board_pager span a:hover	{
+	border-color: #dedede;
+	color: #333;
+	box-shadow: 0 5px 5px #eee inset;
+	-o-box-shadow: 0 5px 5px #eee inset;
+	}
+.board_pager .prev,
+.board_pager .next {
+	padding: 0;
+	}

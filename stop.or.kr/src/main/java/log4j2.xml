@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	<Appenders>
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{YYYY-MM-DD HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+		</Console>
+		<!-- 
+		<RollingFile name="file" fileName="./logs/all.log" filePattern="./logs/all.%i.%d{yyyy-MM-dd}.log">
+			<PatternLayout pattern="%d{YYYY-MM-DD HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+			<Policies>
+				<SizeBasedTriggeringPolicy size="10MB" /> 
+			</Policies>
+			<DefaultRolloverStrategy max="10000" fileIndex="min" />
+		</RollingFile>
+		 -->
+	</Appenders>
+	
+	<Loggers>
+		<Root level="WARN">
+			<AppenderRef ref="console" />
+		</Root>
+
+		<logger name="org.springframework" level="debug" additivity="false" >
+			<appender-ref ref="console" />
+		</logger>
+		
+		<logger name="org.apache" level="debug" additivity="false" >
+			<appender-ref ref="console" />
+		</logger>
+
+		<logger name="egovframework.rte.fdl" level="debug" additivity="false" >
+			<appender-ref ref="console" />
+		</logger>
+		
+ 		<logger name="egovframework.plani" level="debug" additivity="false" >
+			<appender-ref ref="console" />
+		</logger>	
+
+	</Loggers>
+</Configuration>

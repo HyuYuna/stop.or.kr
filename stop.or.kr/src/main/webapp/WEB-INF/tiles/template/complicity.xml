@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 <definition name="MetsysComplicityDefinitionContent" template="/WEB-INF/jsp/layout/template/metsys/layout/modeecLayout.jsp">
+		 <put-attribute name="metsysMeta"	value="/WEB-INF/jsp/layout/template/metsys/meta/meta_type_content.jsp"/>
+		 <put-attribute name="metsysHeader"	value="/WEB-INF/jsp/layout/template/metsys/header.jsp"/>
+		 <put-attribute name="metsysMenu"	value="/WEB-INF/jsp/layout/template/metsys/menu.jsp"/>
+		 <put-attribute name="metsysScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script.jsp"/>
+		 <put-attribute name="metsysSubmenu"	value="/WEB-INF/jsp/layout/template/metsys/submenu/submenu.jsp"/>
+		 <put-attribute name="metsysFooter"	value="/WEB-INF/jsp/layout/template/metsys/footer.jsp"/>
+	 </definition>
+	 <definition name="MetsysComplicityDefinitionEditor" template="/WEB-INF/jsp/layout/template/metsys/layout/modeecLayout.jsp">
+		 <put-attribute name="metsysMeta"	value="/WEB-INF/jsp/layout/template/metsys/meta/meta_type_editor.jsp"/>
+		 <put-attribute name="metsysHeader"	value="/WEB-INF/jsp/layout/template/metsys/header.jsp"/>
+		 <put-attribute name="metsysMenu"	value="/WEB-INF/jsp/layout/template/metsys/menu.jsp"/>
+		 <put-attribute name="metsysScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script.jsp"/>
+		 <put-attribute name="metsysSubmenu"	value="/WEB-INF/jsp/layout/template/metsys/submenu/submenu.jsp"/>
+		 <put-attribute name="metsysFooter"	value="/WEB-INF/jsp/layout/template/metsys/footer.jsp"/>
+	 </definition>
+
+	 <!-- 2018-08-09 pigcos -->
+	 <definition name="/metsys/complicityList" extends="MetsysComplicityDefinitionContent">
+		 <put-attribute name="metsysTitle"	value="공모전 접수 목록" />
+ 		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_cont.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/complicity/list.jsp" />
+	 </definition>
+	 
+	 <!-- 2018-08-09 pigcos -->
+	 <definition name="/metsys/complicityApplication" extends="MetsysComplicityDefinitionContent">
+		 <put-attribute name="metsysTitle"	value="공모전 접수 수정" />
+ 		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_cont.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/complicity/application.jsp" />
+	 </definition>
+	 
+</tiles-definitions>
+

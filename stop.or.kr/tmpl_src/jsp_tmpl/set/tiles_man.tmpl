@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+	 
+	 <definition name="{##ADDR_PREFIX##}/{##LASTDIR##}{##BIZNM_UP1##}/{##BIZNM##}List" extends="{##TILES_LAYOUT##}">
+		 <put-attribute name="{##TILES_LAYOUT_PREFIX##}Title"	value="{##BIZKR##} 목록" />
+		 <put-attribute name="{##TILES_LAYOUT_PREFIX##}SubScript"	value="{##SCRIPT_DIR##}/script_{##BIZNM##}.jsp"/>
+		 <put-attribute name="{##TILES_LAYOUT_PREFIX##}Content"	value="{##PAGE_DIR##}/{##LASTDIR##}/{##BIZNM##}List.jsp" />
+	 </definition>
+
+	 <definition name="{##ADDR_PREFIX##}/{##LASTDIR##}{##BIZNM_UP1##}/{##BIZNM##}Write" extends="{##TILES_LAYOUT##}">
+		 <put-attribute name="{##TILES_LAYOUT_PREFIX##}Title"	value="{##BIZKR##} 등록" />
+		 <put-attribute name="{##TILES_LAYOUT_PREFIX##}SubScript"	value="{##SCRIPT_DIR##}/script_{##BIZNM##}.jsp"/>
+		 <put-attribute name="{##TILES_LAYOUT_PREFIX##}Content"	value="{##PAGE_DIR##}/{##LASTDIR##}/{##BIZNM##}Write.jsp" />
+	 </definition>
+
+</tiles-definitions>
+
+	 

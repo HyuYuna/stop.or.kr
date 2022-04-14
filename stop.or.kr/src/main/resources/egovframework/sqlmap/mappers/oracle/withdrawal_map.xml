@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.man.metsys.dao.WithdrawalDAO">
+
+	
+	
+	<insert id="insertWithdrawal" parameterType="withdrawalVO">
+
+		<selectKey resultType="java.lang.Integer" keyProperty="wd_idx" order="BEFORE">
+			SELECT NVL(MAX(WD_IDX) + 1, 1) AS WD_IDX FROM CMS_USR_WITHDRAWAL
+		</selectKey>
+		
+		INSERT INTO CMS_USR_WITHDRAWAL
+		(
+			WD_IDX,
+			USER_ID,
+			USER_NM,
+			JDT,
+			WDT,
+			WREASON
+		)
+		VALUES
+		(
+			#{wd_idx},
+			#{user_id},
+			#{user_nm},
+			#{jdt},
+			SYSDATE,
+			#{wreason}
+		)
+
+	</insert>
+	
+	<update id="updateWithdrawal" parameterType="withdrawalVO">
+
+		UPDATE CMS_USR_WITHDRAWAL SET
+			WD_IDX = #{wd_idx},
+			USER_ID = #{user_id},
+			USER_NM = #{user_nm},
+			JDT = #{jdt},
+			WDT = #{wdt},
+			WREASON = #{wreason}
+		WHERE
+			WD_IDX = #{wd_idx}
+
+	</update>
+	
+	<delete id="deleteWithdrawal" parameterType="withdrawalVO">
+
+		DELETE FROM CMS_USR_WITHDRAWAL
+		WHERE
+			WD_IDX = #{wd_idx}
+
+	</delete>
+	
+	<select id="selectWithdrawal" parameterType="withdrawalVO" resultType="withdrawalVO">
+
+		SELECT
+			WD_IDX,
+			USER_ID,
+			USER_NM,
+			TO_DATE(JDT, 'YYYY-MM-DD HH24:MI:SS') JDT,
+			TO_DATE(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+			WREASON
+		FROM
+			CMS_USR_WITHDRAWAL
+		WHERE
+			WD_IDX = #{wd_idx}
+
+	</select>
+	
+	<select id="selectWithdrawalList" parameterType="withdrawalVO" resultType="withdrawalVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+	
+			SELECT
+				WD_IDX,
+				USER_ID,
+				USER_NM,
+				TO_DATE(JDT, 'YYYY-MM-DD HH24:MI:SS') JDT,
+				TO_DATE(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+				WREASON
+			FROM
+				CMS_USR_WITHDRAWAL
+			WHERE
+				1 = 1
+				<if test="srchFromDT != null and srchFromDT != ''">
+					<if test="srchToDT != null and srchToDT != ''">
+						AND WDT BETWEEN 
+							TO_DATE(#{srchFromDT} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(#{srchToDT} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+					</if>				
+				</if>
+
+		) TB )  WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+
+	</select>
+	
+	<select id="selectWithdrawalListTotCnt" parameterType="withdrawalVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_USR_WITHDRAWAL
+		WHERE
+			1 = 1
+			<if test="srchFromDT != null and srchFromDT != ''">
+				<if test="srchToDT != null and srchToDT != ''">
+					AND WDT BETWEEN CONCAT(#{srchFromDT}, ' 00:00:00') AND CONCAT(#{srchToDT}, ' 23:59:59')
+				</if>				
+			</if>
+
+	</select>
+	
+	<select id="xlsWithdrawalList" parameterType="withdrawalVO" resultType="withdrawalVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+	
+			SELECT
+				WD_IDX,
+				USER_ID,
+				USER_NM,
+				DATE_FORMAT(JDT, '%Y-%m-%d %H:%i:%s') JDT,
+				DATE_FORMAT(WDT, '%Y-%m-%d %H:%i:%s') WDT,
+				WREASON
+			FROM
+				CMS_USR_WITHDRAWAL
+			WHERE
+				1 = 1
+				<if test="srchFromDT != null and srchFromDT != ''">
+					<if test="srchToDT != null and srchToDT != ''">
+						AND WDT BETWEEN 
+							TO_DATE(#{srchFromDT} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(#{srchToDT} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+					</if>				
+				</if>
+
+		) TB )
+
+	</select>
+	
+	
+
+</mapper>
+

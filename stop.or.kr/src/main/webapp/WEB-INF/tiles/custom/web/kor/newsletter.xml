@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+
+	<!-- <definition name="/newsletter/*" extends="ContDefinitionContent">
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/newsletter/{1}.jsp" />
+	</definition> -->
+	
+	<definition name="/newsletter/newsletterForm" template="/WEB-INF/jsp/layout/blank/blank.jsp">
+		 <put-attribute name="mainMeta"	value="/WEB-INF/jsp/layout/custom/web/kor/main/meta.jsp"/>
+		 <put-attribute name="mainTitle"	value="한국여성인권진흥원" />
+		  <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/meta/meta_content.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/kor/script.jsp"/>
+		 <put-attribute name="data"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/newsletter/newsletterForm.jsp" />
+	</definition>
+	
+	<definition name="/newsletter/*" template="/WEB-INF/jsp/layout/blank/popup.jsp">
+		 <put-attribute name="mainTitle"	value="한국여성인권진흥원" />
+		 <put-attribute name="data"	value="/WEB-INF/jsp/wpages/custom/web/kor/contents/newsletter/{1}.jsp" />
+	</definition>
+	 
+</tiles-definitions>

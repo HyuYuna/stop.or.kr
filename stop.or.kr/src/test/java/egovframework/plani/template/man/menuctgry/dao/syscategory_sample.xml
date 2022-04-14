@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<CMS_SYS_CTGRY CTGRY_IDX ="CTIDX00024" CTGRY_NM="ych_test" USE_YN="N" CTGRY_ORD="2"/>
+	<CMS_SYS_CTGRY CTGRY_IDX="CTIDX00025" UP_CTGRY_IDX ="CTIDX00024" CTGRY_NM="ych_test2" USE_YN="N" CTGRY_ORD="2"/>
+</dataset>

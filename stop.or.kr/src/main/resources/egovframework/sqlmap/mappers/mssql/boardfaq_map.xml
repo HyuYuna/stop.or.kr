@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.brdartcl.dao.BoardfaqDAO">
+
+	<insert id="insertBoardfaq" parameterType="boardfaqVO">
+		
+		<selectKey resultType="java.lang.Integer" keyProperty="cont_idx" order="BEFORE">
+		
+			SELECT ISNULL(MAX(CONT_IDX) + 1, 1) AS CONT_IDX FROM ${tbl_nm} WHERE
+				BRD_ID = #{brd_id}
+		
+		</selectKey>
+		
+		INSERT INTO ${tbl_nm}
+		(
+			BRD_ID,
+			CONT_IDX,
+			CTGRY_IDX,
+			SUBJECT,
+			BRD_CONT,
+			HITS,
+			WRITER,
+			WDT
+		)
+		VALUES
+		(
+			#{brd_id},
+			#{cont_idx},
+			#{ctgry_idx},
+			#{subject},
+			#{brd_cont},
+			#{hits},
+			#{writer},
+			GETDATE()
+		)
+	
+	</insert>
+		
+	<update id="updateBoardfaq" parameterType="boardfaqVO">
+		
+		UPDATE ${tbl_nm} SET
+			<if test="subject != null and subject != ''">
+				CTGRY_IDX = #{ctgry_idx},
+				SUBJECT = #{subject},
+				BRD_CONT = #{brd_cont},
+			</if>
+			MODIFIER = #{modifier},
+			MDT = GETDATE()
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}
+	
+	</update>
+	
+	<update id="updateBoardxcount" parameterType="boardfaqVO" >
+		UPDATE ${tbl_nm} SET
+			HITS = HITS + 1,
+			MDT = MDT
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}
+	</update>
+	
+	
+	<delete id="deleteBoardfaq" parameterType="boardfaqVO">
+	
+		DELETE FROM
+			${tbl_nm}
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}	
+	
+	</delete>
+	
+	<select id="selectBoardfaq" parameterType="boardfaqVO" resultType="boardfaqVO">
+	
+		SELECT
+			BRD_ID,
+			CONT_IDX,
+			CTGRY_IDX,
+			dbo.SF_CTGRY_NM(CTGRY_IDX) CTGRY_NM,
+			SUBJECT,
+			BRD_CONT,
+			HITS,
+			PRE_ATCL,
+			PRE_SUBJ,
+			NEXT_ATCL,
+			NEXT_SUBJ,
+			A.WRITER,
+			CONVERT(VARCHAR(19), A.WDT, 20) WDT,
+			A.MODIFIER,
+			CONVERT(VARCHAR(19), A.MDT, 20) MDT,
+			ISNULL(dbo.SF_USER_NM(WRITER), 'GUEST') WRITER_NM,
+			ROUND(DATEDIFF(DD,A.WDT,GETDATE()),0) DFR_WDT  
+		FROM
+			(
+		    	SELECT
+				    Y.*,
+			    	LAG(CONT_IDX, 1, NULL) OVER (ORDER BY CONT_IDX ) PRE_ATCL,
+			    	LAG(SUBJECT, 1, NULL) OVER (ORDER BY CONT_IDX ) PRE_SUBJ,
+			    	LEAD(CONT_IDX, 1, NULL) OVER (ORDER BY CONT_IDX) NEXT_ATCL,
+			    	LEAD(SUBJECT, 1, NULL) OVER (ORDER BY CONT_IDX) NEXT_SUBJ
+			      FROM
+			  	  	${tbl_nm} Y
+			    	WHERE
+				    	BRD_ID = #{brd_id}
+			) A
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}	
+
+	
+	</select>
+	
+	<select id="selectBoardfaqList" parameterType="boardfaqVO" resultType="boardfaqVO">
+		
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY CONT_IDX DESC) rn, TB.* FROM (
+		
+			SELECT
+				BRD_ID,
+				CONT_IDX,
+				CTGRY_IDX,
+				dbo.SF_CTGRY_NM(CTGRY_IDX) CTGRY_NM,
+				SUBJECT,
+				BRD_CONT,
+				HITS,
+                A.WRITER,
+                CONVERT(VARCHAR(10), A.WDT, 20) WDT,
+                A.MODIFIER,
+                CONVERT(VARCHAR(10), A.MDT, 20) MDT,
+				ISNULL(dbo.SF_USER_NM(WRITER), 'GUEST') WRITER_NM,
+				ROUND(DATEDIFF(DD,A.WDT,GETDATE()),0) DFR_WDT
+			FROM
+		        ${tbl_nm} A
+			WHERE
+				BRD_ID = #{brd_id}
+				<if test="searchKeyword != null and searchKeyword != ''">
+					<if test="searchCondition != null and searchCondition != ''">
+					AND
+						<if test="searchCondition == 'SC_ALL'.toString()">
+							( SUBJECT LIKE '%' + #{searchKeyword} + '%' OR BRD_CONT LIKE '%' + #{searchKeyword} + '%' )
+						</if>
+						<if test="searchCondition != 'SC_ALL'.toString()">
+							${searchCondition} LIKE '%' + #{searchKeyword} + '%'
+						</if>
+					</if>
+				</if>
+				<if test="ctgry_idx != null and ctgry_idx != ''">
+					AND CTGRY_IDX = #{ctgry_idx}
+				</if>
+				
+		) TB ) MORG   WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+			
+	</select>
+	
+	<select id="selectBoardfaqListTotCnt" parameterType="boardfaqVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS "totcnt"
+		FROM
+			(
+				SELECT 
+					A.*,
+					dbo.SF_USER_NM(WRITER) WRITER_NM 
+				FROM
+					${tbl_nm} A
+			) A
+		WHERE
+			BRD_ID = #{brd_id}
+			<if test="searchKeyword != null and searchKeyword != ''">AND
+				<if test="searchCondition == 'SC_ALL'.toString()">
+					( SUBJECT LIKE '%' + #{searchKeyword} + '%' OR BRD_CONT LIKE '%' + #{searchKeyword} + '%' )
+				</if>
+				<if test="searchCondition != 'SC_ALL'.toString()">
+					${searchCondition} LIKE '%' + #{searchKeyword} + '%'
+				</if>
+			</if>			
+			<if test="ctgry_idx != null and ctgry_idx != ''">AND
+				CTGRY_IDX = #{ctgry_idx}
+			</if>	
+			
+	</select>
+
+</mapper>
+

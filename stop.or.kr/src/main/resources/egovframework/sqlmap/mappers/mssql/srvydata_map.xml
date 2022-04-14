@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.survey.dao.SrvydataDAO">
+
+
+	<!-- if use clob column
+	<resultMap id="srvydata" type="srvydataVO"> 
+		<result property="data_idx" column="data_idx"/>
+				<result property="ques_idx" column="ques_idx"/>
+				<result property="srvy_idx" column="srvy_idx"/>
+				<result property="data_cont" column="data_cont"/>
+				<result property="data_spl" column="data_spl"/>
+				<result property="data_addr" column="data_addr"/>
+				<result property="writer" column="writer"/>
+				<result property="wdt" column="wdt"/>
+				<result property="modifier" column="modifier"/>
+				<result property="mdt" column="mdt"/>
+	</resultMap>
+	-->
+	
+	
+	<parameterMap id="paramMap" type="srvydataVO">
+		<parameter property="srvy_seq_name" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="srvy_out_seq" jdbcType="INTEGER" javaType="int" mode="OUT"/>
+	</parameterMap>
+	
+	
+	<sql id="srchSrvydataStmtcond">
+		<if test="srvy_idx != '0'.toString()">AND
+			SRVY_IDX = #{srvy_idx}	
+			
+		</if>
+	</sql>
+	
+
+	<insert id="mergeSrvydata" parameterType="srvydataVO">
+
+		MERGE INTO CMS_SURVEY_DATA USING DUAL
+	    ON (
+	    	DATA_IDX = #{data_idx} AND
+			QUES_IDX = #{ques_idx}
+			QUESSUB_IDX = #{quessub_idx}
+	    )
+	    WHEN MATCHED THEN UPDATE SET
+			SRVY_IDX = #{srvy_idx},
+			DATA_CONT = #{data_cont},
+			DATA_SPL = #{data_spl},
+			DATA_ADDR = #{data_addr}
+	    WHEN NOT MATCHED THEN
+	    	INSERT
+	        (
+				DATA_IDX,
+				QUES_IDX,
+				QUESSUB_IDX,
+				SRVY_IDX,
+				DATA_CONT,
+				DATA_SPL,
+				DATA_ADDR,
+				WDT
+	        )
+	        VALUES
+	        (
+				#{data_idx},
+				#{ques_idx},
+				#{quessub_idx},
+				#{srvy_idx},
+				#{data_cont},
+				#{data_spl},
+				#{data_addr},
+				GETDATE()
+	        )
+
+	</insert>
+	
+	<insert id="insertSrvydata" parameterType="srvydataVO">
+
+		<!--
+		<selectKey resultType="java.lang.Integer" keyProperty="######">
+			SELECT ISNULL(MAX(######) + 1, 1) AS ###### FROM CMS_SURVEY_DATA 
+		</selectKey>
+		-->
+
+		INSERT INTO CMS_SURVEY_DATA
+		(
+			DATA_IDX,
+			QUES_IDX,
+			QUESSUB_IDX,
+			SRVY_IDX,
+			DATA_CONT,
+			DATA_SPL,
+			DATA_ADDR,
+			WDT
+		)
+		VALUES
+		(
+			#{data_idx},
+			#{ques_idx},
+			#{quessub_idx},
+			#{srvy_idx},
+			#{data_cont},
+			#{data_spl},
+			#{data_addr},
+			GETDATE()
+		)
+
+	</insert>
+	
+	<update id="updateSrvydata" parameterType="srvydataVO">
+
+		UPDATE CMS_SURVEY_DATA SET
+			SRVY_IDX = #{srvy_idx},
+			DATA_CONT = #{data_cont},
+			DATA_SPL = #{data_spl},
+			DATA_ADDR = #{data_addr}
+		WHERE
+			DATA_IDX = #{data_idx} AND
+			QUES_IDX = #{ques_idx} AND
+			QUESSUB_IDX = #{quessub_idx}
+
+	</update>
+	
+	<delete id="deleteSrvydata" parameterType="srvydataVO">
+
+		DELETE FROM CMS_SURVEY_DATA
+		WHERE
+			DATA_IDX = #{data_idx} AND
+			QUES_IDX = #{ques_idx} AND
+			QUESSUB_IDX = #{quessub_idx}
+
+	</delete>
+	
+	
+	<select id="selectSrvydataKey" parameterType="srvydataVO" resultType="int" statementType="CALLABLE">
+		<!-- {CALL SEQ_SRVYDATA_IDX.NEXTVAL(#{srvy_seq_name}, #{srvy_out_seq, mode=OUT})} -->
+		SELECT NEXT VALUE FOR SEQ_SRVYDATA_IDX
+	</select>
+	
+	
+	<!-- if use clob column
+	<select id="selectSrvydata" parameterType="srvydataVO" resultMap="srvydata">
+	-->
+	<select id="selectSrvydata" parameterType="srvydataVO" resultType="srvydataVO">
+
+		SELECT
+			DATA_IDX,
+			QUES_IDX,
+			QUESSUB_IDX,
+			SRVY_IDX,
+			DATA_CONT,
+			DATA_SPL,
+			DATA_ADDR,
+			CONVERT(VARCHAR(19), WDT, 20) WDT
+		FROM
+			CMS_SURVEY_DATA
+		WHERE
+			DATA_IDX = #{data_idx} AND
+			QUES_IDX = #{ques_idx} AND
+			QUESSUB_IDX = #{quessub_idx}
+		
+	</select>
+	
+	
+	<select id="selectSrvydataList" parameterType="srvydataVO" resultType="srvydataVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY QUES_IDX ASC, DATA_IDX ASC) rn, TB.* FROM (
+	
+			SELECT
+				DATA_IDX,
+				QUES_IDX,
+				QUESSUB_IDX,
+				SRVY_IDX,
+				DATA_CONT,
+				DATA_SPL,
+				DATA_ADDR,
+				CONVERT(VARCHAR(19), WDT, 20) WDT
+			FROM
+				CMS_SURVEY_DATA
+			WHERE
+				1 = 1
+				<include refid="srchSrvydataStmtcond"/>
+
+		) TB ) MORG   
+
+	</select>
+	
+	
+	<select id="selectSrvydataListTotCnt" parameterType="srvydataVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_SURVEY_DATA
+		WHERE
+			1 = 1
+			<!--
+			<include refid="srchSrvydataStmtcond"/>
+			-->	
+	</select>
+	
+	<select id="xlsSrvydataList" parameterType="srvydataVO" resultType="srvydataVO">
+		
+		
+			SELECT
+				ROW_NUMBER() OVER(ORDER BY DATA_IDX ASC, QUES_IDX ASC) RN,
+				W.*
+			FROM
+			(
+				SELECT *
+				FROM
+				(
+					SELECT
+						TOP 100 PERCENT 
+						DATA_IDX,
+						QUES_IDX,
+						QUESSUB_IDX,
+						(SELECT PART_TYPE FROM CMS_SURVEY_PART WHERE SRVY_IDX = A.SRVY_IDX AND PART_IDX = A.PART_IDX) PART_TYPE,
+						REF_CONT,
+						SRVY_IDX,
+						DATA_CONT,
+						DATA_SPL,
+						DATA_ADDR,
+						WDT
+					FROM
+					(
+						SELECT
+							DATA_IDX,
+							A.QUES_IDX,
+							QUESSUB_IDX,
+							(SELECT PART_IDX FROM CMS_SURVEY_QUESANS WHERE QUES_IDX = A.QUES_IDX AND QUESANS_TYPE = 'Q') PART_IDX,
+							(SELECT QUESANS_CONT FROM CMS_SURVEY_QUESANS WHERE QUES_IDX = A.QUES_IDX AND CAST(ANS_ORD AS VARCHAR(11)) = DATA_CONT AND QUES_TYPE = 'CDIDX00082') REF_CONT,
+							A.SRVY_IDX,
+							DATA_CONT,
+							DATA_SPL,
+							DATA_ADDR,
+							(SELECT DISTINCT QUES_TYPE FROM CMS_SURVEY_QUESANS WHERE QUES_IDX = A.QUES_IDX) QUES_TYPE,
+							A.WDT
+						FROM
+							CMS_SURVEY_DATA A
+						WHERE
+							1 = 1
+							<include refid="srchSrvydataStmtcond"/>
+					) A
+					WHERE
+						QUES_TYPE != 'CDIDX00083'
+					ORDER BY
+						DATA_IDX ASC, PART_TYPE DESC, QUES_IDX ASC
+				) TB 
+	
+				UNION
+	
+				SELECT
+					DATA_IDX,
+					QUES_IDX,
+					1 QUESSUB_IDX,
+					PART_TYPE,
+					REF_CONT,
+					SRVY_IDX,
+					DATA_CONT,
+					DATA_SPL,
+					DATA_ADDR,
+					WDT
+				FROM
+				(
+					SELECT 
+						A.*,
+						(SELECT PART_TYPE FROM CMS_SURVEY_PART WHERE SRVY_IDX = A.SRVY_IDX AND PART_IDX = A.PART_IDX) PART_TYPE,
+						(SELECT QUESANS_CONT FROM CMS_SURVEY_QUESANS WHERE QUES_IDX = A.QUES_IDX AND QUESANS_TYPE = 'A' AND  A.QUESSUB_IDX = QUESANS_IDX -1 AND A.DATA_CONT = 'Y') SUM_DATA
+					FROM
+					(
+						SELECT
+							DATA_IDX,
+							QUES_IDX,
+							QUESSUB_IDX,
+							(SELECT PART_IDX FROM CMS_SURVEY_QUESANS WHERE QUES_IDX = B.QUES_IDX AND QUESANS_TYPE = 'Q') PART_IDX,
+							(SELECT QUESANS_CONT FROM CMS_SURVEY_QUESANS WHERE QUES_IDX = B.QUES_IDX AND CAST(ANS_ORD AS VARCHAR(11)) = DATA_CONT AND QUES_TYPE = 'CDIDX00082') REF_CONT,
+							(SELECT DISTINCT QUES_TYPE FROM CMS_SURVEY_QUESANS WHERE QUES_IDX = B.QUES_IDX) QUES_TYPE,
+							SRVY_IDX,
+							DATA_CONT,
+							DATA_SPL,
+							DATA_ADDR,
+							WDT
+						FROM
+							CMS_SURVEY_DATA B
+						WHERE
+							1 = 1
+							<include refid="srchSrvydataStmtcond"/>
+					) A
+					WHERE
+						QUES_TYPE = 'CDIDX00083'
+				) TB
+				GROUP BY
+					DATA_IDX, QUES_IDX, REF_CONT, SRVY_IDX, PART_TYPE, DATA_SPL, DATA_ADDR, DATA_CONT, WDT
+			) W
+		
+		
+	</select>
+	
+	<select id="selectSrvydataCont" parameterType="srvydataVO" resultType="srvydataVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY QUES_IDX ASC, DATA_IDX ASC) rn, TB.* FROM (
+	
+			SELECT 
+			    DATA_IDX,
+			    QUES_IDX,
+				QUESSUB_IDX,
+			    SRVY_IDX,
+			    DATA_CONT,
+			    DATA_ADDR,
+			    DATA_SPL,
+			    WDT
+			FROM
+		        CMS_SURVEY_DATA A
+			WHERE
+				QUES_IDX IN (SELECT QUES_IDX FROM CMS_SURVEY_QUESANS WHERE SRVY_IDX = #{srvy_idx} AND QUES_TYPE IN ('CDIDX00085', 'CDIDX00084', 'CDIDX00082')) 
+
+ 			
+	
+		) TB ) MORG  
+
+	</select>
+	
+	
+	
+	<select id="selectSrvydataDupCnt" parameterType="srvydataVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_SURVEY_DATA
+		WHERE
+			SRVY_IDX = #{srvy_idx} AND
+			DATA_ADDR = #{data_addr}
+			
+	</select>
+	
+
+</mapper>
+
+

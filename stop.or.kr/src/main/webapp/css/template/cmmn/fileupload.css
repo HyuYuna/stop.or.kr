@@ -1,0 +1,50 @@
+@charset "utf-8";
+
+	
+/* 파일 업로드 STYLE */	
+.fileUpload_area {
+	margin-top: 15px;
+	background: #eff3f9;
+	border: solid 1px #e9e9e9;
+	border-radius: 5px;
+	}
+.fileUpload_area h2 {
+	padding: 20px 0 10px 20px ;
+	color: #317eac;	
+	font-size: 1.2em;
+	}
+.fileUpload_progress {
+	padding: 10px 0 10px 5px;
+	background: #fff;
+	border: solid 1px #e9e9e9;
+	}
+.fileUpload_progress li {
+	position: relative;
+	padding-left: 8px;
+	width:98%;
+	overflow: hidden;
+	}
+.fileUpload_progress li a {
+	margin-right: 3px;
+	color: #333;
+	}
+.fileUpload_progress .file_loding {
+	display: inline-block;
+	margin-left: 15px;
+	}
+.fileUpload_progress .icon_delete {
+	position: absolute;
+	right: 5px;
+	}		
+	
+ul, ol, dl, li, dt, dd, p,
+h1, h2, h3, h4, h5, h6 {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	}		
+img {
+	border: none;
+	}
+	
+	

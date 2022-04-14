@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.man.menuctgry.dao.SysauthmenuDAO">
+	
+	
+	<insert id="insertSysauthmenu" parameterType="sysmenuVO">
+
+		INSERT INTO CMS_MENU_AUTH 
+        (
+			AUTH_CD,
+			MENU_IDX,
+			AUTH_YN,
+			WRITER,
+			WDT
+        )
+        VALUES
+        (
+			#{auth_cd},
+			#{menu_idx},
+			'Y',
+			#{writer},
+			NOW()
+        )
+		ON DUPLICATE KEY 
+    	UPDATE 
+	        AUTH_YN = 'Y'
+
+	</insert>
+	
+	<update id="updateSysauthmenu" parameterType="sysmenuVO">
+
+		UPDATE CMS_MENU_AUTH SET
+			AUTH_YN = 'N',
+			MODIFIER = #{modifier},
+			MDT = NOW()
+		WHERE
+			AUTH_CD = #{auth_cd}
+
+	</update>
+	
+	<delete id="deleteSysauthmenuByAuthcd" parameterType="sysauthVO">
+
+		DELETE FROM CMS_MENU_AUTH
+		WHERE
+			AUTH_CD = #{auth_cd}
+
+	</delete>
+
+	<delete id="deleteSysauthmenuByMenuidx" parameterType="sysmenuVO">
+
+		DELETE FROM CMS_MENU_AUTH
+		WHERE
+			MENU_IDX = #{menu_idx}
+
+	</delete>
+	
+	<select id="selectSysauthmenu" parameterType="sysmenuVO" resultType="sysmenuVO">
+
+		SELECT
+			AUTH_CD,
+			MENU_IDX,
+			AUTH_YN,
+			WRITER,
+			DATE_FORMAT(WDT, '%Y-%m-%d %H:%i:%s') WDT,
+			MODIFIER,
+			DATE_FORMAT(MDT, '%Y-%m-%d %H:%i:%s') MDT
+		FROM
+			CMS_MENU_AUTH
+		WHERE
+			AUTH_CD = #{auth_cd} AND
+			MENU_IDX = #{menu_idx}
+
+	</select>
+	
+
+	<select id="selectSysauthmenuList" parameterType="sysmenuVO" resultType="sysmenuVO">
+
+		SELECT  
+    		A.MENU_IDX, 
+    		A.MENU_NM, 
+        	A.UP_MENU_IDX,  
+        	A.MENU_ORD,
+   			1 MENU_LV, 
+        	B.AUTH_CD,
+	        IF(B.AUTH_CD IS NULL OR B.AUTH_CD = '', 'N', AUTH_YN) AUTH_YN 
+  		FROM 
+        	(
+        		SELECT 
+        			MENU_IDX, 
+        			MENU_NM, 
+        			UP_MENU_IDX, 
+        			MENU_ORD 
+          		FROM  
+          			CMS_SYS_MENU 
+         		WHERE  
+         			MU_GUB = #{mu_gub} AND 
+                	USE_YN = 'Y' 
+         			<if test="auth_cd != 'D0001'.toString()">
+         				AND MENU_IDX NOT IN ('MNIDX00001', 'MNIDX00101')
+         			</if>         			
+        	) A LEFT OUTER JOIN 
+        	(
+        		SELECT 
+        			* 
+          		FROM  
+          			CMS_MENU_AUTH 
+         		WHERE  
+         				AUTH_CD = #{auth_cd} 
+        	) B 
+ 			ON A.MENU_IDX = B.MENU_IDX  
+			
+	</select>
+
+	
+	<select id="selectSysauthmenuListTotCnt" parameterType="sysmenuVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_MENU_AUTH
+		WHERE
+			AUTH_CD = #{auth_cd} AND
+			MENU_IDX = #{menu_idx}
+
+	</select>
+	
+	<select id="xlsSysauthmenuList" parameterType="sysmenuVO" resultType="sysmenuVO">
+
+		SELECT * FROM ( SELECT @RNUM := @RNUM + 1 AS rn, TB.* FROM (
+
+			SELECT
+				AUTH_CD,
+				MENU_IDX,
+				AUTH_YN,
+				WRITER,
+				DATE_FORMAT(WDT, '%Y-%m-%d %H:%i:%s') WDT,
+				MODIFIER,
+				DATE_FORMAT(MDT, '%Y-%m-%d %H:%i:%s') MDT
+			FROM
+				CMS_MENU_AUTH
+			WHERE
+				AUTH_CD = #{auth_cd} AND
+				MENU_IDX = #{menu_idx}
+
+		) TB, ( SELECT @RNUM := 0 ) R ) AL 
+
+	</select>
+	
+	
+
+</mapper>
+

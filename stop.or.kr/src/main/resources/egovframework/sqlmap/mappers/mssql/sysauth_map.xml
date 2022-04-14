@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.man.menuctgry.dao.SysauthDAO">
+
+	<insert id="insertSysauth" parameterType="sysauthVO">
+		
+		<selectKey resultType="java.lang.String" keyProperty="auth_cd" order="BEFORE">
+	     	SELECT 
+				LEFT(#{up_auth_cd}, 1) + RIGHT(REPLICATE('0', 4) + CAST(CAST((ISNULL(RIGHT(MAX(AUTH_CD), 4), '0')) + 1 AS INT) AS VARCHAR), 4) AS AUTH_CD
+			FROM 
+				CMS_SYS_AUTH
+			WHERE 
+				UP_AUTH_CD = #{up_auth_cd}
+				
+		</selectKey>
+
+		INSERT INTO CMS_SYS_AUTH
+		(
+			AUTH_CD,
+			UP_AUTH_CD,
+			AUTH_NM,
+			AUTH_LV,
+			AUTH_ORD,
+			WRITER,
+			WDT
+		)
+		VALUES
+		(
+			#{auth_cd},
+			#{up_auth_cd},
+			#{auth_nm},
+			(
+				SELECT 
+					ISNULL(MAX(AUTH_LV), #{auth_lv}) + 1 
+				FROM 
+					CMS_SYS_AUTH
+				WHERE 
+					UP_AUTH_CD = #{up_auth_cd}
+			), 
+			<if test="auth_ord == '1'.toString()">
+			(
+				SELECT 
+					ISNULL(MAX(AUTH_ORD), 0) + 1
+				FROM
+					CMS_SYS_AUTH
+				WHERE
+					(
+						UP_AUTH_CD 
+						<if test="up_auth_cd == null or up_auth_cd == ''">
+							IS NULL OR UP_AUTH_CD = ''
+						</if>
+						<if test="up_auth_cd != null and up_auth_cd != ''">
+							= #{up_auth_cd}
+						</if>
+					) 
+			),
+			</if>
+			<if test="auth_ord != '1'.toString()">
+				#{auth_ord},
+			</if>
+			#{writer},
+			GETDATE()
+		)
+
+	</insert>
+	
+	<update id="updateSysauth" parameterType="sysauthVO">
+
+		UPDATE CMS_SYS_AUTH SET
+			AUTH_CD = #{auth_cd},
+			UP_AUTH_CD = #{up_auth_cd},
+			AUTH_NM = #{auth_nm},
+			AUTH_ORD = #{auth_ord},
+			USE_YN = #{use_yn},
+			MODIFIER = #{modifier},
+			MDT = GETDATE()
+		WHERE
+			AUTH_CD = #{auth_cd}
+
+	</update>
+
+	<update id="updateSysauthOrderP" parameterType="sysauthVO">
+
+		UPDATE CMS_SYS_AUTH SET
+			AUTH_ORD = AUTH_ORD + 1
+		WHERE
+			(
+				UP_AUTH_CD
+				<if test="up_auth_cd == null or up_auth_cd == ''">
+					IS NULL OR UP_AUTH_CD = ''
+				</if>
+				<if test="up_auth_cd != null and up_auth_cd != ''">
+					= #{up_auth_cd}
+				</if> 
+			) AND
+				AUTH_ORD <![CDATA[ >= ]]> #{auth_ord}
+
+	</update>
+
+	<update id="updateSysauthOrderM" parameterType="sysauthVO">
+
+		UPDATE CMS_SYS_AUTH SET
+			AUTH_ORD = AUTH_ORD + (${add_ord})
+		WHERE
+			(
+				UP_AUTH_CD
+				<if test="up_auth_cd == null or up_auth_cd == ''">
+					IS NULL OR UP_AUTH_CD = ''
+				</if>
+				<if test="up_auth_cd != null and up_auth_cd != ''">
+					= #{up_auth_cd}
+				</if> 
+			) AND
+			AUTH_ORD BETWEEN #{from_ord} AND #{to_ord}
+
+	</update>
+	
+	<delete id="deleteSysauth" parameterType="sysauthVO">
+		<!-- 
+		DELETE FROM CMS_SYS_AUTH
+		WHERE
+			AUTH_CD = #{auth_cd} OR
+			UP_AUTH_CD = #{auth_cd}
+		 -->
+		 
+		UPDATE CMS_SYS_AUTH SET
+ 			USE_YN = 'N'
+ 		WHERE 
+			AUTH_CD = #{auth_cd} OR
+			UP_AUTH_CD = #{auth_cd}
+			
+	</delete>
+	
+	<select id="selectSysauth" parameterType="sysauthVO" resultType="sysauthVO">
+
+		SELECT
+			AUTH_CD,
+			UP_AUTH_CD,
+			AUTH_NM,
+			AUTH_ORD,
+			AUTH_LV,
+			USE_YN,
+			WRITER,
+			CONVERT(VARCHAR(19), WDT, 20) WDT,
+			MODIFIER,
+			CONVERT(VARCHAR(19), MDT, 20) MDT
+		FROM
+			CMS_SYS_AUTH
+		WHERE
+			AUTH_CD = #{auth_cd}
+			
+	</select>
+	
+	<select id="selectSysauthList" parameterType="sysauthVO" resultType="sysauthVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY USE_YN DESC, AUTH_LV ASC) rn, TB.* FROM (
+	
+			SELECT
+				AUTH_CD,
+				UP_AUTH_CD,
+				AUTH_NM,
+				AUTH_ORD,
+				AUTH_LV,
+				USE_YN,
+				WRITER,
+				CONVERT(VARCHAR(19), WDT, 20) WDT,
+				MODIFIER,
+				CONVERT(VARCHAR(19), MDT, 20) MDT
+			FROM
+				CMS_SYS_AUTH
+			WHERE
+				1 = 1
+				<if test="use_yn != null and use_yn != ''">
+					AND USE_YN = #{use_yn}
+				</if>
+				<if test="auth_lv != 0">
+					AND LEFT(AUTH_CD, 1) NOT IN ('D')
+				</if>  
+				<if test="up_auth_cd == null or up_auth_cd == ''">
+					AND ( UP_AUTH_CD IS NULL OR UP_AUTH_CD = '' ) 
+				</if>
+				<if test="up_auth_cd != null and up_auth_cd != ''">
+					AND UP_AUTH_CD = #{up_auth_cd}
+				</if>
+			
+		) TB ) MORG 
+
+	</select>
+		
+	
+	<select id="selectSysauthSubList" resultType="sysauthVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY AUTH_LV) rn, TB.* FROM (
+	
+			SELECT
+				AUTH_CD,
+				UP_AUTH_CD,
+				AUTH_NM,
+				AUTH_ORD,
+				AUTH_LV,
+				WRITER,
+				CONVERT(VARCHAR(19), WDT, 20) WDT,
+				MODIFIER,
+				CONVERT(VARCHAR(19), MDT, 20) MDT
+			FROM
+				CMS_SYS_AUTH
+			WHERE
+				AUTH_LV BETWEEN 2 AND 9998 AND   
+				USE_YN = 'Y' AND 
+				UP_AUTH_CD IS NOT NULL AND UP_AUTH_CD <![CDATA[ <> ]]> ''
+			
+		) TB ) MORG 
+
+	</select>
+	
+	
+	<select id="selectSysauthListTotCnt" parameterType="sysauthVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_SYS_AUTH			
+		WHERE
+			AUTH_CD = #{auth_cd}
+
+	</select>
+		
+
+	
+</mapper>
+

@@ -1,0 +1,715 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.man.menuctgry.dao.SysmenuDAO">
+
+	
+	<insert id="insertSysmenu" parameterType="sysmenuVO">
+		
+		<selectKey resultType="java.lang.String" keyProperty="menu_idx" order="BEFORE">
+			SELECT 
+				CASE #{mu_gub}
+					WHEN 'MAN' THEN
+			     		'MNIDX' || LPAD((NVL(MAX(TO_NUMBER(REPLACE(MENU_IDX, 'MNIDX', ''))), 0) + 1), 5, '0')
+			     	ELSE
+		     			CASE #{mu_lang}
+		     				WHEN 'CDIDX00022' THEN
+			     				'MNIDX' || LPAD((NVL(MAX(TO_NUMBER(REPLACE(MENU_IDX, 'MNIDX', ''))), (TO_NUMBER(substr(#{mu_site}, -5))) * 1000) + 1), 5, '0')
+		     				WHEN 'CDIDX00023' THEN
+			     				'MNIDX' || LPAD((NVL(MAX(TO_NUMBER(REPLACE(MENU_IDX, 'MNIDX', ''))), (TO_NUMBER(substr(#{mu_site}, -5))) * 1000 + 200) + 1), 5, '0')
+		     				WHEN 'CDIDX00024' THEN
+			     				'MNIDX' || LPAD((NVL(MAX(TO_NUMBER(REPLACE(MENU_IDX, 'MNIDX', ''))), (TO_NUMBER(substr(#{mu_site}, -5))) * 1000 + 400) + 1), 5, '0')
+		     				WHEN 'CDIDX00025' THEN
+			     				'MNIDX' || LPAD((NVL(MAX(TO_NUMBER(REPLACE(MENU_IDX, 'MNIDX', ''))), (TO_NUMBER(substr(#{mu_site}, -5))) * 1000 + 600) + 1), 5, '0')
+			     		END
+			     END AS MENU_IDX
+	     	FROM 
+	     		CMS_SYS_MENU
+	     	WHERE
+	     		MU_GUB = #{mu_gub} AND
+	     		MU_SITE = #{mu_site} AND
+	     		MU_LANG = #{mu_lang}
+		</selectKey>
+
+		INSERT INTO CMS_SYS_MENU
+		(
+			MENU_IDX,
+			UP_MENU_IDX,
+			MENU_NM,
+			MENU_NIX,
+			MENU_LINK,
+			MENU_ORD,
+			MENU_IMG_PATH,
+			LEFT_IMG_PATH,
+			TITLE_IMG_PATH,
+			SITEMAP_IMG_PATH,
+			INFO01_IMG_PATH,
+			INFO02_IMG_PATH,
+			MU_GUB,
+			MU_SITE,
+			MU_LANG,
+			BLANK_YN,
+			TABMENU_YN,
+			MEMMENU_YN,
+			USE_YN,
+			OWN_INFO,
+			WRITER,
+			WDT
+		)
+		VALUES
+		(
+			#{menu_idx},
+			#{up_menu_idx},
+			#{menu_nm},
+			#{menu_nix},
+			#{menu_link},
+			(
+				SELECT 
+					NVL(MAX(MENU_ORD), 0) + 1
+				FROM
+					CMS_SYS_MENU
+				WHERE
+		     		MU_GUB = #{mu_gub} AND
+		     		MU_SITE = #{mu_site} AND
+		     		MU_LANG = #{mu_lang} AND
+					UP_MENU_IDX 
+					<choose>
+						<when test="up_menu_idx == null or up_menu_idx == ''">
+							IS NULL
+						</when>
+						<otherwise>
+							= #{up_menu_idx}
+						</otherwise>
+					</choose>
+			),
+			#{menu_img_path},
+			#{left_img_path},
+			#{title_img_path},
+			#{sitemap_img_path},
+			#{info01_img_path},
+			#{info02_img_path},
+			#{mu_gub},
+			#{mu_site},
+			#{mu_lang},
+			#{blank_yn},
+			#{tabmenu_yn},
+			#{memmenu_yn},
+			#{use_yn},
+			#{own_info},
+			#{writer},
+			SYSDATE
+		)
+
+	</insert>
+	
+	<update id="updateSysmenu" parameterType="sysmenuVO">
+
+		UPDATE CMS_SYS_MENU SET
+			<if test="mu_gub != null and mu_gub != ''">
+				MU_GUB = #{mu_gub},
+			</if>
+			<if test="mu_site != null and mu_site != ''">
+				MU_SITE = #{mu_site},
+			</if>
+			<if test="mu_lang != null and mu_lang != ''">
+				MU_LANG = #{mu_lang},
+			</if>
+			MENU_NM = #{menu_nm},
+			MENU_LINK = #{menu_link},
+			MENU_ORD = #{menu_ord},
+			MENU_IMG_PATH = #{menu_img_path},
+			LEFT_IMG_PATH = #{left_img_path},
+			TITLE_IMG_PATH = #{title_img_path},
+			SITEMAP_IMG_PATH = #{sitemap_img_path},
+			INFO01_IMG_PATH = #{info01_img_path},
+			INFO02_IMG_PATH = #{info02_img_path},
+			BLANK_YN = #{blank_yn},
+			TABMENU_YN = #{tabmenu_yn},
+			MEMMENU_YN = #{memmenu_yn},
+			USE_YN = #{use_yn},
+			OWN_INFO = #{own_info},
+			MODIFIER = #{modifier},
+			MDT = SYSDATE
+		WHERE
+			MENU_IDX = #{menu_idx}
+
+	</update>
+	
+	
+	<update id="updateSysmenuOrdPlus" parameterType="sysmenuVO">
+
+		UPDATE CMS_SYS_MENU SET
+			MENU_ORD = MENU_ORD + 1
+		WHERE
+			1 = 1
+			<choose>
+				<when test="up_menu_idx == null or up_menu_idx == ''">
+					AND UP_MENU_IDX IS NULL
+				</when>
+				<otherwise>
+					AND UP_MENU_IDX = #{up_menu_idx}
+				</otherwise>
+			</choose>
+			 AND MENU_ORD <![CDATA[ <= ]]> #{org_menu_ord} AND MENU_ORD <![CDATA[ >= ]]> #{menu_ord}
+
+	</update>
+	
+
+	<update id="updateSysmenuOrdMinus" parameterType="sysmenuVO">
+
+		UPDATE CMS_SYS_MENU SET
+			MENU_ORD = MENU_ORD - 1
+		WHERE
+			1 = 1
+			<choose>
+				<when test="up_menu_idx == null or up_menu_idx == ''">
+					AND UP_MENU_IDX IS NULL
+				</when>
+				<otherwise>
+					AND UP_MENU_IDX = #{up_menu_idx}
+				</otherwise>
+			</choose>
+			 AND MENU_ORD <![CDATA[ >= ]]> #{org_menu_ord} AND MENU_ORD <![CDATA[ <= ]]> #{menu_ord}
+
+	</update>
+	
+
+	<update id="updateSysmenuUsetab" parameterType="sysmenuVO">
+		UPDATE CMS_SYS_MENU SET
+			TABMENU_YN = #{tabmenu_yn}
+		WHERE
+			MENU_IDX = #{menu_idx} OR
+			UP_MENU_IDX = #{menu_idx}	
+	</update>
+
+	<update id="updateSysmenuLink" parameterType="sysmenuVO">
+		UPDATE CMS_SYS_MENU SET
+			MENU_LINK = #{menu_link}
+		WHERE
+			MENU_IDX = #{menu_idx}	
+	</update>
+
+	<update id="updateUseynWithSubLevel" parameterType="sysmenuVO">
+
+		UPDATE CMS_SYS_MENU SET
+			USE_YN = #{use_yn}
+		WHERE
+			MENU_IDX IN (
+				SELECT
+					MENU_IDX
+				FROM
+					CMS_SYS_MENU A
+				
+				CONNECT BY  PRIOR MENU_IDX =  UP_MENU_IDX
+			    START WITH MENU_IDX = #{menu_idx}
+		)
+
+	</update>
+	
+	<delete id="deleteSysmenu" parameterType="sysmenuVO">
+
+		DELETE FROM CMS_SYS_MENU
+		WHERE
+			MENU_IDX IN
+			(
+				SELECT
+					MENU_IDX 
+				FROM
+					CMS_SYS_MENU A
+				
+				CONNECT BY PRIOR MENU_IDX =  UP_MENU_IDX
+			    START WITH MENU_IDX = #{menu_idx}
+			)
+
+	</delete>
+	
+	<select id="selectSysmenu" parameterType="sysmenuVO" resultType="sysmenuVO">
+
+		SELECT
+			MENU_IDX,
+			UP_MENU_IDX,
+			MENU_NM,
+			MENU_NIX,
+			MENU_LINK,
+			MENU_ORD,
+			MENU_IMG_PATH,
+			LEFT_IMG_PATH,
+			TITLE_IMG_PATH,
+			SITEMAP_IMG_PATH,
+			INFO01_IMG_PATH,
+			INFO02_IMG_PATH,
+			MU_GUB,
+			MU_SITE,
+			MU_LANG,
+			BLANK_YN,
+			TABMENU_YN,
+			MEMMENU_YN,
+			USE_YN,
+			OWN_INFO,
+			WRITER,
+			TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+			MODIFIER,
+			TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+		FROM
+			CMS_SYS_MENU
+		WHERE
+			MENU_IDX = #{menu_idx} OR 
+			MENU_NIX = #{srch_menu_nix}
+			
+	</select>
+
+	<select id="selectSysupmenu" parameterType="sysmenuVO" resultType="sysmenuVO">
+
+		SELECT
+			MENU_IDX,
+			UP_MENU_IDX,
+			MENU_NM,
+			MENU_NIX,
+			MENU_LINK,
+			MENU_ORD,
+			MENU_IMG_PATH,
+			LEFT_IMG_PATH,
+			TITLE_IMG_PATH,
+			SITEMAP_IMG_PATH,
+			INFO01_IMG_PATH,
+			INFO02_IMG_PATH,
+			MU_GUB,
+			MU_SITE,
+			MU_LANG,
+			TABMENU_YN,
+			MEMMENU_YN,
+			USE_YN,
+			OWN_INFO,
+			WRITER,
+			TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+			MODIFIER,
+			TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+		FROM
+			CMS_SYS_MENU
+		WHERE
+			MENU_IDX = (
+				SELECT 
+					MENU_IDX
+				FROM
+				(
+					SELECT 
+						A.*, LEVEL 
+					FROM
+						CMS_SYS_MENU A 
+					CONNECT BY MENU_IDX = PRIOR UP_MENU_IDX
+					START WITH MENU_NIX = #{srch_menu_nix}
+                 )
+                 WHERE UP_MENU_IDX IS NULL
+			)
+			
+	</select>
+	
+	<select id="selectSysmenuList" parameterType="sysmenuVO" resultType="sysmenuVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+
+			SELECT  
+				A.MENU_IDX,
+				UP_MENU_IDX,
+				MENU_NM,
+				MENU_NIX,
+				MENU_LINK,
+				MENU_ORD,
+				MENU_IMG_PATH,
+				LEFT_IMG_PATH,
+				TITLE_IMG_PATH,
+				SITEMAP_IMG_PATH,
+				INFO01_IMG_PATH,
+				INFO02_IMG_PATH,
+				LEVEL MENU_LV,
+				BLANK_YN,
+				TABMENU_YN,
+				MEMMENU_YN,
+				MU_GUB,
+				MU_SITE,
+				MU_LANG,
+				USE_YN,
+				OWN_INFO,
+				WRITER,
+				TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+				MODIFIER,
+				TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT,
+				(SELECT COUNT(*) FROM CMS_SYS_MENU  WHERE UP_MENU_IDX = A.MENU_IDX) SUB_MENU_CNT, 
+	        	B.AUTH_CD,
+	       	 	DECODE(B.AUTH_CD, NULL, 'Y', AUTH_YN) AUTH_YN,
+                CONNECT_BY_ISLEAF AS IS_LEAF
+	  		FROM 
+	        	(
+	        		SELECT 
+	        			MENU_IDX, 
+                        UP_MENU_IDX,   
+                        MENU_NM, 
+                        MENU_NIX,
+                        MENU_LINK,          
+                        MENU_ORD, 
+                        BLANK_YN, 
+						TABMENU_YN,
+						MEMMENU_YN,
+                        USE_YN,      
+                        MU_GUB,
+						MU_SITE,
+						MU_LANG,
+						OWN_INFO,
+						MENU_IMG_PATH,
+						LEFT_IMG_PATH,
+						TITLE_IMG_PATH,
+						SITEMAP_IMG_PATH,
+						INFO01_IMG_PATH,
+						INFO02_IMG_PATH
+	          		FROM  
+	          			CMS_SYS_MENU 
+	         		WHERE  
+	         			1 = 1
+						<if test="use_yn != null and use_yn != ''">
+							AND USE_YN = #{use_yn}
+						</if>
+						<if test="srch_mu_gub != null and srch_mu_gub != ''">
+							AND MU_GUB = #{srch_mu_gub}
+						</if>
+						<if test="srch_mu_gub != 'MAN'.toString()">
+							<if test="srch_mu_site != null and srch_mu_site != ''">
+								AND MU_SITE = #{srch_mu_site}
+							</if>
+							<if test="srch_mu_lang != null and srch_mu_lang != ''">
+								AND MU_LANG = #{srch_mu_lang}
+							</if>
+						</if>
+	        	) A, 
+	        	(
+	        		SELECT 
+	        			* 
+	          		FROM  
+	          			CMS_MENU_AUTH 
+	         		WHERE  
+	         			AUTH_CD = #{auth_cd} 
+	        	) B 
+	 		WHERE  
+ 				A.MENU_IDX = B.MENU_IDX (+)
+ 				<if test="srch_mu_gub == 'MAN'.toString()"> 
+	 				AND AUTH_YN='Y'
+	 			</if>
+	            CONNECT BY PRIOR A.MENU_IDX = UP_MENU_IDX START 
+	       		WITH UP_MENU_IDX IS NULL 
+	       		ORDER SIBLINGS BY MENU_ORD 
+
+		) TB )
+
+
+	</select>
+
+	<select id="selectSysmenumanList" parameterType="sysmenuVO" resultType="sysmenuVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+
+			SELECT  
+				MENU_IDX,
+				UP_MENU_IDX,
+				MENU_NM,
+				MENU_NIX,
+				MENU_LINK,
+				MENU_ORD,
+				MENU_IMG_PATH,
+				LEFT_IMG_PATH,
+				TITLE_IMG_PATH,
+				SITEMAP_IMG_PATH,
+				INFO01_IMG_PATH,
+				INFO02_IMG_PATH,
+				LEVEL MENU_LV,
+				BLANK_YN,
+				TABMENU_YN,
+				MEMMENU_YN,
+				USE_YN,
+				MU_GUB,
+				MU_SITE,
+				MU_LANG,
+				OWN_INFO,
+				WRITER,
+				WDT,
+				MODIFIER,
+				MDT,
+				UCONT_ID, 
+				BRD_ID,
+                CONNECT_BY_ISLEAF AS IS_LEAF 
+	  		FROM 
+	        	(
+	        		SELECT 
+	        			MENU_IDX,
+						UP_MENU_IDX,
+						MENU_NM,
+						MENU_NIX,
+						MENU_LINK,
+						MENU_ORD,
+						MENU_IMG_PATH,
+						LEFT_IMG_PATH,
+						TITLE_IMG_PATH,
+						SITEMAP_IMG_PATH,
+						INFO01_IMG_PATH,
+						INFO02_IMG_PATH,
+						BLANK_YN,
+						TABMENU_YN,
+						MEMMENU_YN,
+						USE_YN,
+						MU_GUB,
+						MU_SITE,
+						MU_LANG,
+						OWN_INFO,
+						WRITER,
+						TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+						MODIFIER,
+						TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT 
+	          		FROM  
+	          			CMS_SYS_MENU 
+	         		WHERE  
+	         			1 = 1
+						<if test="use_yn != null and use_yn != ''">
+							AND USE_YN = #{use_yn}
+						</if>
+						<if test="srch_mu_gub != null and srch_mu_gub != ''">
+							AND MU_GUB = #{srch_mu_gub}
+						</if>
+						<if test="srch_mu_gub != 'MAN'.toString()">
+							<if test="srch_mu_site != null and srch_mu_site != ''">
+								AND MU_SITE = #{srch_mu_site}
+							</if>
+							<if test="srch_mu_lang != null and srch_mu_lang != ''">
+								AND MU_LANG = #{srch_mu_lang}
+							</if>
+						</if>
+						
+	        	) A,
+	        	(
+	        	
+		        	SELECT
+						UCONT_ID,
+						REF_MENU_NIX
+					FROM
+						(
+							SELECT
+								UCONT_ID,
+								UCONT_VERSION,
+								REF_MENU_NIX,
+								RANK() OVER (PARTITION BY UCONT_ID ORDER BY UCONT_VERSION DESC) RANKORD
+							FROM
+								CMS_USR_CONTENTS			
+							WHERE
+								1 = 1
+								<if test="srch_mu_site != null and srch_mu_site != ''">
+									AND MU_SITE = #{srch_mu_site}
+								</if>
+								<if test="srch_mu_lang != null and srch_mu_lang != ''">
+									AND MU_LANG = #{srch_mu_lang}
+								</if>
+							
+						)
+						WHERE RANKORD = 1
+	        	
+	        	) B,
+	        	(
+	        	
+		        	SELECT
+						BRD_ID,
+						REF_MENU_NIX
+					FROM
+						CMS_BRD_INFO
+					WHERE
+						1 = 1
+						<if test="srch_mu_site != null and srch_mu_site != ''">
+							AND MU_SITE = #{srch_mu_site}
+						</if>
+						<if test="srch_mu_lang != null and srch_mu_lang != ''">
+							AND MU_LANG = #{srch_mu_lang}
+						</if>
+	        	) C
+	        	WHERE 
+	        		A.MENU_NIX = B.REF_MENU_NIX(+) AND
+	        		A.MENU_NIX = C.REF_MENU_NIX(+)
+	        	
+            CONNECT BY PRIOR MENU_IDX = UP_MENU_IDX START 
+       		WITH UP_MENU_IDX IS NULL 
+       		ORDER SIBLINGS BY MENU_ORD 
+
+		) TB )
+
+
+	</select>
+	
+	
+	<select id="selectSubmenuList" parameterType="sysmenuVO" resultType="sysmenuVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+
+			SELECT  
+				A.MENU_IDX,
+				UP_MENU_IDX,
+				MENU_NM,
+				MENU_NIX,
+				MENU_LINK,
+				MENU_ORD,
+				LEVEL MENU_LV,
+				MENU_IMG_PATH,
+				LEFT_IMG_PATH,
+				TITLE_IMG_PATH,
+				SITEMAP_IMG_PATH,
+				INFO01_IMG_PATH,
+				INFO02_IMG_PATH,
+				BLANK_YN,
+				TABMENU_YN,
+				MEMMENU_YN,
+				USE_YN,
+				MU_GUB,
+				MU_SITE,
+				MU_LANG,						
+				OWN_INFO,
+				WRITER,
+				TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+				MODIFIER,
+				TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT,
+	        	B.AUTH_CD,
+		        DECODE(B.AUTH_CD, NULL, 'Y', AUTH_YN) AUTH_YN 
+	  		FROM 
+	        	(
+	        		SELECT 
+	        			MENU_IDX, 
+                        UP_MENU_IDX,   
+                        MENU_NM, 
+                        MENU_NIX,
+                        MENU_LINK,          
+                        MENU_ORD, 
+						TABMENU_YN,
+						MEMMENU_YN,
+                        USE_YN,      
+						MU_GUB,
+						MU_SITE,
+						MU_LANG,						
+						OWN_INFO,
+                        BLANK_YN,      
+						MENU_IMG_PATH,
+						LEFT_IMG_PATH,
+						TITLE_IMG_PATH,
+						SITEMAP_IMG_PATH,
+						INFO01_IMG_PATH,
+						INFO02_IMG_PATH
+	          		FROM  
+	          			CMS_SYS_MENU 
+	         		WHERE  
+	         			1 = 1 
+						<if test="use_yn != null and use_yn != ''">
+							AND USE_YN = #{use_yn}
+						</if>
+						<if test="srch_mu_gub != null and srch_mu_gub != ''">
+							AND MU_GUB = #{srch_mu_gub}
+						</if>
+						<if test="srch_mu_gub != 'MAN'.toString()">
+							<if test="srch_mu_site != null and srch_mu_site != ''">
+								AND MU_SITE = #{srch_mu_site}
+							</if>
+							<if test="srch_mu_lang != null and srch_mu_lang != ''">
+								AND MU_LANG = #{srch_mu_lang}
+							</if>
+						</if>
+						
+	        	) A, 
+	        	(
+	        		SELECT 
+	        			* 
+	          		FROM  
+	          			CMS_MENU_AUTH 
+	         		WHERE  
+	         			AUTH_CD = #{auth_cd} 
+	        	) B 
+	 		WHERE  
+	 			A.MENU_IDX = B.MENU_IDX(+)
+			CONNECT BY PRIOR A.MENU_IDX =  UP_MENU_IDX
+			START WITH A.MENU_IDX = (
+				SELECT 
+					MENU_IDX
+				FROM
+				(
+					SELECT 
+						A.*, LEVEL 
+					FROM
+						CMS_SYS_MENU A 
+					CONNECT BY MENU_IDX = PRIOR UP_MENU_IDX
+					START WITH MENU_NIX = #{srch_menu_nix}
+                 )
+                 WHERE UP_MENU_IDX IS NULL
+			)
+			ORDER SIBLINGS BY MENU_ORD
+
+		) TB )
+		
+
+
+	</select>
+	
+	<select id="selectSysmenuListTotCnt" parameterType="sysmenuVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_SYS_MENU
+		WHERE
+			1 = 1
+			<if test="use_yn != null and use_yn != ''">
+				AND USE_YN = #{use_yn}
+			</if>
+			<if test="srch_mu_gub != null and srch_mu_gub != ''">
+				AND MU_GUB = #{srch_mu_gub}
+			</if>
+			<if test="srch_mu_gub != 'MAN'.toString()">
+				<if test="srch_mu_site != null and srch_mu_site != ''">
+					AND MU_SITE = #{srch_mu_site}
+				</if>
+				<if test="srch_mu_lang != null and srch_mu_lang != ''">
+					AND MU_LANG = #{srch_mu_lang}
+				</if>
+			</if>	
+			
+	</select>
+
+	
+	<select id="selectSysmenuListSub" parameterType="sysmenuVO" resultType="sysmenuVO">
+
+		SELECT
+			MENU_IDX,
+			UP_MENU_IDX,
+			MENU_NM,
+			MENU_NIX,
+			MENU_LINK,
+			MENU_ORD,
+			MENU_IMG_PATH,
+			LEFT_IMG_PATH,
+			TITLE_IMG_PATH,
+			SITEMAP_IMG_PATH,
+			INFO01_IMG_PATH,
+			INFO02_IMG_PATH,
+			MU_GUB,
+			MU_SITE,
+			MU_LANG,
+			BLANK_YN,
+			TABMENU_YN,
+			MEMMENU_YN,
+			USE_YN,
+			MU_GUB,
+			MU_SITE,
+			MU_LANG,						
+			OWN_INFO,
+			WRITER,
+			TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+			MODIFIER,
+			TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+		FROM
+			CMS_SYS_MENU
+		WHERE
+			UP_MENU_IDX = #{up_menu_idx}
+			
+	</select>
+	
+
+</mapper>
+

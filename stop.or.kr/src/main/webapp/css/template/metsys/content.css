@@ -1,0 +1,382 @@
+@charset "utf-8";
+
+/*-------------------------------------------------
+sub Style Sheet
+Version : 1.0
+Author : myeong-hee park
+Create date : 2011. 11. 08.
+Last update : 2011. 11. 08.
+-------------------------------------------------*/
+/* 컨텐츠 title STYLE
+------------------------------------------*/
+.depth1_title,
+.depth1_title02,
+.depth1_bbsTitle,
+.depth1_bbsTitle02	 {
+	margin-bottom: 13px;
+	color: #313131;
+	letter-spacing: -1px;
+	line-height: 1.3;
+	font-size: 1.429em;
+	}
+.depth1_title02,
+.depth1_bbsTitle02 {
+	margin-top: 28px;
+	}
+.depth2_title,
+.depth2_title02,
+.depth2_bbsTitle,
+.depth2_bbsTitle02 {
+	margin-bottom: 10px;
+	color: #5671a7;
+	font-size: 1.14em;
+	}
+.depth3_title,
+.depth3_title02,
+.depth3_bbsTitle,
+.depth3_bbsTitle02 {
+	margin-bottom: 11px;
+	padding-left: 13px;
+	background: url(../../../images/common/content/depth3_arrow.gif) no-repeat 0 6px;
+	color: #000;
+	font-size: 1em;
+	}
+.depth2_title02,
+.depth2_bbsTitle02,
+.depth2_normalTitle02,
+.depth3_title02,
+.depth3_bbsTitle02 {
+	margin-top: 33px;
+	}
+.depth3_lstyle {
+	margin-left: 23px;
+	}	
+.depth3_title_txt,
+.depth3_lstyle > li	 {
+	margin: 20px 0 11px 0; 
+	padding-left: 19px; 
+	font-weight: bold; 
+	background: url(../../../images/common/content/depth3_arrow_orange.gif) no-repeat 0 6px;
+	color: #000;
+	}		
+.depth3_title02,
+.depth3_bbsTitle02 {
+	margin-top: 20px;
+	}
+.depth3_title.black_txt,
+.depth3_bbsTitle.black_txt, 	
+.depth3_title02.black_txt,
+.depth3_bbsTitle02.black_txt {
+	color: #000;
+	}
+.depth1_bbsTitle,	
+.depth1_bbsTitle02,	
+.depth2_bbsTitle,
+.depth2_bbsTitle02,
+.depth3_bbsTitle,
+.depth3_bbsTitle02 {
+	margin-bottom: 5px;
+	}
+.title_underLine {
+	margin-bottom: 20px;
+	border-bottom: solid 1px #e1e1e1;
+	}	
+.normal_title,
+.normal_title02 {	
+	margin-bottom: 5px;
+	color: #252525;
+	font-size: 1.8em;
+	letter-spacing: -0.1em;
+	}		
+.normal_title02 {	
+	margin-top: 12px;
+	}
+.table_graph {
+	display: block;
+	margin-top: 10px;
+	overflow: auto;
+	}
+.table_graph .tstyle_list {
+	float: left;
+	width: 30%;
+	}
+.table_graph .tstyle_list {
+	float: left;
+	width: 30%;
+	}
+.table_graph .tstyle_graph {
+	float: right;
+	width: 69%;
+	}
+.table_graph .tstyle_graph td {
+	vertical-align: bottom;
+	}
+
+/* 컨텐츠 설정관리 */
+.treeMenu_area {
+	position: relative;
+	_float:left;
+	_width /**/:100%;
+	padding-right: 330px;
+	}
+*:first-child+html .treeMenu_area	{
+	overflow-x: hidden;
+	}
+.treeMenu_area:after{
+	display: block;
+	clear: both;
+	content:'';
+	}
+.tree_nav {
+	position: relative;
+	float: left;
+	width: 250px;
+	margin-right: 38px;
+	padding: 20px;
+	background: #f9fafc;
+	border: solid 1px #e1e1e3;
+	}
+.tree_nav .siteidsel {
+	width: 100%;
+	margin-bottom: 10px;
+	padding: 3px 0;
+	}
+.tree_nav .btn_area {
+	margin-bottom: 10px;
+	margin-top: 0px;
+	padding: 0;
+	}
+.tree_nav .dtree img {
+	vertical-align: top;
+	}	
+.clip .dTreeNode {
+	padding-top: 3px;
+	}
+.treeMenu_area .tree_arrow {	
+	position: absolute;
+	top: 213px;
+	left: 305px;
+	width: 8px;
+	background: url(../../../images/ips/sub/dtree_arrow.gif) no-repeat 0 0;
+	text-indent: -999px;
+	}			
+.tree_list {
+	float: left;
+	width: 100%;
+	margin-right: -330px;
+	_margin-right: -100px;
+	padding-bottom: 20px;
+	}
+.tree_list .tstyle_list {
+	margin-bottom: 0;
+	}
+.tree_tScroll {
+	height: 250px;
+	overflow-y: auto;
+	}	
+/* 탭메뉴 */
+.tab_menu {
+	position: relative;
+	top: 1px;
+	width: 100%;
+	margin-bottom: 25px;
+	border-bottom: solid 1px #c5d0dc;
+	}
+.tab_menu:before,		
+.tab_menu:after {	
+	display: table;
+	content: " ";
+	clear: both;
+	}	
+.tab_menu > li {
+	position: relative;
+	float: left;
+	margin-bottom: -1px;
+	}
+.tab_menu > li > a {
+	position: relative;
+	display: block;
+	margin-right: -1px;
+	padding: 7px 15px 8px;
+	border: solid 1px #c5d0dc;
+	background: #f9f9f9;
+	color: #767676;
+	line-height: 1.6;
+	}
+.tab_menu > li.on > a {
+	margin-top: -1px;
+	background: #fff;
+	border-top: solid 2px #4c8fbd;
+	border-bottom-color: transparent;
+	color: #576373;
+	line-height: 1.6;
+	font-weight: bold;
+	z-index: 1;
+	}	
+.graybox {
+	padding: 18px 25px;
+	background: #fafafb;
+	border: solid 1px #e9eaee;
+	letter-spacing: -1px;
+	overflow: hidden;
+	}
+.graybox .textarea {
+	display: block;
+	width: 100%;
+	height: 60px;
+	margin-top: 5px;
+	}	
+/* 동적사이트 상태값*/
+.dynamic_siteSet {
+	margin-bottom: 5px;
+	overflow: hidden;
+	font-size: 1.1em;
+	}
+.dynamic_siteSet dt {
+	clear: both;
+	float: left;
+	margin: 0 5px 5px 0;
+	padding-left: 8px;
+	background: url(../../../images/common/content/depth4_arrow.gif) no-repeat 0 8px;
+	font-weight: bold;
+	}	
+.dynamic_siteSet dd {
+	position: relative;
+	overflow: hidden;
+	}
+	
+.dynamic_siteSet .point01_bold {
+	color: #f05e22;
+	font-weight: bold;
+	}
+/* 동적사이트 관리 단계 */
+.dynamic_step {
+	width: 790px;
+	height: 41px;
+	padding: 5px 0 20px 0; 
+	overflow: hidden;
+	}
+.dynamic_step dd {
+	width: 100%;
+	height: 41px;
+	background: url(../../../images/ips/sub/dynamic_step.gif) no-repeat 0 0; 
+	overflow: hidden;
+	text-indent: -9999px;
+	}	
+.dynamic_step ul > li {	
+	float: left;
+	width: 16.66%;
+	}
+.dynamic_step ul > li a {	
+	display: block;
+	height: 41px;
+	}
+.dynamic_step dd.step02 {
+	background-position: 0 -41px;
+	}	
+.dynamic_step dd.step03 {
+	background-position: 0 -82px;
+	}
+.dynamic_step dd.step04 {
+	background-position: 0 -123px;
+	}
+.dynamic_step dd.step05 {
+	background-position: 0 -164px;
+	}
+.dynamic_step dd.step06 {
+	background-position: 0 -205px;
+	}
+
+/* 동적사이트 관리 */
+.header_type {
+	margin-left: 5px;
+	}	
+.menu_type,
+.siteSet_list {
+	margin-top: 5px;
+	padding-top: 10px;
+	border-top: solid 1px #e4e7ec;
+	border-bottom: solid 1px #e4e7ec;
+	overflow: hidden;
+	}	
+.header_type li,
+.menu_type li  {
+	margin-bottom: 15px;
+	}	
+.header_type li img,
+.menu_type li img	 {
+	display: block;
+	margin: 5px 0 0 20px;
+	}
+.siteSet_list li {
+	float: left;
+	width: 33.3%;
+	margin-bottom: 15px;
+	}	
+.siteSet_list li .display_block {
+	margin: 5px 0 0 20px;
+	}	
+	
+/* 관리자페이지 */
+.network_info {}
+.network_info > dt {
+	float: left; 
+	padding-right: 7px;
+	margin-right: 7px; 
+	background: url(../../../resources/images/htt/content/bu07.png) no-repeat right 8px; 
+	color: #555; 
+	overflow: hidden;
+	font-weight: bold; 
+	}
+.network_info > dd {}
+.network_info > dd > ul {overflow: hidden;}
+.network_info .incharge {float: left; width: 100px;}
+	
+.visual_widthLong,	
+.ui-sortable {
+	width: 800px;
+	}	
+.visual_widthLong {
+	margin-top: 10px;
+	}	
+/* 기술이전 시간카테고리 */
+.time_tab {
+	margin-bottom: 40px;
+	background: #fdfdfd;
+	border: solid 1px #dddedf;
+	border-top-color: #d9dadb;
+	border-bottom-color: #c9cacc;
+	overflow: hidden;
+	}
+.time_tab > li {
+	float: left;
+	}
+.time_tab > li button {
+	margin: -1px 0 -1px -1px;
+	padding: 12px 10px;
+	border: solid 1px #eee;
+	}	
+.time_tab > li.off button {
+	color: #bbb;
+	}	
+.time_tab > li.on button {
+	background: #41495d;
+	color: #fff;
+	font-weight: bold;
+	}	
+/* 차트 */
+.chart_area {
+	oveflow: hidden;
+	}
+.chart_area .chart {
+	hieght: 210px;
+	}
+.chart_area .float_left,
+.chart_area .float_right {
+	width: 50%;
+	}
+.full_chart {
+	width: 100%;
+	hieght: 210px;
+	oveflow: hidden;
+	}	

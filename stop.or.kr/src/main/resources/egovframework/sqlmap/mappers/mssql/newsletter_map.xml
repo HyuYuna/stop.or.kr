@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.custom.man.newsletter.dao.NewsletterDAO">
+
+	<insert id="insertNewsletter" parameterType="newsletterVO">
+	
+		<selectKey resultType="java.lang.Integer" keyProperty="new_idx" order="BEFORE">
+			SELECT ISNULL(MAX(NEW_IDX) + 1, 1) AS NEW_IDX FROM CMS_NEWSLETTER
+		</selectKey>
+	
+		INSERT INTO CMS_NEWSLETTER
+		(
+			NEW_IDX,
+			EMAIL,
+			MU_LANG,
+			WDT
+		)
+		VALUES
+		(
+			#{new_idx},
+			#{email},
+			#{srch_mu_lang},
+			GETDATE()
+		)
+
+	</insert>
+	
+	<select id="selectNewsletterList" parameterType="newsletterVO" resultType="newsletterVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY NEW_IDX DESC) rn, TB.* FROM (
+	
+			SELECT
+				NEW_IDX,
+				EMAIL,
+				CONVERT(VARCHAR(19), WDT, 23) WDT,
+				CONVERT(VARCHAR(19), MDT, 23) MDT,
+				CONVERT(VARCHAR(19), DELDT, 23) DELDT,
+				MU_LANG,
+				AGREE
+			FROM
+				CMS_NEWSLETTER
+			WHERE
+				1 = 1
+				AND MU_LANG = #{srch_mu_lang}
+				<if test="searchKeyword != null and searchKeyword != ''">AND
+					EMAIL LIKE '%' + #{searchKeyword} + '%'
+				</if>
+
+		) TB ) MORG WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+		
+
+	</select>
+	
+	<select id="selectExcelList" parameterType="newsletterVO" resultType="newsletterVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY NEW_IDX DESC) rn, TB.* FROM (
+	
+			SELECT
+				NEW_IDX,
+				EMAIL,
+				CONVERT(VARCHAR(19), WDT, 23) WDT,
+				CONVERT(VARCHAR(19), MDT, 23) MDT,
+				CONVERT(VARCHAR(19), DELDT, 23) DELDT,
+				MU_LANG,
+				AGREE
+			FROM
+				CMS_NEWSLETTER
+			WHERE
+				1 = 1
+				AND MU_LANG = #{srch_mu_lang}
+				<if test="searchKeyword != null and searchKeyword != ''">AND
+					EMAIL LIKE '%' + #{searchKeyword} + '%'
+				</if>
+
+		) TB ) MORG
+		
+
+	</select>
+	
+	
+	<select id="selectNewsletterListTotCnt" parameterType="newsletterVO" resultType="int">
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_NEWSLETTER
+		WHERE
+			1 = 1
+			AND MU_LANG = #{srch_mu_lang}
+			<if test="searchKeyword != null and searchKeyword != ''">AND
+				EMAIL LIKE '%' + #{searchKeyword} + '%'
+			</if>
+	</select>
+	
+	<select id="selectNewsletter" parameterType="newsletterVO" resultType="newsletterVO">
+
+		SELECT
+			NEW_IDX,
+			EMAIL,
+			CONVERT(VARCHAR(19), WDT, 23) WDT,
+			CONVERT(VARCHAR(19), MDT, 23) MDT,
+			CONVERT(VARCHAR(19), MDT, 23) DELDT,
+			MU_LANG
+		FROM
+			CMS_NEWSLETTER
+		WHERE
+			NEW_IDX = #{new_idx}
+			AND MU_LANG = #{srch_mu_lang}
+
+	</select>
+	
+	<update id="updateNewsletter" parameterType="newsletterVO">
+		UPDATE CMS_NEWSLETTER SET
+			<if test="srch_mu_gub == 'USR'.toString()">
+			EMAIL = NULL,
+			</if>
+			<if test="srch_mu_gub == 'MAN'.toString()">
+			EMAIL  = #{email},
+			</if>
+			<if test="deldt != null and deldt != ''">
+			DELDT = CONVERT(DATETIME,#{deldt}),
+			</if>
+			MDT	 = GETDATE()
+		WHERE
+			<if test="srch_mu_gub == 'USR'.toString()">
+				EMAIL  = #{email}
+			</if>
+			<if test="srch_mu_gub == 'MAN'.toString()">
+				NEW_IDX = #{new_idx}
+			</if>
+			
+			AND MU_LANG = #{srch_mu_lang}
+	</update>
+	
+	<update id="updateNewsletterReForm" parameterType="newsletterVO">
+		UPDATE CMS_NEWSLETTER SET
+			AGREE  = #{agree},
+			WDT	 = GETDATE()
+		WHERE
+			EMAIL  = #{email}
+	</update>
+	
+	
+	<!-- 삭제 -->
+	<delete id="deleteNewsletter" parameterType="newsletterVO">
+		
+		DELETE FROM 
+			CMS_NEWSLETTER 
+		WHERE 
+			NEW_IDX = #{new_idx}
+			AND MU_LANG = #{srch_mu_lang}
+			
+	</delete>
+	
+	<select id="selectNewsletterCheckEmail" parameterType="newsletterVO" resultType="int">
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_NEWSLETTER
+		WHERE
+		 	EMAIL = #{email}
+	</select>
+	
+</mapper>
+

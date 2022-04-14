@@ -1,0 +1,58 @@
+package {##PKG_NM##};
+
+import java.util.List;
+import {##IMPT_BIZVO##};
+
+public interface {##BIZNM_UP1##}Service {
+
+	/**
+	 * {##BIZKR##} 을/를 등록한다.
+	 * @param vo - 등록할 조건이 담긴 VO
+	 * @exception Exception
+	 */
+	public Integer insert{##BIZNM_UP1##}({##BIZNM_UP1##}VO vo) throws Exception;
+	
+	/**
+	 * {##BIZKR##} 을/를 수정한다.
+	 * @param vo - 수정할 조건이 담긴 VO
+	 * @exception Exception
+	 */
+	public void update{##BIZNM_UP1##}({##BIZNM_UP1##}VO vo) throws Exception;
+	
+	/**
+	 * {##BIZKR##} 을/를 삭제한다.
+	 * @param vo - 삭제할 조건이 담긴 VO
+	 * @exception Exception
+	 */
+	public void delete{##BIZNM_UP1##}({##BIZNM_UP1##}VO vo) throws Exception;
+	
+	/**
+	 * {##BIZKR##} 항목을 상세조회한다.
+	 * @param vo - 조회할 조건이 담긴 VO
+	 * @exception Exception
+	 */
+	public {##BIZNM_UP1##}VO select{##BIZNM_UP1##}({##BIZNM_UP1##}VO vo) throws Exception;
+	
+	/**
+	 * {##BIZKR##} 목록을 조회한다.
+	 * @param vo - 조회할 조건이 담긴 VO
+	 * @exception Exception
+	 */
+	public List select{##BIZNM_UP1##}List({##BIZNM_UP1##}VO vo) throws Exception;
+	
+	/**
+	 * {##BIZKR##} 목록의 총 개수를 구한다.
+	 * @param vo - 조회할 조건이 담긴 VO
+	 * @exception Exception
+	 */
+	public int select{##BIZNM_UP1##}ListTotCnt({##BIZNM_UP1##}VO vo) throws Exception;
+	
+	/**
+	 * {##BIZKR##} 목록의 엑셀 다운로드를 처리한다.
+	 * @param vo - 조회할 조건이 담긴 VO
+	 * @exception Exception
+	 */
+	public List xls{##BIZNM_UP1##}List({##BIZNM_UP1##}VO vo) throws Exception;
+	
+}
+

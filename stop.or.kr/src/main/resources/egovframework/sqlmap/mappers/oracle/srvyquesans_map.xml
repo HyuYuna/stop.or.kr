@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.survey.dao.SrvyquesansDAO">
+
+	
+	
+	<sql id="srchSrvyquesansStmtcond">
+		<if test="srvy_idx != 0">
+			AND SRVY_IDX = #{srvy_idx}	
+		</if>
+		<if test="part_idx != 0">
+			AND PART_IDX = #{part_idx}	
+		</if>
+		<if test="ques_idx != 0">
+			AND QUES_IDX = #{ques_idx}	
+		</if>
+	</sql>
+
+	<insert id="mergeSrvyquesans" parameterType="srvyquesansVO">
+
+		MERGE INTO CMS_SURVEY_QUESANS USING DUAL
+	    ON (
+	    	QUES_IDX = #{ques_idx} AND
+			QUESANS_IDX = #{quesans_idx}
+	    )
+	    WHEN MATCHED THEN 
+	    UPDATE SET
+			QUESANS_TYPE = #{quesans_type},
+			QUESANS_CONT = #{quesans_cont},
+			QUES_TYPE = #{ques_type},
+			ANS_NEED_SPL = #{ans_need_spl},
+			ANS_ORD = #{ans_ord},
+			QUESANS_NULL = #{quesans_null},
+			MODIFIER = #{modifier},
+			MDT = SYSDATE
+	    WHEN NOT MATCHED THEN
+	    	INSERT
+	        (
+				QUES_IDX,
+				QUESANS_IDX,
+				SRVY_IDX,
+				PART_IDX,
+				QUESANS_TYPE,
+				QUESANS_CONT,
+				QUES_TYPE,
+				ANS_NEED_SPL,
+				ANS_ORD,
+				QUESANS_NULL,
+				WRITER,
+				WDT
+	        )
+	        VALUES
+	        (
+				#{ques_idx},
+				(SELECT NVL(MAX(QUESANS_IDX) + 1, 1) AS QUES_IDX FROM CMS_SURVEY_QUESANS WHERE QUES_IDX = #{ques_idx}),
+				#{srvy_idx},
+				#{part_idx},
+				#{quesans_type},
+				#{quesans_cont},
+				#{ques_type},
+				#{ans_need_spl},
+				#{ans_ord},
+				#{quesans_null},
+				#{writer},
+				SYSDATE
+	        )
+
+	</insert>
+	
+	
+	<select id="selectSrvyquesansQuesidx" parameterType="srvyquesansVO" resultType="int">
+		SELECT NVL(MAX(QUES_IDX) + 1, 1) AS QUES_IDX FROM CMS_SURVEY_QUESANS
+	</select>
+	
+	<insert id="insertSrvyquesans" parameterType="srvyquesansVO">
+
+		<!--
+		<selectKey resultType="java.lang.Integer" keyProperty="######" order="BEFORE">
+			SELECT NVL(MAX(######) + 1, 1) AS ###### FROM CMS_SURVEY_QUESANS 
+		</selectKey>
+		-->
+
+		INSERT INTO CMS_SURVEY_QUESANS
+		(
+			QUES_IDX,
+			QUESANS_IDX,
+			SRVY_IDX,
+			PART_IDX,
+			QUESANS_TYPE,
+			QUESANS_CONT,
+			QUES_TYPE,
+			ANS_NEED_SPL,
+			ANS_ORD,
+			QUESANS_NULL,
+			WRITER,
+			WDT,
+			MODIFIER,
+			MDT
+		)
+		VALUES
+		(
+			#{ques_idx},
+			#{quesans_idx},
+			#{srvy_idx},
+			#{part_idx},
+			#{quesans_type},
+			#{quesans_cont},
+			#{ques_type},
+			#{ans_need_spl},
+			#{ans_ord},
+			#{quesans_null},
+			#{writer},
+			SYSDATE,
+			#{modifier},
+			SYSDATE
+		)
+
+	</insert>
+	
+	
+	<update id="updateSrvyquesans" parameterType="srvyquesansVO">
+
+		UPDATE CMS_SURVEY_QUESANS SET
+			QUESANS_TYPE = #{quesans_type},
+			QUESANS_CONT = #{quesans_cont},
+			QUES_TYPE = #{ques_type},
+			ANS_NEED_SPL = #{ans_need_spl},
+			ANS_ORD = #{ans_ord},
+			QUESANS_NULL = #{quesans_null},
+			MODIFIER = #{modifier},
+			MDT = SYSDATE
+		WHERE
+			QUES_IDX = #{ques_idx} AND
+			QUESANS_IDX = #{quesans_idx}
+
+	</update>
+	
+	
+	<update id="updateSrvyquesansOrd" parameterType="srvyquesansVO">
+
+		UPDATE CMS_SURVEY_QUESANS SET
+			ANS_ORD = ANS_ORD - 1
+		WHERE
+			QUES_IDX = #{ques_idx} AND ANS_ORD <![CDATA[ > ]]> #{ans_ord}
+
+	</update>
+	
+	
+	<delete id="deleteSrvyquesans" parameterType="srvyquesansVO">
+
+		DELETE FROM CMS_SURVEY_QUESANS
+		WHERE
+			QUES_IDX = #{ques_idx} AND
+			QUESANS_IDX = #{quesans_idx}
+
+	</delete>
+	
+	<delete id="deleteSrvyquesansGroup" parameterType="srvyquesansVO">
+
+		DELETE FROM CMS_SURVEY_QUESANS
+		WHERE
+			QUES_IDX = #{ques_idx} 
+
+	</delete>
+	
+
+	<select id="selectSrvyquesans" parameterType="srvyquesansVO" resultType="srvyquesansVO">
+
+		SELECT
+			QUES_IDX,
+			QUESANS_IDX,
+			SRVY_IDX,
+			PART_IDX,
+			QUESANS_TYPE,
+			QUESANS_CONT,
+			QUES_TYPE,
+			ANS_NEED_SPL,
+			ANS_ORD,
+			QUESANS_NULL,
+			(SELECT SRVY_NM FROM CMS_SURVEY_MAIN WHERE SRVY_IDX = A.SRVY_IDX) SRVY_NM,
+			(SELECT PART_NM FROM CMS_SURVEY_PART WHERE SRVY_IDX = A.SRVY_IDX AND PART_IDX = A.PART_IDX) PART_NM,
+			WRITER,
+			TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+			MODIFIER,
+			TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+		FROM
+			CMS_SURVEY_QUESANS A
+		WHERE
+			QUES_IDX = #{ques_idx} AND
+			QUESANS_IDX = #{quesans_idx}
+		
+	</select>
+	
+	
+	<select id="selectSrvyquesList" parameterType="srvyquesansVO" resultType="srvyquesansVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+	
+			SELECT
+				QUES_IDX,
+				QUESANS_IDX,
+				SRVY_IDX,
+				PART_IDX,
+				QUESANS_TYPE,
+				QUESANS_CONT,
+				QUES_TYPE,
+				SF_CODE_NM(QUES_TYPE) QUES_TYPE_NM,
+				ANS_NEED_SPL,
+				ANS_ORD,
+				QUESANS_NULL,
+				WRITER,
+				TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+				MODIFIER,
+				TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+			FROM
+				CMS_SURVEY_QUESANS
+			WHERE
+				1 = 1
+				<include refid="srchSrvyquesansStmtcond"/>
+				AND	QUESANS_IDX = 1
+
+		) TB )  
+
+	</select>
+
+	<select id="selectSrvyquesansList" parameterType="srvyquesansVO" resultType="srvyquesansVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+			SELECT
+				QUES_IDX,
+				QUESANS_IDX,
+				SRVY_IDX,
+				PART_IDX,
+				QUESANS_TYPE,
+				QUESANS_CONT,
+				QUES_TYPE,
+				ANS_NEED_SPL,
+				ANS_ORD,
+				ANS_CNT,
+				QUESANS_NULL,
+				SF_ATCFILE_INFO('SRVY_QUESANS', SRVY_IDX, QUES_IDX, ANS_ORD, 'N', 'VCODE') VCHKCODE,
+				TO_NUMBER(NVL(SF_ATCFILE_INFO('SRVY_QUESANS', SRVY_IDX, QUES_IDX, ANS_ORD, 'N', 'IMG_WIDTH'), '0')) IMG_WIDTH,
+				WRITER,
+				TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+				MODIFIER,
+				TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+			FROM
+			(
+				SELECT
+					QUES_IDX,
+					QUESANS_IDX,
+					SRVY_IDX,
+					PART_IDX,
+					QUESANS_TYPE,
+					QUESANS_CONT,
+					QUES_TYPE,
+					(SELECT PART_TYPE FROM CMS_SURVEY_PART WHERE SRVY_IDX = A.SRVY_IDX AND PART_IDX = A.PART_IDX) PART_TYPE,
+					ANS_NEED_SPL,
+					ANS_ORD,
+					QUESANS_NULL,
+					DECODE(QUESANS_TYPE, 'Q', (SELECT COUNT(*) FROM CMS_SURVEY_QUESANS WHERE QUES_IDX = A.QUES_IDX AND QUESANS_TYPE = 'A'), 0) ANS_CNT,
+					WRITER,
+					WDT,
+					MODIFIER,
+					MDT
+				FROM
+					CMS_SURVEY_QUESANS A
+			)
+			WHERE
+				1 = 1
+				<include refid="srchSrvyquesansStmtcond"/>
+			
+			ORDER BY  PART_TYPE DESC, QUES_IDX, ANS_ORD ASC
+			
+		) TB )  
+
+	</select>
+	
+	
+	<select id="selectSrvyquesansListTotCnt" parameterType="srvyquesansVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_SURVEY_QUESANS
+		WHERE
+			1 = 1
+			<include refid="srchSrvyquesansStmtcond"/>
+			
+	</select>
+	
+	
+	<select id="selectSrvyquesansResult" parameterType="srvyquesansVO" resultType="srvyquesansVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+	
+	
+			SELECT
+				QUES_IDX,
+				QUESANS_IDX,
+				SRVY_IDX,
+				PART_IDX,
+				QUESANS_TYPE,
+				QUESANS_CONT,
+				QUES_TYPE,
+				ANS_NEED_SPL,
+				ANS_ORD,
+				ANS_CNT,
+				ANS_PCT,
+				NO_ANS_PCT,
+				QUESANS_NULL,
+				WRITER,
+				TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+				MODIFIER,
+				TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+			FROM
+			(
+				SELECT
+					QUES_IDX,
+					QUESANS_IDX,
+					SRVY_IDX,
+					PART_IDX,
+					QUESANS_TYPE,
+					QUESANS_CONT,
+					QUES_TYPE,
+					(SELECT PART_TYPE FROM CMS_SURVEY_PART WHERE SRVY_IDX = A.SRVY_IDX AND PART_IDX = A.PART_IDX) PART_TYPE,
+					ANS_NEED_SPL,
+					ANS_ORD,
+					QUESANS_NULL,
+					DECODE(QUESANS_TYPE, 'Q', (SELECT COUNT(*) FROM CMS_SURVEY_QUESANS WHERE QUES_IDX = A.QUES_IDX AND QUESANS_TYPE = 'A'), 0) ANS_CNT,
+					DECODE(QUESANS_TYPE, 'Q', '', SF_SRVY_PCT(SRVY_IDX, QUES_IDX, ANS_ORD, QUES_TYPE)) ANS_PCT,
+					DECODE(QUESANS_TYPE, 'Q', '', SF_SRVY_PCT(SRVY_IDX, QUES_IDX, 468482, QUES_TYPE)) NO_ANS_PCT,
+					WRITER,
+					WDT,
+					MODIFIER,
+					MDT
+				FROM
+					CMS_SURVEY_QUESANS A
+			)
+			WHERE
+				1 = 1
+				<include refid="srchSrvyquesansStmtcond"/>
+			
+			ORDER BY  PART_TYPE DESC, QUES_IDX, ANS_ORD ASC
+			
+		) TB )  
+
+	</select>
+	
+	
+	<select id="xlsSrvyquesansList" parameterType="srvyquesansVO" resultType="srvyquesansVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+	
+			SELECT
+				QUES_IDX,
+				QUESANS_IDX,
+				SRVY_IDX,
+				PART_IDX,
+				QUESANS_TYPE,
+				QUESANS_CONT,
+				QUES_TYPE,
+				ANS_NEED_SPL,
+				ANS_ORD,
+				QUESANS_NULL,
+				WRITER,
+				TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+				MODIFIER,
+				TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+			FROM
+				CMS_SURVEY_QUESANS
+			WHERE
+				1 = 1
+				<!--
+				<include refid="srchSrvyquesansStmtcond"/>
+				-->	
+		) TB ) 
+
+	</select>
+	
+	<select id="selectXlsSrvyquesansList" parameterType="srvyquesansVO" resultType="srvyquesansVO">
+	
+		SELECT *
+		FROM
+		(
+			SELECT
+				ROWNUM RN,
+				W.*
+			FROM
+			(
+				SELECT *
+				FROM
+				(
+					SELECT
+						QUES_IDX,
+						QUESANS_IDX,
+						SRVY_IDX,
+						PART_IDX,
+						QUESANS_TYPE,
+						QUESANS_CONT,
+						QUES_TYPE,
+						ANS_NEED_SPL,
+						ANS_ORD,
+						ANS_CNT,
+						QUESANS_NULL,
+						SF_ATCFILE_INFO('SRVY_QUESANS', SRVY_IDX, QUES_IDX, ANS_ORD, 'N', 'VCODE') VCHKCODE,
+						WRITER,
+						TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+						MODIFIER,
+						TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+					FROM
+					(
+						SELECT
+							QUES_IDX,
+							QUESANS_IDX,
+							SRVY_IDX,
+							PART_IDX,
+							QUESANS_TYPE,
+							QUESANS_CONT,
+							QUES_TYPE,
+							(SELECT PART_TYPE FROM CMS_SURVEY_PART WHERE SRVY_IDX = A.SRVY_IDX AND PART_IDX = A.PART_IDX) PART_TYPE,
+							ANS_NEED_SPL,
+							ANS_ORD,
+							QUESANS_NULL,
+							DECODE(QUESANS_TYPE, 'Q', (SELECT COUNT(*) FROM CMS_SURVEY_QUESANS WHERE QUES_IDX = A.QUES_IDX AND QUESANS_TYPE = 'A'), 0) ANS_CNT,
+							WRITER,
+							WDT,
+							MODIFIER,
+							MDT
+						FROM
+							CMS_SURVEY_QUESANS A
+						WHERE
+							QUES_TYPE != 'CDIDX00083'
+					)
+					WHERE
+						1 = 1
+						<include refid="srchSrvyquesansStmtcond"/>
+					ORDER BY
+						PART_TYPE DESC, QUES_IDX, ANS_ORD ASC
+				) TB
+
+				UNION
+
+				SELECT *
+				FROM
+				(
+					SELECT
+						QUES_IDX,
+						QUESANS_IDX,
+						SRVY_IDX,
+						PART_IDX,
+						QUESANS_TYPE,
+						QUESANS_CONT,
+						QUES_TYPE,
+						ANS_NEED_SPL,
+						ANS_ORD,
+						ANS_CNT,
+						QUESANS_NULL,
+						SF_ATCFILE_INFO('SRVY_QUESANS', SRVY_IDX, QUES_IDX, ANS_ORD, 'N', 'VCODE') VCHKCODE,
+						WRITER,
+						TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+						MODIFIER,
+						TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+					FROM
+					(
+						SELECT
+							QUES_IDX,
+							QUESANS_IDX,
+							SRVY_IDX,
+							PART_IDX,
+							QUESANS_TYPE,
+							QUESANS_CONT,
+							QUES_TYPE,
+							(SELECT PART_TYPE FROM CMS_SURVEY_PART WHERE SRVY_IDX = A.SRVY_IDX AND PART_IDX = A.PART_IDX) PART_TYPE,
+							ANS_NEED_SPL,
+							ANS_ORD,
+							QUESANS_NULL,
+							DECODE(QUESANS_TYPE, 'Q', (SELECT COUNT(*) FROM CMS_SURVEY_QUESANS WHERE QUES_IDX = A.QUES_IDX AND QUESANS_TYPE = 'A'), 0) ANS_CNT,
+							WRITER,
+							WDT,
+							MODIFIER,
+							MDT
+						FROM
+							CMS_SURVEY_QUESANS A
+						WHERE
+							QUES_TYPE = 'CDIDX00083' AND
+							QUESANS_TYPE = 'Q'
+					)
+				WHERE
+					1 = 1
+					<include refid="srchSrvyquesansStmtcond"/>
+				ORDER BY
+					PART_TYPE DESC, QUES_IDX, ANS_ORD ASC
+				) TB
+			) W
+			ORDER BY
+				PART_IDX, QUES_IDX, QUESANS_IDX, ANS_ORD
+		)
+	</select>
+	
+</mapper>
+
+

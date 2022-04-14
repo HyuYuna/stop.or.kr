@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.man.menuctgry.dao.SyscodeDAO">
+
+	
+	<insert id="insertSyscode" parameterType="syscodeVO">
+		
+		<selectKey resultType="java.lang.String" keyProperty="code_idx" order="BEFORE">
+			<!-- 			
+	     	SELECT 
+	     		'CDIDX' || LPAD((NVL(MAX(TO_NUMBER(REPLACE(CODE_IDX, 'CDIDX', ''))), 0) + 1), 5, '0') AS CODE_IDX
+	     	FROM 
+	     		CMS_SYS_CODE
+	     	 -->	
+                
+			SELECT 
+				DECODE(
+					#{up_code_idx}, 
+					NULL, 
+					(
+						SELECT 
+							'CDIDX' || LPAD( (COUNT(CODE_IDX) * 20) + 1, 5, '0')
+                        FROM 
+                        	CMS_SYS_CODE
+                        WHERE
+                        	UP_CODE_IDX IS NULL 
+     				), 
+     				(
+     					SELECT 
+     						'CDIDX' || LPAD((NVL(MAX(TO_NUMBER(REPLACE(CODE_IDX, 'CDIDX', ''))), TO_NUMBER(REPLACE(#{up_code_idx}, 'CDIDX', ''))) + 1), 5, '0') AS CODE_IDX
+			    		FROM 
+		     				CMS_SYS_CODE 
+		     			WHERE 
+		     				UP_CODE_IDX = #{up_code_idx}
+		     		)
+				) 
+			FROM 
+				DUAL
+	     		
+		</selectKey>
+
+		INSERT INTO CMS_SYS_CODE
+		(
+			CODE_IDX,
+			UP_CODE_IDX,
+			CODE_NM,
+			CODE_ORD,
+			WRITER,
+			WDT
+		)
+		VALUES
+		(
+			#{code_idx},
+			#{up_code_idx},
+			#{code_nm},
+			<choose>
+				<when test="code_ord == 1">
+					(
+						SELECT 
+							NVL(MAX(CODE_ORD), 0) + 1
+						FROM
+							CMS_SYS_CODE
+						WHERE
+							UP_CODE_IDX 
+							<if test="up_code_idx == null or up_code_idx == ''">
+								IS NULL
+							</if>
+							<if test="up_code_idx != null and up_code_idx != ''">
+								= #{up_code_idx}
+							</if> 
+					),
+				</when>
+				<otherwise>
+					#{code_ord},
+				</otherwise>
+			</choose>
+			#{writer},
+			SYSDATE
+		)
+
+	</insert>
+	
+	<update id="updateSyscode" parameterType="syscodeVO">
+
+		UPDATE CMS_SYS_CODE SET
+			CODE_IDX = #{code_idx},
+			UP_CODE_IDX = #{up_code_idx},
+			CODE_NM = #{code_nm},
+			CODE_ORD = #{code_ord},
+			USE_YN = #{use_yn},
+			MODIFIER = #{modifier},
+			MDT = SYSDATE
+		WHERE
+			CODE_IDX = #{code_idx}
+
+	</update>
+	
+	<update id="updateSyscodeOrderP" parameterType="syscodeVO">
+
+		UPDATE CMS_SYS_CODE SET
+			CODE_ORD = CODE_ORD + 1
+		WHERE
+			UP_CODE_IDX
+			<choose>
+				<when test="up_code_idx == null or up_code_idx == ''">
+					IS NULL
+				</when>
+				<otherwise>
+					= #{up_code_idx}
+				</otherwise>
+			</choose>
+			 AND CODE_ORD <![CDATA[ >= ]]> #{code_ord}
+
+	</update>
+
+	<update id="updateSyscodeOrderM" parameterType="syscodeVO">
+
+		UPDATE CMS_SYS_CODE SET
+			CODE_ORD = CODE_ORD + (${add_ord})
+		WHERE
+			UP_CODE_IDX
+			<choose>
+				<when test="up_code_idx == null or up_code_idx == ''">
+					IS NULL
+				</when>
+				<otherwise>
+					= #{up_code_idx}
+				</otherwise>
+			</choose>
+			AND CODE_ORD  BETWEEN #{from_ord} AND #{to_ord}
+
+	</update>
+	
+	<delete id="deleteSyscode" parameterType="syscodeVO">
+		<!-- 
+		DELETE FROM CMS_SYS_CODE
+		WHERE
+			CODE_IDX = #{code_idx} OR
+			UP_CODE_IDX = #{code_idx}
+ 		-->
+
+ 		UPDATE CMS_SYS_CODE SET
+ 			USE_YN = 'N'
+ 		WHERE 
+			CODE_IDX = #{code_idx} OR
+			UP_CODE_IDX = #{code_idx}
+			
+	</delete>
+	
+	<select id="selectSyscode" parameterType="syscodeVO" resultType="syscodeVO">
+
+		SELECT
+			CODE_IDX,
+			UP_CODE_IDX,
+			CODE_NM,
+			CODE_ORD,
+			USE_YN,
+			WRITER,
+			TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+			MODIFIER,
+			TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+		FROM
+			CMS_SYS_CODE
+		WHERE
+			CODE_IDX = #{code_idx} 
+
+	</select>
+	
+	<select id="selectSyscodeList" parameterType="syscodeVO" resultType="syscodeVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+	
+			SELECT
+				CODE_IDX,
+				UP_CODE_IDX,
+				CODE_NM,
+				CODE_ORD,
+				USE_YN,
+				WRITER,
+				TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+				MODIFIER,
+				TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+			FROM
+				CMS_SYS_CODE
+			WHERE
+				1 = 1		
+				<if test="use_yn != null and use_yn != ''">AND
+					USE_YN = #{use_yn}
+				</if>
+				<choose>
+					<when test="up_code_idx == null or up_code_idx == ''">
+						AND UP_CODE_IDX IS NULL
+					</when>
+					<otherwise>
+						AND UP_CODE_IDX = #{up_code_idx}
+					</otherwise>
+				</choose>
+				<if test="except_codes != null and except_codes != ''">
+					AND CODE_IDX NOT IN ($except_codes$)
+				</if>
+			
+			ORDER BY USE_YN DESC, CODE_ORD ASC
+		) TB )
+
+	</select>
+	
+	<select id="selectSyscodeListTotCnt" parameterType="syscodeVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_SYS_CODE			
+		WHERE
+			CODE_IDX = #{code_idx}
+
+	</select>
+	
+	
+</mapper>
+

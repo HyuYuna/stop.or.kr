@@ -1,0 +1,112 @@
+@charset "utf-8";
+@import url("layout.css");
+@import url("sub.css");
+/*-------------------------------------------------
+Author : ㅈㅁㅈ
+Create date : 2018-07-13
+-------------------------------------------------*/
+
+@media screen and (max-width:1250px)
+{
+	#snb {display:block; overflow:hidden; overflow-x:auto; width:auto; margin:-30px -30px 0;}
+	#snb:before {left:0; width:100%; margin:0;}
+	#snb.fixed {margin:0;}
+}
+
+@media screen and (max-width:1024px)
+{
+	/* 상단 로고 */
+	.logo a {width:auto; height:auto;}
+	.logo img {width:200px;}
+	
+	/* 상단 유틸 */
+	.util .all-menu {margin-left:10px;}
+	.util .sns a {top:0; margin-left:5px;}
+	
+	/* 주메뉴 */
+	#gnb {margin-top:0; padding-right:0; border-top:1px solid #cfd4d7;}
+	#gnb a:after {left:auto; content:'';}
+	
+	/* 콘텐츠 */
+	#main {padding-top:60px;}
+	#contents {margin:30px auto 50px;}
+	
+	/* 비주얼 */
+	#spot {padding-top:60px;}
+	#spot strong {margin-bottom:20px;}
+	#spot em {left:auto; right:20px; top:20px; margin-left:0;}
+	#spot p {display:block;}
+	
+	/* 썸네일게시판 */
+	.board-thumb a {padding:30px;}
+	
+	/* 메인 비주얼 */
+	#visual {padding:160px 0 50px;}
+	#visual .img {right:250px; top:70px; transform:translate(0, 0); -webkit-transform:translate(0, 0);}
+	#visual .desc {width:320px; padding:100px 40px 40px; box-shadow:15px 15px 0 rgba(125, 58, 175, .1);}
+	
+	/* 소개 */
+	.intro .item {padding-left:250px;}
+}
+
+@media screen and (max-width:768px)
+{
+	/* 비주얼 */
+	#spot {padding-top:30px;}
+	#spot em {width:50px; height:50px; padding:12px 8px 0 0; font-size:1.5rem;}
+	#spot strong {line-height:1.2; word-break:keep-all;}
+	#spot a {height:40px; line-height:32px;}
+	
+	/* 메인 비주얼 */
+	#visual {margin-bottom:30px; padding:70px 0 30px;}
+	#visual:after {display:none;}
+	#visual .img {position:relative; top:auto; left:auto; right:auto;}
+	#visual .desc {display:block; width:100%; margin:20px auto 0;}
+	
+	/* 메인 링크 */
+	.go {padding-left:0;}
+	.go .title {position:relative; width:100%; margin-bottom:20px;}
+	
+	/* 공모요강 */
+	p.board-view.txt-center {padding:20px 0;}
+	
+	/* 소개 */
+	.intro .title {height:200px; background-size:auto 100%;}
+	.intro .item {margin-top:0; padding-left:0;}
+	.intro .item p {margin-bottom:15px;}
+	.intro .item p img {height:25px; margin-top:20px;}
+	.intro .label {display:block; position:relative; margin:40px 0 20px;}
+	.intro .label br {display:none;}
+}
+
+@media screen and (max-width:525px)
+{
+	/* 상단 유틸 */
+	.util .sns {display:none;}
+	
+	/* 비주얼 */
+	#spot {padding-top:15px;}
+	#spot strong {width:280px; margin:0 auto 15px; line-height:1;}
+	#spot em {display:none;}
+	
+	/* 서브메뉴 */
+	#snb ul {table-layout:auto;}
+	
+	/* 접수확인 */
+	.form-contest {padding-top:30px !important;}
+	.form-contest .item {margin-top:30px; padding:15px;}
+	.form-contest .item .form {padding-right:0;}
+	.form-contest .item .form input + input {margin-top:5px;}
+	.form-contest .item .form .btn {display:block; position:relative; width:100%; height:40px; margin-top:10px; line-height:40px;}
+	
+	/* 썸네일게시판 */
+	.board-thumb a {padding:20px 10px;}
+	
+	/* 메인 비주얼 */
+	#visual .img:after {left:-10px; top:-10px;}
+	#visual .desc {padding:100px 25px 25px;}
+	
+	/* 메인 링크 */
+	.go ul {margin:0 -10px; white-space:nowrap;}
+	.go img {width:50px;} 
+}

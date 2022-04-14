@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="sysauth">
+
+	<typeAlias  alias="sysauthVO" type="egovframework.plani.template.man.menuctgry.vo.SysauthVO"/>
+	
+	<insert id="sysauthDAO.insertSysauth" parameterClass="sysauthVO">
+		
+		<selectKey resultClass="java.lang.String" keyProperty="auth_cd">
+	     	SELECT 
+	     		SUBSTR(#up_auth_cd#, 1, 1) || LPAD((NVL(MAX(TO_NUMBER(SUBSTR(AUTH_CD, 2, 5))), 0) + 1), 4, '0') AS AUTH_CD
+	     	FROM 
+	     		CMS_SYS_AUTH
+	     	WHERE 
+	     		UP_AUTH_CD = #up_auth_cd#
+		</selectKey>
+
+		INSERT INTO CMS_SYS_AUTH
+		(
+			AUTH_CD,
+			UP_AUTH_CD,
+			AUTH_NM,
+			AUTH_LV,
+			AUTH_ORD,
+			WRITER,
+			WDT
+		)
+		VALUES
+		(
+			#auth_cd#,
+			#up_auth_cd#,
+			#auth_nm#,
+			(
+				SELECT 
+					NVL(MAX(AUTH_LV), #auth_lv#) + 1 
+				FROM 
+					CMS_SYS_AUTH
+				WHERE 
+					UP_AUTH_CD = #up_auth_cd#
+			), 
+			<isEqual property="auth_ord" compareValue="1">
+			(
+				SELECT 
+					NVL(MAX(AUTH_ORD), 0) + 1
+				FROM
+					CMS_SYS_AUTH
+				WHERE
+					UP_AUTH_CD 
+					<isEmpty property="up_auth_cd">
+						IS NULL
+					</isEmpty>
+					<isNotEmpty property="up_auth_cd">
+						= #up_auth_cd#
+					</isNotEmpty> 
+			),
+			</isEqual>
+			<isNotEqual property="auth_ord" compareValue="1">
+				#auth_ord#,
+			</isNotEqual>
+			#writer#,
+			SYSDATE
+		)
+
+	</insert>
+	
+	<update id="sysauthDAO.updateSysauth" parameterClass="sysauthVO">
+
+		UPDATE CMS_SYS_AUTH SET
+			AUTH_CD = #auth_cd#,
+			UP_AUTH_CD = #up_auth_cd#,
+			AUTH_NM = #auth_nm#,
+			AUTH_ORD = #auth_ord#,
+			USE_YN = #use_yn#,
+			MODIFIER = #modifier#,
+			MDT = SYSDATE
+		WHERE
+			AUTH_CD = #auth_cd#
+
+	</update>
+
+	<update id="sysauthDAO.updateSysauthOrderP" parameterClass="sysauthVO">
+
+		UPDATE CMS_SYS_AUTH SET
+			AUTH_ORD = AUTH_ORD + 1
+		WHERE
+			UP_AUTH_CD
+			<isEmpty property="up_auth_cd">
+				IS NULL
+			</isEmpty>
+			<isNotEmpty property="up_auth_cd">
+				= #up_auth_cd#
+			</isNotEmpty> AND
+			AUTH_ORD <![CDATA[ >= ]]> #auth_ord#
+
+	</update>
+
+	<update id="sysauthDAO.updateSysauthOrderM" parameterClass="sysauthVO">
+
+		UPDATE CMS_SYS_AUTH SET
+			AUTH_ORD = AUTH_ORD + ($add_ord$)
+		WHERE
+			UP_AUTH_CD
+			<isEmpty property="up_auth_cd">
+				IS NULL
+			</isEmpty>
+			<isNotEmpty property="up_auth_cd">
+				= #up_auth_cd#
+			</isNotEmpty> AND
+			AUTH_ORD BETWEEN #from_ord# AND #to_ord#
+
+	</update>
+	
+	<delete id="sysauthDAO.deleteSysauth" parameterClass="sysauthVO">
+		<!-- 
+		DELETE FROM CMS_SYS_AUTH
+		WHERE
+			AUTH_CD = #auth_cd# OR
+			UP_AUTH_CD = #auth_cd#
+		 -->
+		 
+		UPDATE CMS_SYS_AUTH SET
+ 			USE_YN = 'N'
+ 		WHERE 
+			AUTH_CD = #auth_cd# OR
+			UP_AUTH_CD = #auth_cd#
+			
+	</delete>
+	
+	<select id="sysauthDAO.selectSysauth" parameterClass="sysauthVO" resultClass="sysauthVO">
+
+		SELECT
+			AUTH_CD,
+			UP_AUTH_CD,
+			AUTH_NM,
+			AUTH_ORD,
+			AUTH_LV,
+			USE_YN,
+			WRITER,
+			TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+			MODIFIER,
+			TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+		FROM
+			CMS_SYS_AUTH
+		WHERE
+			AUTH_CD = #auth_cd#
+			
+	</select>
+	
+	<select id="sysauthDAO.selectSysauthList" parameterClass="sysauthVO" resultClass="sysauthVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+	
+			SELECT
+				AUTH_CD,
+				UP_AUTH_CD,
+				AUTH_NM,
+				AUTH_ORD,
+				AUTH_LV,
+				USE_YN,
+				WRITER,
+				TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+				MODIFIER,
+				TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+			FROM
+				CMS_SYS_AUTH
+			WHERE
+				1 = 1
+				<isNotEmpty property="use_yn" prepend="AND">
+					USE_YN = #use_yn#
+				</isNotEmpty>
+				<isNotEqual property="auth_lv" compareValue="0" prepend="AND">
+					SUBSTR(AUTH_CD, 1, 1) NOT IN ('D')
+				</isNotEqual>  
+				<isEmpty property="up_auth_cd" prepend="AND">
+					UP_AUTH_CD IS NULL
+				</isEmpty>
+				<isNotEmpty property="up_auth_cd" prepend="AND">
+					UP_AUTH_CD = #up_auth_cd#
+				</isNotEmpty>
+			
+			ORDER BY USE_YN DESC, AUTH_LV ASC
+		) TB )
+
+	</select>
+		
+	
+	<select id="sysauthDAO.selectSysauthSubList" resultClass="sysauthVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+	
+			SELECT
+				AUTH_CD,
+				UP_AUTH_CD,
+				AUTH_NM,
+				AUTH_ORD,
+				AUTH_LV,
+				WRITER,
+				TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+				MODIFIER,
+				TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+			FROM
+				CMS_SYS_AUTH
+			WHERE
+				AUTH_LV BETWEEN 2 AND 9998 AND   
+				USE_YN = 'Y' AND 
+				UP_AUTH_CD IS NOT NULL
+			
+			ORDER BY AUTH_LV
+		) TB )
+
+	</select>
+	
+	
+	<select id="sysauthDAO.selectSysauthListTotCnt" parameterClass="sysauthVO" resultClass="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_SYS_AUTH			
+		WHERE
+			AUTH_CD = #auth_cd#
+
+	</select>
+		
+
+	
+</sqlMap>
+

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="smsinfo">
+
+	<typeAlias  alias="messageVO" type="egovframework.plani.template.cmm.vo.MessageVO"/>
+	
+	<insert id="messageDAO.insertSms" parameterClass="messageVO">
+		INSERT INTO SC_TRAN
+		(
+			TR_NUM,
+			TR_SENDDATE,
+			TR_SENDSTAT,
+			TR_MSGTYPE,
+			TR_PHONE,
+			TR_CALLBACK,
+			TR_MSG
+		) VALUES (
+			SC_TRAN_SEQ.NEXTVAL,
+			SYSDATE,
+			#send_stat#,
+			#msg_type#,
+			#phone#,
+			#callback#,
+			#msg#
+		)
+	</insert>
+	
+	<insert id="messageDAO.insertMms" parameterClass="messageVO">
+		INSERT INTO MMS_MSG
+		(
+			MSGKEY,
+			SUBJECT,
+			PHONE,
+			CALLBACK,
+			STATUS,
+			REQDATE,
+			MSG,
+			FILE_CNT,
+			FILE_PATH1,
+			TYPE
+		) VALUES (
+			MMS_MSG_SEQ.NEXTVAL,
+			#subject#,
+			#phone#,
+			#callback#,
+			#send_stat#,
+			SYSDATE,
+			#msg#,
+			#file_cnt#,
+			#file_path#,
+			#msg_type#
+		)
+	</insert>
+	
+</sqlMap>

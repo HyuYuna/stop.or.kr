@@ -1,0 +1,390 @@
+@charset "utf-8";
+
+/*-------------------------------------------------
+Layout Style Sheet
+Version : 1.0
+Author : myeong-hee park
+Create date : 2011. 01. 13.
+Last update : 2011. 01. 13.
+-------------------------------------------------*/
+body {
+	background: url(../../../images/template/metsys/layout/side_bg.gif) repeat-y 0 0;
+	}	
+.nanumbarun {font-family:"NanumBarun";}
+.nanumbarun-l {font-family:"NanumBarunL";}
+
+/* LAYOUT STYLE
+-------------------------------------------------*/
+#wrap {
+	position: relative;
+	width: 100%;
+	margin: auto;
+	}
+#header	{
+	position: relative;	
+	width: 100%;
+	/* height:60px; */
+	background: url(../../../images/template/metsys/layout/header_bg.gif) repeat-x 0 bottom;
+	}
+#header:after{
+	display: block;
+	clear: both;
+	content:'';
+	}
+/* 로그인 정보, 프린트, 도움말 */
+.hlogin	{
+	width: 100%;
+	height: 30px;
+	background: #d4dce7;
+	color: #555862;
+	letter-spacing: -0.1em;
+	text-align: right;
+	overflow: hidden;
+	}
+.hlogin span {
+	display: inline-block;
+	}
+.hlogin .point {
+	font-weight: bold;
+	}
+.hlogin span a {
+	display: inline-block;
+	padding: 7px 22px;
+	font-size: 0.95em;
+	}
+.print {
+	display: inline-block;
+	margin: 0 10px;
+	padding: 7px 0 7px 20px;
+	background: url(../../../images/template/metsys/layout/icon_print.gif) no-repeat 0 9px;
+  	font-size: 0.95em;
+	}
+#header .logo	{
+	float: left;
+	width: 220px;
+	height: 60px;
+	background:url('/images/kor/main/logo.png') no-repeat center center #1e2434;
+	background-size:auto 30px;
+	color: transparent;
+	text-align: center;
+	line-height: 2;
+	font-weight: normal;
+	overflow: hidden;
+	}
+#header .logo img {display:none;}
+#header .logo a {
+	color: transparent;
+	}
+#gnavigation {
+	position: relative;
+	float: left;
+	height: 60px;
+	margin-left: 15px;
+	border-bottom: none;
+    font-size: 1.071em;	
+	}
+#gnavigation > li {
+	float: left;
+	}	
+#gnavigation > li > a {
+	display: block;
+	padding: 20px 12px;
+	color: #000;
+	white-space: nowrap;
+	}
+#gnavigation > li > a:hover,
+#gnavigation > li.active {
+	border-bottom: solid 2px #6f7d95;
+	text-decoration: none;
+	font-weight: bold;
+	overflow: hidden;
+	}
+#gnavigation > li.active a:hover {
+	border-bottom: none;
+	}	
+#gnavigation > li.divisional > a {
+	padding-right: 35px;
+	background: url(../../../images/template/metsys/layout/divisional_arrow.gif) no-repeat right 28px;
+	}	
+#gnavigation .depth2 {
+	position: absolute;
+	top: 60px;
+	padding: 15px 20px;
+	background: #fff;
+	border: solid 1px #dfe4ea;
+	border-top: none;
+	font-weight: normal;
+	z-index: 100;
+	}
+#gnavigation .depth2 > li {
+	margin-top: 3px;
+	}	
+#gnavigation .depth2 > li > a {
+	white-space: nowrap;
+	}	
+#gnavigation .depth2 > li.on {
+	text-decoration: underline;
+	font-weight: bold;
+	}
+#gnavigation .depth2 > li.on > a {
+	color: #0f79b8;
+	}	
+#header .goto_link {
+	float: right;
+	height: 60px;
+	overflow: hidden;
+	}	
+.leftMenu_hidden {
+	float: left;
+	width: 60px;
+	height: 59px;
+	background: url(../../../images/template/metsys/layout/leftMenu_hidden.gif) no-repeat 0 0;
+	border-right: solid 1px #eaedf0;
+	cursor: pointer;
+	text-indent: -9999px;
+	overflow: hidden;
+	}
+.goto_link .user {
+	float: left;
+	margin: 20px 20px 0 0;
+	}	
+.goto_link > span {
+	float: left;
+	display: block;
+	width: 60px;
+	}
+.goto_link > span > a {
+	display: block;
+	padding: 21px 0;
+	background: url(../../../images/template/metsys/layout/goto_link.png) no-repeat 0 0;
+	border-left: solid 1px #eaedf0;
+	text-indent: -9999px;
+	}
+.goto_link .logout a {
+	background-position: -60px 0;
+	}
+.goto_link > span > a:hover {
+	background-position: 0 -60px;
+	background-color: #6f7d95;
+	}
+.goto_link .logout a:hover {
+	background-position: -60px -60px;
+	}	
+	
+/* 본문 STYLE
+-------------------------------------------------*/		
+#body {
+	margin-right: 25px;
+	overflow: hidden;
+	}
+#body:after{
+	display: block;
+	clear: both;
+	content:'';
+	}		
+/* side STYLE */	
+#side {
+	position: relative;
+	float: left;
+	width: 220px;
+	overflow: hidden;
+	}
+#side .stitle {
+	height: 120px;
+	}	
+#snavigation {	
+	width: 100%;
+	margin-top: 30px;
+	}
+#snavigation li	{
+	
+	}
+#snavigation li a {
+	display: block;
+	padding: 10px 0 11px 25px;
+	border-left: solid 4px #354052;
+	color: #848fa2;
+	}
+#snavigation li a:hover,
+#snavigation li.on a {
+	background-color: #2f3949;
+	border-left: solid 4px #15a4fa;
+	color: #fff;
+	text-decoration: none;
+	}
+#snavigation .depth2 {
+	position: relative;
+	display: block;
+	padding: 0 0 25px 29px;
+	border-bottom: solid 2px #3d495d;
+	overflow: hidden;
+	}
+#snavigation li.on .depth2 {
+	margin-top: 20px;
+	}	
+#snavigation .depth2:after {
+	display: block;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 1px;
+	background: #293241;
+	content: '';
+	}
+#snavigation .depth2 li {
+	margin-top: 5px;
+	padding-left: 8px;
+	background: url(../../../images/template/metsys/layout/depth3_arrow.png) no-repeat 0 10px;	
+	border: none;
+	letter-spacing: 0;
+	}
+#snavigation .depth2 > li:first-child {
+	margin-top: 0;
+	}
+#snavigation .depth2 li a {
+	padding: 3px;
+	background: none;
+	border-left: none;
+	color: #a0abbf;
+	font-weight: normal;
+	}
+#snavigation .depth2 li	a:hover,
+#snavigation .depth2 li.on a {
+	background: none;
+	border-left: none;
+	color: #fff;
+	text-decoration: underline;
+	font-weight: bold;
+	}
+#snavigation .depth3 {
+	display: block;
+	width: 191px;
+	margin: 0 0 10px -10px;
+	padding: 5px 5px 10px;
+	background: #fff;	
+	border: solid 1px #e9e9e9;
+	overflow: hidden;
+	font-weight: normal;
+	}
+#snavigation .depth3 li {
+	display: block;
+	margin-left: 5px;
+	padding-left: 5px; 
+	background: none;	
+	border: none;
+	background: url(../../../images/template/metsys/layout/list_arrow.gif) no-repeat 0 13px;	
+	}
+#snavigation .depth3 li a {
+	padding: 3px;
+	background: none;
+	color: #373841;
+	font-weight: normal;
+	text-decoration: none;
+	}
+#snavigation .depth3 li a:hover,
+#snavigation .depth3 li.on a {
+	color: #000;
+	text-decoration: underline;
+	font-weight: bold;
+	}
+
+/* 컨텐츠 layout STYLE
+-------------------------------------------------*/	
+#content {
+	position: relative;
+	margin: 30px 0 50px;
+	padding-left: 30px;
+	overflow: hidden;
+	}
+.title_wrap {
+	margin-bottom: 40px;
+	line-height: 1.2;
+	overflow: hidden;
+	}	
+.title_wrap .title {
+	color: #4e515e;
+	font-size: 1.4em;
+	}
+.title_wrap .location {
+	margin: 10px 0 0;
+	padding: 1px 0 2px 20px;
+	color: #8c95a3;
+	background: url(../../../images/template/metsys/layout/location_icon.gif) no-repeat 0 2px;
+	overflow: hidden;
+	line-height: 1.3;
+	}
+.title_wrap .location strong {
+	font-weight: normal;
+	}	
+#content_detail	{
+	position: relative;
+	min-height: 500px;
+	}
+
+/* FOOTER STYLE
+-------------------------------------------------*/	
+#footer  {	
+	clear: both;
+	width: 100%;
+	height: 35px;
+	padding-top: 20px; 
+	background: #fff;
+	border-top: solid 1px #dcdfe6;
+	text-align: center;
+	}
+
+@media all and (max-width: 900px){
+#header .logo {
+	display: none;
+	}	
+#gnavigation > li > a {
+	padding: 20px;
+	}	
+	
+}		
+
+
+#selectable_lv1 .ui-selecting,  #selectable_lv2 .ui-selecting{ background: #FECA40; }
+#selectable_lv1 .ui-selected, #selectable_lv2 .ui-selected { background: #F39814; color: white; }
+#selectable_lv1, #selectable_lv2 { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+#selectable_lv1 li, #selectable_lv2 li { margin: 3px; padding: 0.4em; font-size: 1.2em; height: 18px; }
+	
+/* 2018-08-31 ㅈㅁㅈ */
+.tstyle_view li.ui-state-disabled {opacity:1;}
+.btn_area_right input.btn_line[type='submit'],
+.btn_area_right input.btn_linebold[type='submit'],
+.deleteCardNews,
+.deletewebtoon {
+	display: inline-block; 
+	height: 35px; 
+	padding: 0 20px;
+	background-color: #fff;
+	border: solid 1px #313131 !important; 
+	box-sizing: border-box;
+	font-size: 0.929em;
+	font-weight:400;
+	line-height: 31px; 
+	vertical-align: top;
+	}
+#webtoonVO + #divMainArticle .tstyle_list th[width='13%'] {width:180px !important;}
+#webtoonVO + #divMainArticle .tstyle_list td:nth-child(2),
+#webtooncategoryVO + #divMainArticle #list_content td:nth-child(2),
+#mapVO + #container .tstyle_list[summary='지원관리 목록 조회'] td:nth-child(3),
+#cardNewsVO #list_content td:nth-child(2),
+#newsletterVO + #container .tstyle_list td:nth-child(2) {text-align:left !important;}
+.deleteCardNews,
+.deletewebtoon,
+td .btn_line {height:25px; padding:0 10px; line-height:21px;}
+
+#memberVO + .tstyle_list th:nth-child(5)[width='10%']{width:120px !important;}
+
+.goto_link .ip,
+.goto_link .login_time,
+.goto_link .logout_time {width:auto; line-height:60px;}
+.goto_link .logout_time:before,
+.goto_link .login_time:before {margin:0 2px; content:'/';}
+.goto_link .home {margin-left:20px;}
+
+.leftMenu_hidden + div {float: left; padding-left: 10px; line-height: 60px;}
+.leftMenu_hidden + div li {display: inline;}

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.cardnews.dao.CardNewsDAO">
+
+		<!-- 카드뉴스목록 목록 -->
+	<select id="selectCardNewsList" parameterType="cardNewsVO" resultType="cardNewsVO">
+		
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY CN_SEQ DESC) rn, TB.* FROM (
+	
+			SELECT
+				CN_SEQ
+				, CN_TITLE
+				, CN_CONTENT
+				, CN_ALT
+				, IS_NOTICE
+				, CONVERT(VARCHAR(10), WDT, 20) WDT
+				, VCHKCODE
+			FROM
+				CMS_CARD_NEWS A  
+				LEFT OUTER JOIN 
+	  			(
+	  				SELECT 
+	  					* 
+	  				FROM
+	  					CMS_ATACH
+	  				WHERE 
+			 			ATCKEY_1ST = 'CARD_NEWS' AND
+			 			ATCKEY_3RD = 1 AND
+	        			ATCKEY_4TH = 1 AND
+	        			IS_THUMB = 'N'
+	  				 
+	  			) B 
+	  			ON A.CN_SEQ = B.ATCKEY_2ND	
+	  			WHERE A.IS_NOTICE = 'N'
+	  			<if test="searchKeyword != null and searchKeyword != ''">
+						AND A.CN_TITLE LIKE '%' + #{searchKeyword} + '%'
+				</if>
+						
+					
+		
+		) TB ) MORG  WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage} ORDER BY WDT DESC, CN_SEQ DESC
+		
+	</select>
+	
+	
+	<select id="selectNoticeCardNewsList" parameterType="cardNewsVO" resultType="cardNewsVO">
+		
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY CN_SEQ DESC) rn, TB.* FROM (
+	
+			SELECT
+				CN_SEQ
+				, CN_TITLE
+				, CN_CONTENT
+				, CN_ALT
+				, IS_NOTICE
+				, CONVERT(VARCHAR(10), WDT, 20) WDT
+				, VCHKCODE
+			FROM
+				CMS_CARD_NEWS A  
+				LEFT OUTER JOIN 
+	  			(
+	  				SELECT 
+	  					* 
+	  				FROM
+	  					CMS_ATACH
+	  				WHERE 
+			 			ATCKEY_1ST = 'cardnews' AND
+			 			ATCKEY_3RD = 1 AND
+	        			ATCKEY_4TH = 1 AND
+	        			IS_THUMB = 'N'
+	  				 
+	  			) B 
+	  			ON A.CN_SEQ = B.ATCKEY_2ND			
+					
+		
+		) TB ) MORG  WHERE IS_NOTICE = 'Y' ORDER BY WDT DESC, CN_SEQ DESC
+	</select>
+	
+	
+	
+	<!-- 페이지 나누기를 위한 총 개수 -->
+	<select id="selectCardNewsListTotCnt" parameterType="cardNewsVO" resultType="int">
+	
+		SELECT
+			COUNT(*) AS totcnt
+		FROM
+			CMS_CARD_NEWS
+			WHERE IS_NOTICE = 'N'
+		<if test="searchKeyword != null and searchKeyword != ''">
+			AND CN_TITLE LIKE '%' + #{searchKeyword} + '%'
+		</if>
+			
+	</select>
+	
+	
+
+
+
+
+	<!-- 카드뉴스목록 등록 -->
+	<insert id="insertCardNews" parameterType="cardNewsVO">
+		<selectKey keyProperty="cn_seq" resultType="int" order="BEFORE">
+			SELECT ISNULL(MAX(CN_SEQ), 0) + 1 FROM CMS_CARD_NEWS
+		</selectKey>
+	
+		INSERT INTO CMS_CARD_NEWS(
+			CN_SEQ
+			, CN_TITLE
+			, CN_CONTENT
+			, IS_NOTICE
+			, WDT
+		)
+		VALUES(
+			#{cn_seq}
+			, #{cn_title}
+			, #{cn_content}
+			, #{is_notice}
+			, GETDATE()
+		)	
+	</insert>
+	
+	
+	<!-- 카드뉴스목록 수정 -->
+	<update id="updateCardNews" parameterType="cardNewsVO">
+		UPDATE CMS_CARD_NEWS SET
+			  CN_TITLE = #{cn_title}
+			, CN_CONTENT = #{cn_content}
+			, IS_NOTICE = #{is_notice}
+		WHERE
+			CN_SEQ = #{cn_seq}
+	</update>
+	
+	<!-- 카드뉴스목록 삭제 -->
+	<delete id="deleteCardNews" parameterType="cardNewsVO">
+		
+		DELETE FROM 
+			CMS_CARD_NEWS 
+		WHERE 
+			CN_SEQ = #{cn_seq}
+			
+	</delete>
+	
+	<!-- 카드뉴스목록 상세 -->
+	<select id="selectCardNews" parameterType="cardNewsVO" resultType="cardNewsVO">
+		
+		SELECT
+			  CN_SEQ
+			, CN_TITLE
+			, CN_CONTENT
+			, IS_NOTICE
+			, WDT
+			, HITS
+		FROM
+			CMS_CARD_NEWS
+		WHERE
+			CN_SEQ = #{cn_seq}
+			
+	</select>
+	
+	
+	<update id="updatecCardNewsCount" parameterType="cardNewsVO" >
+		UPDATE CMS_CARD_NEWS SET
+			<if test="hits != '0'.toString()">
+				HITS = #{hits}
+			</if>
+		WHERE
+			CN_SEQ = #{cn_seq}
+	</update>
+	
+</mapper>
+

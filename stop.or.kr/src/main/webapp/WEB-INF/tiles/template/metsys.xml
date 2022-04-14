@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 
+	 <definition name="metsysDefinitionIndex" template="/WEB-INF/jsp/layout/template/metsys/layout/metsysLayout.jsp">
+		 <put-attribute name="metsysMeta"	value="/WEB-INF/jsp/layout/template/metsys/meta/meta_type_index.jsp"/>
+		 <put-attribute name="metsysHeader"	value="/WEB-INF/jsp/layout/template/metsys/header.jsp"/>
+		 <put-attribute name="metsysMenu"	value="/WEB-INF/jsp/layout/template/metsys/menu.jsp"/>
+		 <put-attribute name="metsysScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script.jsp"/>
+		 <put-attribute name="metsysSubmenu"	value="/WEB-INF/jsp/layout/template/metsys/submenu/submenu.jsp"/>
+		 <put-attribute name="metsysFooter"	value="/WEB-INF/jsp/layout/template/metsys/footer.jsp"/>
+	 </definition>
+
+	 <definition name="metsysDefinitionContent" template="/WEB-INF/jsp/layout/template/metsys/layout/metsysLayout.jsp">
+		 <put-attribute name="metsysMeta"	value="/WEB-INF/jsp/layout/template/metsys/meta/meta_type_content.jsp"/>
+		 <put-attribute name="metsysHeader"	value="/WEB-INF/jsp/layout/template/metsys/header.jsp"/>
+		 <put-attribute name="metsysMenu"	value="/WEB-INF/jsp/layout/template/metsys/menu.jsp"/>
+		 <put-attribute name="metsysScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script.jsp"/>
+		 <put-attribute name="metsysSubmenu"	value="/WEB-INF/jsp/layout/template/metsys/submenu/submenu.jsp"/>
+		 <put-attribute name="metsysFooter"	value="/WEB-INF/jsp/layout/template/metsys/footer.jsp"/>
+	 </definition>
+
+	 <definition name="metsysDefinitionEditor" template="/WEB-INF/jsp/layout/template/metsys/layout/metsysLayout.jsp">
+		 <put-attribute name="metsysMeta"	value="/WEB-INF/jsp/layout/template/metsys/meta/meta_type_editor.jsp"/>
+		 <put-attribute name="metsysHeader"	value="/WEB-INF/jsp/layout/template/metsys/header.jsp"/>
+		 <put-attribute name="metsysMenu"	value="/WEB-INF/jsp/layout/template/metsys/menu.jsp"/>
+		 <put-attribute name="metsysScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script.jsp"/>
+		 <put-attribute name="metsysSubmenu"	value="/WEB-INF/jsp/layout/template/metsys/submenu/submenu.jsp"/>
+		 <put-attribute name="metsysFooter"	value="/WEB-INF/jsp/layout/template/metsys/footer.jsp"/>
+	 </definition>
+
+	 <definition name="/metsys/metsysMain" extends="metsysDefinitionIndex">
+		 <put-attribute name="metsysTitle"	value="관리화면 메인" />
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/metsysMain.jsp" />
+	 </definition>
+
+
+</tiles-definitions>
+

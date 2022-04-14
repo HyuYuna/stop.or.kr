@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+    "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>						
+	<sqlMap resource="egovframework/sqlmap/com/oracle/boardinfo_map.xml"/>		
+	<sqlMap resource="egovframework/sqlmap/com/oracle/boardarticle_map.xml"/>
+	<sqlMap resource="egovframework/sqlmap/com/oracle/boardfaq_map.xml"/>		
+	<sqlMap resource="egovframework/sqlmap/com/oracle/boardreply_map.xml"/>		
+	<sqlMap resource="egovframework/sqlmap/com/oracle/boardrcmnd_map.xml"/>		
+	<sqlMap resource="egovframework/sqlmap/com/oracle/boardthm_map.xml"/>		
+	<sqlMap resource="egovframework/sqlmap/com/oracle/boarddry_map.xml"/>		
+	<sqlMap resource="egovframework/sqlmap/com/oracle/contentsman_map.xml"/>		
+	<sqlMap resource="egovframework/sqlmap/com/oracle/tablecrud_map.xml"/>		
+	<sqlMap resource="egovframework/sqlmap/com/oracle/popup_map.xml"/>		
+	<sqlMap resource="egovframework/sqlmap/com/oracle/atchfile_map.xml"/>
+	<sqlMap resource="egovframework/sqlmap/com/oracle/syscategory_map.xml"/>		
+	<sqlMap resource="egovframework/sqlmap/com/oracle/syscode_map.xml"/>		
+	<sqlMap resource="egovframework/sqlmap/com/oracle/sysauth_map.xml"/>		
+	<sqlMap resource="egovframework/sqlmap/com/oracle/sysmenu_map.xml"/>		
+	<sqlMap resource="egovframework/sqlmap/com/oracle/sysauthmenu_map.xml"/>		
+	<sqlMap resource="egovframework/sqlmap/com/oracle/member_map.xml"/>		
+	<sqlMap resource="egovframework/sqlmap/com/oracle/commstat_map.xml"/>		
+	<sqlMap resource="egovframework/sqlmap/com/oracle/message_map.xml"/>
+	<sqlMap resource="egovframework/sqlmap/com/oracle/manlog_map.xml"/>
+	<sqlMap resource="egovframework/sqlmap/com/oracle/withdrawal_map.xml"/>
+	<sqlMap resource="egovframework/sqlmap/com/oracle/accessip_map.xml"/>
+	<sqlMap resource="egovframework/sqlmap/com/oracle/srvymain_map.xml"/>
+	<sqlMap resource="egovframework/sqlmap/com/oracle/srvypart_map.xml"/>
+	<sqlMap resource="egovframework/sqlmap/com/oracle/srvydata_map.xml"/>
+	<sqlMap resource="egovframework/sqlmap/com/oracle/srvyquesans_map.xml"/>
+</sqlMapConfig>

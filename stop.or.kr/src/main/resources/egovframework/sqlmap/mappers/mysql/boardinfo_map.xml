@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.brdartcl.dao.BoardinfoDAO">
+
+	
+	<select id="selectBoardinfoList" parameterType="boardinfoVO" resultType="boardinfoVO">
+
+
+		SELECT * FROM ( SELECT @RNUM := @RNUM + 1 AS rn, TB.* FROM (
+	
+			SELECT
+				BRD_ID,
+				TBL_NM,
+				BRD_NM,
+				BRD_DFT,
+				BRD_DFT_SKIN,
+				BRD_CUST_SKIN,
+				BRD_GB,
+				BRD_GB_SUB,
+				EDITOR_GB,
+				USE_NOTICE,
+				USE_SCRT,
+				USE_RCMND,
+				USE_RJCT,
+				USE_ATCH,
+				USE_UPLOADIFY,
+				USE_KOGL,
+				REPLY_GB,
+				ATTACH_CNT_LIMIT,
+				ATTACH_SIZE_LIMIT,
+				ATCL_PER_PG,
+				PG_PER_NAVI,
+				ON_VIEWMODE,
+				OFF_VIEWMODE,
+				CREATE_NEW_TABLE,
+				REF_MENU_NIX,
+				BRD_AUTH_USR,
+				WRITER,
+				WDT,
+				MODIFIER,
+				MDT		
+			FROM
+			(
+				SELECT
+					BRD_ID,
+					TBL_NM,
+					BRD_NM,
+					BRD_DFT,
+					BRD_DFT_SKIN,
+					BRD_CUST_SKIN,
+					BRD_GB,
+					BRD_GB_SUB,
+					EDITOR_GB,
+					USE_NOTICE,
+					USE_SCRT,
+					USE_RCMND,
+					USE_RJCT,
+					USE_ATCH,
+					USE_UPLOADIFY,
+					USE_KOGL,
+					REPLY_GB,
+					ATTACH_CNT_LIMIT,
+					ATTACH_SIZE_LIMIT,
+					ATCL_PER_PG,
+					PG_PER_NAVI,
+					ON_VIEWMODE,
+					OFF_VIEWMODE,
+					CREATE_NEW_TABLE,
+					REF_MENU_NIX,
+					BRD_AUTH_USR,
+					WRITER,
+					DATE_FORMAT(WDT, '%Y-%m-%d') WDT,
+					WDT WDTORDER,
+					MODIFIER,
+					DATE_FORMAT(MDT, '%Y-%m-%d') MDT
+				FROM 
+					CMS_BRD_INFO
+				WHERE
+					MU_SITE = #{srch_mu_site} AND
+		     		MU_LANG = #{srch_mu_lang}
+					<if test="brd_auth_usr != null and brd_auth_usr != ''">
+						AND BRD_AUTH_USR LIKE CONCAT('%', #{brd_auth_usr}, '%')
+					</if>
+				ORDER BY WDTORDER ASC
+			) INN			
+			
+		) TB, ( SELECT @RNUM := 0 ) R ) AL		
+	</select>
+	
+	
+	<select id="selectBoardinfoListTotCnt" parameterType="boardinfoVO" resultType="int">
+	
+		SELECT 
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_BRD_INFO
+		WHERE
+			MU_SITE = #{srch_mu_site} AND
+     		MU_LANG = #{srch_mu_lang}
+			<if test="brd_auth_usr != null and brd_auth_usr != ''">
+				AND BRD_AUTH_USR LIKE CONCAT('%', #{brd_auth_usr}, '%')
+			</if>	
+			
+	</select>
+	
+	
+	<select id="selectBoardinfomenuList" parameterType="boardinfoVO" resultType="boardinfoVO">
+	
+		SELECT
+			B.RN,
+			B.MENU_IDX,
+			B.UP_MENU_IDX,
+			B.MENU_NM,
+			B.MENU_LV,
+			B.USE_YN,
+			B.IS_LEAF,
+			BRD_ID,
+			TBL_NM,
+			BRD_NM,
+			BRD_DFT,
+			BRD_DFT_SKIN,
+			BRD_CUST_SKIN,
+			BRD_GB,
+			BRD_GB_SUB,
+			EDITOR_GB,
+			USE_NOTICE,
+			USE_SCRT,
+			USE_RCMND,
+			USE_RJCT,
+			USE_ATCH,
+			USE_UPLOADIFY,
+			USE_KOGL,
+			REPLY_GB,
+			IFNULL(ATTACH_CNT_LIMIT, 0) ATTACH_CNT_LIMIT,
+			IFNULL(ATTACH_SIZE_LIMIT, 0) ATTACH_SIZE_LIMIT,
+			IFNULL(ATCL_PER_PG, 0) ATCL_PER_PG,
+			IFNULL(PG_PER_NAVI, 0) PG_PER_NAVI,
+			ON_VIEWMODE,
+			OFF_VIEWMODE,
+			CREATE_NEW_TABLE,
+			REF_MENU_NIX,
+			BRD_AUTH_USR,
+			A.WRITER,
+			DATE_FORMAT(A.WDT, '%Y-%m-%d') WDT,
+			A.WDT WDTORDER,
+			A.MODIFIER,
+			DATE_FORMAT(A.MDT, '%Y-%m-%d') MDT
+		FROM
+			CMS_BRD_INFO A
+			RIGHT OUTER JOIN
+			(
+				SELECT
+					MN.*,
+					1 MENU_LV,
+					IF((SELECT COUNT(*) FROM CMS_SYS_MENU WHERE UP_MENU_IDX = MN.MENU_IDX) = 0, '1', '0') AS IS_LEAF,
+					@RNUM := @RNUM + 1 AS RN
+				FROM
+					CMS_SYS_MENU MN, ( SELECT @RNUM := 0 ) R 
+				WHERE
+					MU_GUB = 'USR'
+					<if test="srch_mu_site != null and srch_mu_site != ''">
+						AND MU_SITE = #{srch_mu_site}
+					</if>
+					<if test="srch_mu_lang != null and srch_mu_lang != ''">
+						AND MU_LANG = #{srch_mu_lang}
+					</if>
+			) B
+		ON A.REF_MENU_NIX = B.MENU_NIX
+
+		<if test="brd_auth_usr != null and brd_auth_usr != ''">
+			AND BRD_AUTH_USR LIKE CONCAT('%', #{brd_auth_usr}, '%')
+		</if>
+
+		ORDER BY RN
+			
+	</select>
+	
+	
+	
+	<insert id="insertBoardinfo" parameterType="boardinfoVO">
+		
+		INSERT INTO CMS_BRD_INFO 
+       	( 
+			BRD_ID,
+			TBL_NM,
+			BRD_NM,
+			BRD_DFT,
+			BRD_DFT_SKIN,
+			BRD_CUST_SKIN,
+			BRD_GB,
+			BRD_GB_SUB,
+			EDITOR_GB,
+			USE_CTGRY,
+			CTGRY_IDX,
+			USE_NOTICE,
+			USE_SCRT,
+			USE_RCMND,
+			USE_RJCT,
+			USE_ATCH,
+			USE_UPLOADIFY,
+			USE_KOGL,
+			REPLY_GB,
+			ATTACH_CNT_LIMIT,
+			ATTACH_SIZE_LIMIT,
+			ATCL_PER_PG,
+			PG_PER_NAVI,
+			ON_VIEWMODE,
+			OFF_VIEWMODE,
+			CREATE_NEW_TABLE,
+			REF_MENU_NIX,
+			BRD_AUTH_USR,
+			MU_SITE,
+			MU_LANG,
+			WRITER,
+			WDT
+		) 
+       	VALUES 
+       	( 
+           #{brd_id},
+           #{tbl_nm},
+           #{brd_nm},
+           #{brd_dft},
+           #{brd_dft_skin},
+           #{brd_cust_skin},
+           #{brd_gb},
+           #{brd_gb_sub},
+           #{editor_gb},
+           #{use_ctgry},
+           <if test="use_ctgry == 'Y'.toString()">
+	           #{ctgry_idx},
+           </if>
+           <if test="use_ctgry == 'N'.toString()">
+           		NULL,
+           </if>
+           #{use_notice},
+           #{use_scrt},
+           #{use_rcmnd},
+           #{use_rjct},
+           #{use_atch},
+           #{use_uploadify},
+           #{use_kogl},
+           #{reply_gb},
+           #{attach_cnt_limit},
+           #{attach_size_limit},
+           #{atcl_per_pg},
+           #{pg_per_navi},
+           #{on_viewmode},
+           #{off_viewmode},
+           #{create_new_table},
+           <if test="ref_menu_nix != null and ref_menu_nix != ''">
+				#{ref_menu_nix},
+		   </if>
+		   <if test="ref_menu_nix == null or ref_menu_nix == ''">
+				NULL,
+		   </if>
+           #{brd_auth_usr},
+           #{mu_site},
+		   #{mu_lang},
+           #{writer},
+           NOW()
+		) 
+	</insert>
+	
+	<insert id="createBoardTable" parameterType="boardinfoVO">
+		<choose>
+			<when test="brd_gb == 'CDIDX00044'.toString()">
+				CREATE TABLE ${tbl_nm} (
+					BRD_ID         VARCHAR(32 BYTE)      NOT NULL, 
+					CONT_IDX       NUMBER                 NOT NULL, 
+					SUBJECT        VARCHAR(512 BYTE)         NULL, 
+					IMG_IDX        NUMBER                     NULL, 
+					THM_IMG_IDX    NUMBER                     NULL, 
+					HITS           NUMBER                     NULL, 
+					IS_NOTICE      CHAR(1 BYTE)          DEFAULT 'N' NULL, 
+					IS_SCRT        CHAR(1 BYTE)          DEFAULT 'N' NULL, 
+					WRITER         VARCHAR(24 BYTE)          NULL, 
+					WDT            DATE                       NULL, 
+					MODIFIER       VARCHAR(24 BYTE)          NULL, 
+					MDT            DATE                       NULL, 
+				    CONSTRAINT PK_${tbl_nm}
+				    PRIMARY KEY ( BRD_ID, CONT_IDX )
+				)
+			</when>
+			<when test="brd_gb == 'CDIDX00045'.toString()">
+				CREATE TABLE ${tbl_nm} (
+					BRD_ID        VARCHAR(32 BYTE)       NOT NULL, 
+					CONT_IDX      NUMBER                  NOT NULL, 
+					SUBJECT       VARCHAR(512 BYTE)          NULL, 
+					BRD_CONT      VARCHAR(4000 BYTE)         NULL, 
+					STARTDT       DATE                    NOT NULL, 
+					ENDDT         DATE                    NOT NULL, 
+					ALLDAY_YN     CHAR(1 BYTE)           DEFAULT 'N' NOT NULL, 
+					REPEAT_YN     CHAR(1 BYTE)           DEFAULT 'N' NOT NULL, 
+					HOLIDAY_YN    CHAR(1 BYTE)           DEFAULT 'N' NOT NULL, 
+					WRITER        VARCHAR(24 BYTE)           NULL, 
+					WDT           DATE                        NULL, 
+					MODIFIER      VARCHAR(24 BYTE)           NULL, 
+					MDT           DATE                        NULL, 
+				    CONSTRAINT PK_${tbl_nm}
+					PRIMARY KEY ( BRD_ID, CONT_IDX )
+				)
+			</when>
+			<when test="brd_gb == 'CDIDX00042'.toString()">
+				CREATE TABLE ${tbl_nm} (
+					  BRD_ID       VARCHAR(32 BYTE)      NOT NULL, 
+					  CONT_IDX     NUMBER                 NOT NULL, 
+					  CTGRY_IDX    VARCHAR(16 BYTE)          NULL, 
+					  SUBJECT      VARCHAR(512 BYTE)     NOT NULL, 
+					  BRD_CONT     TEXT                   NOT NULL, 
+					  HITS         NUMBER                     NULL, 
+					  GRP_NO       NUMBER                     NULL, 
+					  GRP_LV       NUMBER                     NULL, 
+					  GRP_ORD      NUMBER                     NULL, 
+					  IS_NOTICE    CHAR(1 BYTE)          DEFAULT 'N' NULL, 
+					  IS_SCRT	   CHAR(1 BYTE)          DEFAULT 'N' NULL, 
+					  KOGL         VARCHAR(16 BYTE)          NULL, 
+					  WRITER       VARCHAR(24 BYTE)          NULL, 
+					  WDT          DATE                       NULL, 
+					  MODIFIER     VARCHAR(24 BYTE)          NULL, 
+					  MDT          DATE                       NULL, 
+					  CONSTRAINT PK_${tbl_nm}
+					  PRIMARY KEY ( BRD_ID, CONT_IDX )
+				)
+			</when>
+			<when test="brd_gb == 'CDIDX00043'.toString()">
+				CREATE TABLE ${tbl_nm} (
+				  	BRD_ID       VARCHAR(32)       NOT NULL, 
+				  	CONT_IDX     NUMBER             NOT NULL, 
+				  	CTGRY_IDX    VARCHAR(16)           NULL, 
+				  	SUBJECT      VARCHAR(512)      NOT NULL, 
+				  	BRD_CONT     VARCHAR(4000)     NOT NULL, 
+				  	HITS         NUMBER                 NULL, 
+				  	WRITER       VARCHAR(24)           NULL, 
+				  	WDT          DATE                   NULL, 
+				  	MODIFIER     VARCHAR(24)           NULL, 
+				  	MDT          DATE                   NULL, 
+				  	KOGL         VARCHAR(16)           NULL, 
+				    CONSTRAINT PK_${tbl_nm}
+				    PRIMARY KEY ( BRD_ID, CONT_IDX )
+				)
+			</when>
+		</choose>
+	</insert>
+	
+	<select id="selectBoardinfo" parameterType="boardinfoVO" resultType="boardinfoVO">
+	
+		SELECT
+			BRD_ID,
+			TBL_NM,
+			BRD_NM,
+			BRD_DFT,
+			BRD_DFT_SKIN,
+			BRD_CUST_SKIN,
+			BRD_GB,
+			SF_CODE_NM(BRD_GB) BRD_GB_NM,
+			BRD_GB_SUB,
+			EDITOR_GB,
+			USE_CTGRY,
+			CTGRY_IDX,
+			USE_NOTICE,
+			USE_SCRT,
+			USE_RCMND,
+			USE_RJCT,
+			USE_ATCH,
+			USE_UPLOADIFY,
+			USE_KOGL,
+			REPLY_GB,
+			ATTACH_CNT_LIMIT,
+			ATTACH_SIZE_LIMIT,
+			ATCL_PER_PG,
+			PG_PER_NAVI,
+			ON_VIEWMODE,
+			OFF_VIEWMODE,
+			CREATE_NEW_TABLE,
+			REF_MENU_NIX,
+			SF_MENU_NM(null, REF_MENU_NIX) REF_MENU_NM,
+			BRD_AUTH_USR,
+			MU_SITE,
+			MU_LANG,
+			WRITER,
+			DATE_FORMAT(WDT, '%Y-%m-%d %H:%i:%s') WDT,
+			MODIFIER,
+			DATE_FORMAT(MDT, '%Y-%m-%d %H:%i:%s') MDT
+		FROM
+			CMS_BRD_INFO
+		WHERE
+			BRD_ID = #{brd_id}
+			
+	</select>
+	
+	
+	<select id="selectBoardinfoByName" parameterType="boardinfoVO" resultType="boardinfoVO">
+	
+		SELECT
+			BRD_ID,
+			TBL_NM,
+			BRD_NM,
+			BRD_DFT,
+			BRD_DFT_SKIN,
+			BRD_CUST_SKIN,
+			BRD_GB,
+			BRD_GB_SUB,
+			EDITOR_GB,
+			USE_CTGRY,
+			CTGRY_IDX,
+			USE_NOTICE,
+			USE_SCRT,
+			USE_RCMND,
+			USE_RJCT,
+			USE_ATCH,
+			USE_UPLOADIFY,
+			USE_KOGL,
+			REPLY_GB,
+			ATTACH_CNT_LIMIT,
+			ATTACH_SIZE_LIMIT,
+			ATCL_PER_PG,
+			PG_PER_NAVI,
+			ON_VIEWMODE,
+			OFF_VIEWMODE,
+			CREATE_NEW_TABLE,
+			REF_MENU_NIX,
+			SF_MENU_NM(null, REF_MENU_NIX) REF_MENU_NM,
+			BRD_AUTH_USR,
+			MU_SITE,
+			MU_LANG,
+			WRITER,
+			DATE_FORMAT(WDT, '%Y-%m-%d %H:%i:%s') WDT,
+			MODIFIER,
+			DATE_FORMAT(MDT, '%Y-%m-%d %H:%i:%s') MDT
+		FROM
+			CMS_BRD_INFO
+		WHERE
+			BRD_NM = #{brd_nm}
+			
+	</select>
+	
+
+	<update id="updateBoardinfo" parameterType="boardinfoVO" >
+		
+		UPDATE CMS_BRD_INFO SET
+			BRD_NM = #{brd_nm},
+			BRD_DFT = #{brd_dft},
+			BRD_DFT_SKIN = #{brd_dft_skin},
+			BRD_CUST_SKIN = #{brd_dft_skin},
+			<if test="brd_gb != null and brd_gb != ''">
+				BRD_GB = #{brd_gb},
+			</if>
+			<if test="brd_gb_sub != null and brd_gb_sub != ''">
+				BRD_GB_SUB = #{brd_gb_sub},
+			</if>
+			EDITOR_GB = #{editor_gb},
+			USE_CTGRY = #{use_ctgry},
+			<choose>
+				<when test="use_ctgry == 'Y'.toString()">
+					CTGRY_IDX = #{ctgry_idx},
+				</when>
+				<otherwise>
+					CTGRY_IDX = NULL,
+				</otherwise>
+			</choose>
+			USE_NOTICE = #{use_notice},
+			USE_SCRT = #{use_scrt},
+			USE_RCMND = #{use_rcmnd},
+			USE_RJCT = #{use_rjct},
+			USE_ATCH = #{use_atch},
+			USE_UPLOADIFY = #{use_uploadify},
+			USE_KOGL = #{use_kogl},
+			<if test="reply_gb != null and reply_gb != ''">
+				REPLY_GB = #{reply_gb},
+			</if>
+			ATTACH_CNT_LIMIT = #{attach_cnt_limit},
+			ATTACH_SIZE_LIMIT = #{attach_size_limit},
+			ATCL_PER_PG = #{atcl_per_pg},
+			PG_PER_NAVI = #{pg_per_navi},
+			ON_VIEWMODE = #{on_viewmode},
+			OFF_VIEWMODE = #{off_viewmode},
+			CREATE_NEW_TABLE = #{create_new_table},
+			BRD_AUTH_USR = #{brd_auth_usr},
+			<if test="mu_site != null and mu_site != ''">
+				MU_SITE = #{mu_site},
+			</if>
+			<if test="mu_lang != null and mu_lang != ''">
+				MU_LANG = #{mu_lang},
+			</if>
+			<if test="ref_menu_nix != null and ref_menu_nix != ''">
+				REF_MENU_NIX = #{ref_menu_nix},
+			</if>
+			MODIFIER = #{modifier},
+			MDT = NOW()
+		WHERE
+			BRD_ID = #{brd_id}
+	
+	</update>		
+	
+	<update id="updateBoardinfoMenunix" parameterType="boardinfoVO" >
+		
+		UPDATE CMS_BRD_INFO SET
+			REF_MENU_NIX = #{ref_menu_nix}
+		WHERE
+			BRD_ID = #{brd_id}
+	
+	</update>	
+	
+	<update id="updateBoardinfoMenunixNull" parameterType="boardinfoVO" >
+		
+		UPDATE CMS_BRD_INFO SET
+			REF_MENU_NIX = ''
+		WHERE
+			REF_MENU_NIX = #{ref_menu_nix}
+	
+	</update>	
+	
+	<delete id="deleteBoardinfo" parameterType="boardinfoVO" >
+	
+		DELETE FROM CMS_BRD_INFO WHERE
+			BRD_ID = #{brd_id}
+	
+	</delete>
+	
+</mapper>

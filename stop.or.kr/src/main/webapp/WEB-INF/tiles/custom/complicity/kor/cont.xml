@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 
+	 <definition name="ComplicityContentDefinitionContent" template="/WEB-INF/jsp/layout/custom/complicity/kor/contents/layout/contentsLayout.jsp">
+		 <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/complicity/kor/contents/meta/meta_content.jsp"/>
+		 <put-attribute name="contHeader"	value="/WEB-INF/jsp/layout/template/complicity/header.jsp"/>
+		 <put-attribute name="contSidemenu"	value="/WEB-INF/jsp/layout/template/complicity/sidemenu.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/complicity/script.jsp"/>
+		 <put-attribute name="contQuicklink"	value="/WEB-INF/jsp/layout/custom/complicity/kor/contents/quickLink.jsp"/>
+		 <put-attribute name="contFooter"	value="/WEB-INF/jsp/layout/template/complicity/footer.jsp"/>
+	 </definition>
+	<!-- 
+	 <definition name="ComplicityContDefinitionEditor" template="/WEB-INF/jsp/layout/custom/complicity/kor/contents/layout/contentsLayout.jsp">
+		 <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/complicity/kor/contents/meta/meta_editor.jsp"/>
+		 <put-attribute name="contHeader"	value="/WEB-INF/jsp/layout/template/complicity/header.jsp"/>
+		 <put-attribute name="contSidemenu"	value="/WEB-INF/jsp/layout/template/complicity/sidemenu.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/complicity/script.jsp"/>
+		 <put-attribute name="contFooter"	value="/WEB-INF/jsp/layout/template/complicity/footer.jsp"/>
+	 </definition>
+	 -->
+
+	 <definition name="/complicity/contents/contentsView" extends="ComplicityContentDefinitionContent">
+		 <put-attribute name="contTitle"	value="컨텐츠페이지" />
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/complicity/kor/contents/script/script_cont.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/template/cmmn/complicity/contentspage/contentsPage.jsp" />
+	 </definition>
+
+	<!-- 
+	 <definition name="/complicity/contents/staticContentsView" extends="ComplicityContentDefinitionContent">
+		 <put-attribute name="contTitle"	value="컨텐츠페이지" />
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/web/complicity/contents/script/script_cont.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/template/cmmn/complicity/contentspage/contentsPage.jsp" />
+	 </definition>
+	-->
+	<!-- 
+	 <definition name="/complicity/contents/sitemapView" extends="ComplicityContentDefinitionContent">
+		 <put-attribute name="contTitle"	value="사이트맵" />
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/complicity/kor/contents/script/script_cont.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/complicity/kor/contents/sitemap/siteMap.jsp" />
+	 </definition>
+	 -->
+	
+	 
+</tiles-definitions>
+

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.man.metsys.dao.ComplicityDAO">
+	<!--
+		identity 값을 초기화 
+		DBCC CHECKIDENT ('CMS_COMPLICITY_INFO', RESEED, 0); 
+	-->
+	<!-- 
+	<insert id="insertComplicity" parameterType="complicityVO">
+		<selectKey keyProperty="group_id" resultType="int" order="BEFORE">
+			SELECT ISNULL(MAX(GROUP_ID), 0) + 1 FROM CMS_COMPLICITY_INFO
+		</selectKey>		
+		INSERT INTO CMS_COMPLICITY_INFO
+		(
+			GROUP_ID,
+			NAME,
+			TEL,
+			EMAIL,
+			AGE,
+			BELONG,
+		    SURVEY_GENDER, 
+		    SURVEY_AGE, 
+		    SURVEY_CITY, 
+		    SURVEY_FROM, 
+		    SURVEY_ETC, 
+			WRITER,
+			WDT
+		)
+		VALUES
+		(
+			#{group_id},
+			#{name},
+			#{tel},
+			#{email},
+			#{age},
+			#{belong},
+			#{survey_gender},
+			#{survey_age},
+			#{survey_city},
+			#{survey_from_string},
+			#{survey_etc},
+			#{writer},
+			GETDATE()
+		)
+	</insert>
+	 -->
+	
+	<!-- 공모전 기본정보 저장 -->
+	<insert id="insertComplicity" parameterType="complicityVO" useGeneratedKeys="true" keyProperty="group_id">
+		INSERT INTO CMS_COMPLICITY_INFO
+		(
+			NAME,
+			TEL,
+			EMAIL,
+			AGE,
+			BELONG,
+		    SURVEY_GENDER, 
+		    SURVEY_AGE, 
+		    SURVEY_CITY, 
+		    SURVEY_FROM, 
+		    SURVEY_ETC, 
+			WRITER,
+			WDT
+		)
+		VALUES
+		(
+			#{name},
+			#{tel},
+			#{email},
+			#{age},
+			#{belong},
+			#{survey_gender},
+			#{survey_age},
+			#{survey_city},
+			#{survey_from_string},
+			#{survey_etc},
+			#{writer},
+			GETDATE()
+		)
+	</insert>	
+	
+	<!-- 공모전 등록 메일 카운트 -->
+	<select id="selectComplicityByEmailCount" parameterType="complicityVO" resultType="int">
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			(
+				SELECT
+					*
+				FROM
+					CMS_COMPLICITY_INFO
+				WHERE
+				EMAIL=#{email}
+			) INNB
+	</select>
+	
+	<!-- 공모전 기본 정보  -->
+	<select id="selectComplicity" parameterType="String" resultType="complicityVO">
+		SELECT
+		    *,
+		    SURVEY_FROM AS SURVEY_FROM_STRING
+		FROM
+      		CMS_COMPLICITY_INFO
+      	WHERE
+      		GROUP_ID = #{group_id}
+	</select>
+	
+	<delete id="deleteComplicity" parameterType="Integer">
+		DELETE FROM
+			CMS_COMPLICITY_INFO
+		WHERE
+			GROUP_ID = #{group_id}
+	</delete>		
+	
+</mapper>
+

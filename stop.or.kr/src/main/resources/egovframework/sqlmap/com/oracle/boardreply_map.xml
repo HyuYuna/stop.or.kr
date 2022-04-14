@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="boardreply">
+
+	<typeAlias  alias="boardreplyVO" type="egovframework.plani.template.brdartcl.vo.BoardreplyVO"/>
+	
+	<insert id="boardreplyDAO.insertBoardreply" parameterClass="boardreplyVO">
+		
+		<selectKey resultClass="java.lang.Integer" keyProperty="reply_idx">
+		
+			SELECT NVL(MAX(REPLY_IDX) + 1, 1) AS REPLY_IDX FROM CMS_BRD_REPLY_IDX_VXD5L880 WHERE
+				BRD_ID = #brd_id# AND
+				CONT_IDX = #cont_idx#
+		
+		</selectKey>
+		
+		INSERT INTO CMS_BRD_REPLY_IDX_VXD5L880
+		(
+			BRD_ID,
+			BRD_PWD,
+			CONT_IDX,
+			REPLY_IDX,
+			REPLY_CONT,
+			RCMND_CNT,
+			WRITER,
+			WDT
+		)
+		VALUES
+		(
+			#brd_id#,
+			#brd_pwd#,
+			#cont_idx#,
+			#reply_idx#,
+			#reply_cont#,
+			#rcmnd_cnt#,
+			#writer#,
+			SYSDATE
+		)
+		
+	</insert>
+	
+	
+	<insert id="boardreplyDAO.createBoardReplyTable" parameterClass="boardreplyVO">
+		CREATE TABLE CMS_BRD_REPLY_IDX_VXD5L880 (
+			BRD_ID        VARCHAR2(32 BYTE)       NOT NULL, 
+			CONT_IDX      NUMBER                  NOT NULL, 
+			REPLY_IDX     NUMBER                  NOT NULL, 
+			REPLY_CONT    VARCHAR2(4000 BYTE)         NULL, 
+			RCMND_CNT     NUMBER                      NULL, 
+			WRITER        VARCHAR2(24 BYTE)           NULL, 
+			WDT           DATE                        NULL, 
+			MODIFIER      VARCHAR2(24 BYTE)           NULL, 
+			MDT           DATE                        NULL, 
+			CONSTRAINT PK_CMS_BRD_REPLY_IDX_VXD5L880
+			PRIMARY KEY ( BRD_ID, CONT_IDX, REPLY_IDX )
+		)
+	</insert>
+	
+	<update id="boardreplyDAO.updateBoardreply" parameterClass="boardreplyVO">
+		
+		UPDATE CMS_BRD_REPLY_IDX_VXD5L880 SET
+			REPLY_CONT = #reply_cont#,
+			<isNotEqual property="rcmnd_cnt" compareValue="0">
+				RCMND_CNT = #rcmnd_cnt#,
+			</isNotEqual>
+			MODIFIER = #modifier#,
+			MDT = SYSDATE
+		WHERE
+			BRD_ID = #brd_id# AND
+			CONT_IDX = #cont_idx# AND
+			REPLY_IDX = #reply_idx#
+					
+	</update>
+	
+	<delete id="boardreplyDAO.deleteBoard" parameterClass="boardreplyVO">
+	
+		DELETE FROM
+			CMS_BRD_REPLY_IDX_VXD5L880
+		WHERE
+			BRD_ID = #brd_id# 
+	
+	</delete>
+	
+	<delete id="boardreplyDAO.deleteBoardreply" parameterClass="boardreplyVO">
+	
+		DELETE FROM
+			CMS_BRD_REPLY_IDX_VXD5L880
+		WHERE
+			BRD_ID = #brd_id# AND
+			CONT_IDX = #cont_idx# AND
+			REPLY_IDX = #reply_idx#
+	
+	</delete>
+
+	<delete id="boardreplyDAO.deleteBoardreplyByCont" parameterClass="boardreplyVO">
+	
+		DELETE FROM
+			CMS_BRD_REPLY_IDX_VXD5L880
+		WHERE
+			BRD_ID = #brd_id# AND
+			CONT_IDX = #cont_idx#
+	
+	</delete>
+	
+	<select id="boardreplyDAO.selectBoardreply" parameterClass="boardreplyVO" resultClass="boardreplyVO">
+			
+		SELECT
+			BRD_ID,
+			CONT_IDX,
+			REPLY_IDX,
+			REPLY_CONT,
+			RCMND_CNT,
+			A.WRITER,
+			TO_CHAR(A.WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+			A.MODIFIER,
+			TO_CHAR(A.MDT, 'YYYY-MM-DD HH24:MI:SS') MDT,
+			NVL(B.USER_NM, A.WRITER) WRITER_NM   
+		FROM
+			CMS_BRD_REPLY_IDX_VXD5L880 A,
+            CMS_USR_INFO B
+		WHERE
+			A.WRITER = B.USER_ID(+) AND
+			BRD_ID = #brd_id# AND
+			CONT_IDX = #cont_idx# AND
+			REPLY_IDX = #reply_idx#
+			<isNotEmpty property="brd_pwd_chk" prepend="AND">
+				BRD_PWD = #brd_pwd_chk#
+			</isNotEmpty>
+	
+	</select>
+	
+	<select id="boardreplyDAO.selectBoardreplyList" parameterClass="boardreplyVO" resultClass="boardreplyVO">
+		
+		SELECT
+			BRD_ID,
+			CONT_IDX,
+			REPLY_IDX,
+			REPLY_CONT,
+			RCMND_CNT,
+			A.WRITER,
+			TO_CHAR(A.WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+			A.MODIFIER,
+			TO_CHAR(A.MDT, 'YYYY-MM-DD HH24:MI:SS') MDT,
+			NVL(B.USER_NM, A.WRITER) WRITER_NM   
+		FROM
+			CMS_BRD_REPLY_IDX_VXD5L880 A,
+            CMS_USR_INFO B
+		WHERE
+			A.WRITER = B.USER_ID(+) AND
+			BRD_ID = #brd_id# AND
+			CONT_IDX = #cont_idx#
+	
+	</select>
+		
+	
+</sqlMap>
+

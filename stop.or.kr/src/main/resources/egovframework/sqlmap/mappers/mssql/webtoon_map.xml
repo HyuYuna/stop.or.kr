@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.webtoon.dao.WebtoonDAO">
+
+		<!-- 카드뉴스목록 목록 -->
+	<select id="selectWebtoonList" parameterType="webtoonVO" resultType="webtoonVO">
+		
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY CN_SEQ DESC) rn, TB.* FROM (
+	
+			SELECT
+				CN_SEQ
+				, CN_TITLE
+				, CN_CONTENT
+				, IS_NOTICE
+				, CONVERT(VARCHAR(10), WDT, 20) WDT
+				, VCHKCODE
+				<if test="srch_mu_gub != 'MAN'.toString()">
+					, CATEGORY
+				</if>
+				<if test="srch_mu_gub == 'MAN'.toString()">
+					, (SELECT CN_TITLE FROM CMS_WEBTOON_CATEGORY WHERE CN_SEQ=A.CATEGORY) CATEGORY
+				</if>
+			FROM
+				CMS_WEBTOON A  
+				LEFT OUTER JOIN 
+	  			(
+	  				SELECT 
+	  					* 
+	  				FROM
+	  					CMS_ATACH
+	  				WHERE 
+			 			ATCKEY_1ST = 'WEBTOON' AND
+			 			ATCKEY_3RD = 1 AND
+	        			ATCKEY_4TH = 1 AND
+	        			IS_THUMB = 'N'
+	  				 
+	  			) B 
+	  			ON A.CN_SEQ = B.ATCKEY_2ND	
+	  			WHERE A.IS_NOTICE = 'N'
+	  			<if test="category != null and category != ''">
+	  				AND A.CATEGORY = #{category}
+	  			</if>
+	  			<if test="searchKeyword != null and searchKeyword != ''">
+						AND A.CN_TITLE LIKE '%' + #{searchKeyword} + '%'
+				</if>
+				<if test="searchCondition != null and searchCondition != ''">
+						AND A.CATEGORY = ${searchCondition}
+				</if>
+						
+					
+		
+		) TB ) MORG  <if test="srch_mu_gub == 'MAN'.toString()"> WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage} </if>
+		
+	</select>
+	
+	<select id="selectDescSeq" parameterType="webtoonVO" resultType="webtoonVO">
+		
+		SELECT * FROM (
+			
+			SELECT
+				ROW_NUMBER() OVER (
+
+					ORDER BY CN_SEQ DESC
+				
+				) RN,
+				CN_SEQ
+				, CN_TITLE
+				, CN_CONTENT
+				, IS_NOTICE
+				, CONVERT(VARCHAR(10), WDT, 20) WDT
+				,CATEGORY
+				
+				FROM CMS_WEBTOON
+		) A
+		WHERE RN =1
+		AND CATEGORY = #{category}
+	
+	</select>
+	
+	
+	<select id="selectNoticeWebtoonList" parameterType="webtoonVO" resultType="webtoonVO">
+		
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY CN_SEQ DESC) rn, TB.* FROM (
+	
+			SELECT
+				CN_SEQ
+				, CN_TITLE
+				, CN_CONTENT
+				, IS_NOTICE
+				, CONVERT(VARCHAR(10), WDT, 20) WDT
+				, VCHKCODE
+				, CATEGORY
+			FROM
+				CMS_WEBTOON A  
+				LEFT OUTER JOIN 
+	  			(
+	  				SELECT 
+	  					* 
+	  				FROM
+	  					CMS_ATACH
+	  				WHERE 
+			 			ATCKEY_1ST = 'WEBTOON' AND
+			 			ATCKEY_3RD = 1 AND
+	        			ATCKEY_4TH = 1 AND
+	        			IS_THUMB = 'N'
+	  				 
+	  			) B 
+	  			ON A.CN_SEQ = B.ATCKEY_2ND	
+	  			<if test="category != null and category != ''">
+					WHERE A.CATEGORY = #{category}	
+				</if>
+		
+		) TB ) MORG  WHERE IS_NOTICE = 'Y' ORDER BY WDT DESC, CN_SEQ DESC
+	</select>
+	
+	
+	
+	<!-- 페이지 나누기를 위한 총 개수 -->
+	<select id="selectWebtoonListTotCnt" parameterType="webtoonVO" resultType="int">
+	
+		SELECT
+			COUNT(*) AS totcnt
+		FROM
+			CMS_WEBTOON
+			WHERE IS_NOTICE = 'N'
+			<if test="category != null and category != ''">
+				AND CATEGORY = #{category}	
+			</if>
+			<if test="searchKeyword != null and searchKeyword != ''">
+				AND CN_TITLE LIKE '%' + #{searchKeyword} + '%'
+			</if>
+			<if test="searchCondition != null and searchCondition != ''">
+				AND CATEGORY = ${searchCondition}
+			</if>
+			
+	</select>
+	
+	
+
+
+
+
+	<!-- 카드뉴스목록 등록 -->
+	<insert id="insertWebtoon" parameterType="webtoonVO">
+		<selectKey keyProperty="cn_seq" resultType="int" order="BEFORE">
+			SELECT ISNULL(MAX(CN_SEQ), 0) + 1 FROM CMS_WEBTOON
+		</selectKey>
+	
+		INSERT INTO CMS_WEBTOON(
+			CN_SEQ
+			, CN_TITLE
+			, CN_CONTENT
+			, IS_NOTICE
+			, CATEGORY
+			, WDT
+		)
+		VALUES(
+			#{cn_seq}
+			, #{cn_title}
+			, #{cn_content}
+			, #{is_notice}
+			, #{category}
+			, GETDATE()
+		)	
+	</insert>
+	
+	
+	<!-- 카드뉴스목록 수정 -->
+	<update id="updateWebtoon" parameterType="webtoonVO">
+		UPDATE CMS_WEBTOON SET
+			  CN_TITLE = #{cn_title}
+			, CN_CONTENT = #{cn_content}
+			, CATEGORY = #{category}
+			, IS_NOTICE = #{is_notice}
+		WHERE
+			CN_SEQ = #{cn_seq}
+	</update>
+	
+	<!-- 카드뉴스목록 삭제 -->
+	<delete id="deleteWebtoon" parameterType="webtoonVO">
+		
+		DELETE FROM 
+			CMS_WEBTOON 
+		WHERE 
+			CN_SEQ = #{cn_seq}
+			
+	</delete>
+	
+	<!-- 카드뉴스목록 상세 -->
+	<select id="selectWebtoon" parameterType="webtoonVO" resultType="webtoonVO">
+		
+		SELECT
+			  CN_SEQ
+			, CN_TITLE
+			, CN_CONTENT
+			, IS_NOTICE
+			, WDT
+			, HITS
+			,CATEGORY
+		FROM
+			CMS_WEBTOON
+		WHERE
+			CN_SEQ = #{cn_seq}
+			
+	</select>
+	
+	
+	<update id="updateWebtoonCount" parameterType="webtoonVO" >
+		UPDATE CMS_WEBTOON SET
+			<if test="hits != '0'.toString()">
+				HITS = #{hits}
+			</if>
+		WHERE
+			CN_SEQ = #{cn_seq}
+	</update>
+	
+</mapper>
+

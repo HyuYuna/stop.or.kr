@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+	
+		<!-- 각 mapper에 설정된 캐시를 전역적으로 사용할지 여부 -->
+		<setting name="cacheEnabled" value="true" />
+		
+		<setting name="lazyLoadingEnabled" value="true" />
+		
+		<!-- 
+			활성화면 늦은로딩 프로퍼티를 가진 객체는 호출에 따라 로드
+			개별 프로퍼티는 요청할 때 로드
+		-->
+		<setting name="aggressiveLazyLoading" value="true" />
+		
+		<!-- 한개의 구문에서 여러개의 ResultSet 을 허용할지 여부 -->
+		<setting name="multipleResultSetsEnabled" value="true" />
+		
+		<!-- 
+			컬럼명 대신 컬럼라벨을 사용
+		-->
+		<setting name="useColumnLabel" value="true" />
+		
+		<!-- 
+			생성키에 대한 jdbc 지원을 허용 - 지원하는 드라이버 필요
+		-->
+		<setting name="useGeneratedKeys" value="false" />
+		
+		<!-- 
+			MyBatis가 컬럼을 필드/프로퍼티에 자동으로 매핑할지 방법에 대한 명시
+			NONE : 하지 않음
+			PARTIAL(*) : 간단한 자동매핑
+			FULL : 처리 가능한 모든 자동매핑 처리
+		-->	
+		<setting name="autoMappingBehavior" value="PARTIAL"/>
+		
+		<!--
+			SIMPLE(*) : 특별히 하는 일이 없다.
+			REUSE : PreapredStatement 를 재사용
+			BATCH : 구문을 재사용하고 수정을 배치처리
+		-->
+		<setting name="defaultExecutorType" value="REUSE" />
+		
+		<!-- 데이터베이스로부터 응답을 얼마나 오래 기다릴지 판단하는 타임아웃 설정 (양수) -->
+		<setting name="defaultStatementTimeout" value="25000" />
+		
+		<!-- 
+			전통적인 데이터베이스 컬럼명 형태인 A_COLUMN 을 CamelCase 형태의 
+			프로퍼티형인 aColumn 으로 자동 매핑
+		-->
+		<setting name="mapUnderscoreToCamelCase" value="false"/>
+		
+		<!-- SESSION(*), STATEMENT -->
+		<setting name="localCacheScope" value="SESSION"/>
+		
+		<!-- NULL, VARCHAR, OTHER(*) -->
+		<setting name="jdbcTypeForNull" value="NULL"/>
+		
+		<setting name="lazyLoadTriggerMethods" value="eqlas,clone,hashCode,toString"/>
+	</settings>
+
+	<typeAliases>
+		<typeAlias alias="accessipVO" type="egovframework.plani.template.man.metsys.vo.AccessipVO"/>
+		<typeAlias alias="atchfileVO" type="egovframework.plani.template.atchfile.vo.AtchfileVO"/>
+		<typeAlias alias="boardarticleVO" type="egovframework.plani.template.brdartcl.vo.BoardarticleVO"/>
+		<typeAlias alias="boarddryVO" type="egovframework.plani.template.brdartcl.vo.BoarddryVO"/>
+		<typeAlias alias="boardfaqVO" type="egovframework.plani.template.brdartcl.vo.BoardfaqVO"/>
+		<typeAlias alias="boardinfoVO" type="egovframework.plani.template.brdartcl.vo.BoardinfoVO"/>
+		<typeAlias alias="boardrcmndVO" type="egovframework.plani.template.brdartcl.vo.BoardrcmndVO"/>
+		<typeAlias alias="boardreplyVO" type="egovframework.plani.template.brdartcl.vo.BoardreplyVO"/>
+		<typeAlias alias="boardthmVO" type="egovframework.plani.template.brdartcl.vo.BoardthmVO"/>
+		<typeAlias alias="commstatVO" type="egovframework.plani.template.man.stat.vo.CommstatVO"/>
+		<typeAlias alias="contentsmanVO" type="egovframework.plani.template.man.metsys.vo.ContentsmanVO"/>
+		<typeAlias alias="manlogVO" type="egovframework.plani.template.man.log.vo.ManlogVO"/>
+		<typeAlias alias="memberVO" type="egovframework.plani.custom.memsvc.vo.MemberVO"/>
+		<typeAlias alias="messageVO" type="egovframework.plani.template.cmm.vo.MessageVO"/>
+		<typeAlias alias="popupVO" type="egovframework.plani.template.man.popup.vo.PopupVO"/>
+		<typeAlias alias="srvydataVO" type="egovframework.plani.template.survey.vo.SrvydataVO"/>
+		<typeAlias alias="srvymainVO" type="egovframework.plani.template.survey.vo.SrvymainVO"/>
+		<typeAlias alias="srvypartVO" type="egovframework.plani.template.survey.vo.SrvypartVO"/>
+		<typeAlias alias="srvyquesansVO" type="egovframework.plani.template.survey.vo.SrvyquesansVO"/>
+		<typeAlias alias="sysauthVO" type="egovframework.plani.template.man.menuctgry.vo.SysauthVO"/>
+		<typeAlias alias="sysmenuVO" type="egovframework.plani.template.man.menuctgry.vo.SysmenuVO"/>
+		<typeAlias alias="syscategoryVO" type="egovframework.plani.template.man.menuctgry.vo.SyscategoryVO"/>
+		<typeAlias alias="syscodeVO" type="egovframework.plani.template.man.menuctgry.vo.SyscodeVO"/>
+		<typeAlias alias="sysmenuVO" type="egovframework.plani.template.man.menuctgry.vo.SysmenuVO"/>
+		<typeAlias alias="tablecrudVO" type="egovframework.plani.template.man.metsys.vo.TablecrudVO"/>
+		<typeAlias alias="withdrawalVO" type="egovframework.plani.template.man.metsys.vo.WithdrawalVO"/>
+		<typeAlias alias="releaseVO" type="egovframework.plani.template.release.vo.ReleaseVO"/>
+		<typeAlias alias="cardNewsVO" type="egovframework.plani.template.cardnews.vo.CardNewsVO"/>
+		<typeAlias alias="multiCmsVO" type="egovframework.plani.template.multicms.vo.MultiCmsVO"/>
+		<!-- ych -->
+		<typeAlias alias="scheduleVO" type="egovframework.plani.custom.man.schedule.vo.ScheduleVO"/>
+		<typeAlias alias="newsletterVO" type="egovframework.plani.custom.man.newsletter.vo.NewsletterVO"/>
+		<typeAlias alias="companyVO" type="egovframework.plani.custom.man.company.vo.CompanyVO"/>
+		<typeAlias alias="mapVO" type="egovframework.plani.custom.man.map.vo.MapVO"/>
+		<typeAlias alias="zipcodeVO" type="egovframework.plani.custom.man.map.vo.ZipcodeVO"/>
+		<typeAlias alias="webtoonVO" type="egovframework.plani.template.webtoon.vo.WebtoonVO"/>
+		<typeAlias alias="webtoonCategoryVO" type="egovframework.plani.template.webtoon.vo.WebtoonCategoryVO"/>
+		
+		<!-- 2018-06-27 pigcos : 공고그룹 -->
+		<typeAlias alias="announcementGroupVO" type="egovframework.plani.template.man.metsys.vo.AnnouncementGroupVO"/>		
+		<!-- 2018-06-29 pigcos : 공고데이터 -->
+		<typeAlias alias="announcementDataVO" type="egovframework.plani.template.man.metsys.vo.AnnouncementDataVO"/>
+		<!-- 2018-08-02 pigcos : 공모전 작품접수 기본정보 -->
+		<typeAlias alias="complicityVO" type="egovframework.plani.template.man.metsys.vo.ComplicityVO"/>
+		<!-- 2018-08-02 pigcos : 공모전 작품접수 출품작 정보 -->
+		<typeAlias alias="complicityItemVO" type="egovframework.plani.template.man.metsys.vo.ComplicityItemVO"/>
+		
+		<!-- 2018-08-13 pigcos : 수상작 그룹 -->
+		<typeAlias alias="awardsGroupVO" type="egovframework.plani.template.man.metsys.vo.AwardsGroupVO"/>		
+		<!-- 2018-08-13 pigcos : 수상작 데이터 -->
+		<typeAlias alias="awardsDataVO" type="egovframework.plani.template.man.metsys.vo.AwardsDataVO"/>
+		
+		<!-- 2019-05-24 PMS게시판 추가 -->
+		<typeAlias alias="projectVO" type="egovframework.plani.template.project.vo.ProjectVO"/>
+		<typeAlias alias="CmmMap" type="egovframework.dev.cmm.service.CmmMap"/>
+		<typeAlias alias="FileVO" type="egovframework.com.cmm.service.FileVO"/>
+		
+	</typeAliases>
+	
+</configuration>

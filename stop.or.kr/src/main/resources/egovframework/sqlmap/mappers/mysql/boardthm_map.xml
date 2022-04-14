@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.brdartcl.dao.BoardthmDAO">
+
+	
+		
+	<resultMap id="boardthm" type="boardthmVO"> 
+		<result property="brd_id" column="brd_id"/>
+		<result property="cont_idx" column="cont_idx"/>
+		<result property="subject" column="subject"/>
+		<result property="brd_cont" column="brd_cont" javaType="java.lang.String"/>
+		<result property="brd_utb" column="brd_utb"/>
+		<result property="hits" column="hits"/>
+		<result property="is_notice" column="is_notice"/>
+		<result property="img_idx" column="img_idx"/>
+		<result property="thm_img_idx" column="thm_img_idx"/>
+		<result property="writer" column="writer"/>
+		<result property="pre_atcl" column="pre_atcl"/>
+		<result property="pre_subj" column="pre_subj"/>
+		<result property="next_atcl" column="next_atcl"/>
+		<result property="next_subj" column="next_subj"/>
+		<result property="writer_nm" column="writer_nm"/>
+		<result property="wdt" column="wdt"/>
+		<result property="modifier" column="modifier"/>
+		<result property="mdt" column="mdt"/>
+	</resultMap> 
+	
+	<insert id="insertBoardthm" parameterType="boardthmVO">
+
+		<selectKey resultType="java.lang.Integer" keyProperty="cont_idx" order="BEFORE">
+		
+			SELECT IFNULL(MAX(CONT_IDX) + 1, 1) AS CONT_IDX FROM ${tbl_nm} WHERE
+				BRD_ID = #{brd_id}
+		
+		</selectKey>
+
+		INSERT INTO ${tbl_nm}
+		(
+			BRD_ID,
+			CONT_IDX,
+			SUBJECT,
+			BRD_CONT, 
+			BRD_UTB,
+			IMG_IDX,
+			THM_IMG_IDX,
+			HITS,
+			WRITER,
+			WDT
+		)
+		VALUES
+		(
+			#{brd_id},
+			#{cont_idx},
+			#{subject},
+			#{brd_cont},
+			#{brd_utb},
+			0,
+			0,
+			#{hits},
+			#{writer},
+			NOW()
+		)
+
+	</insert>
+	
+	<update id="updateBoardthm" parameterType="boardthmVO">
+
+		UPDATE ${tbl_nm} SET
+			<if test="subject != null and subject != ''">
+				SUBJECT = #{subject},
+				BRD_CONT = #{brd_cont},
+			</if>
+			<if test="brd_utb != null and brd_utb != ''">
+				BRD_UTB = #{brd_utb},
+			</if>
+			<if test="wdt != null and wdt != ''">
+				WDT = STR_TO_DATE(#{wdt}, '%Y-%m-%d %H:%i:%s'),
+			</if>
+			MODIFIER = #{modifier},
+			MDT = NOW()
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}
+	</update>
+	
+	
+	<update id="updateBoardxcount" parameterType="boardthmVO" >
+		UPDATE ${tbl_nm} SET
+			<if test="hits != '0'.toString()">
+				HITS = #{hits},
+			</if>
+			MDT = MDT
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}
+	</update>
+	
+	<delete id="deleteBoardthm" parameterType="boardthmVO">
+
+		DELETE FROM ${tbl_nm}
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}
+
+	</delete>
+	
+	<select id="selectBoardthm" parameterType="boardthmVO" resultMap="boardthm">
+
+		SELECT
+			A.BRD_ID,
+			A.CONT_IDX,
+			SUBJECT,
+			BRD_CONT,
+			BRD_UTB,
+			IMG_IDX,
+			THM_IMG_IDX,
+			HITS,
+			IS_NOTICE,
+			PRE_ATCL,
+			PRE_SUBJ,
+			NEXT_ATCL,
+			NEXT_SUBJ,
+			A.WRITER,
+			DATE_FORMAT(A.WDT, '%Y-%m-%d') WDT,
+			A.MODIFIER,
+			DATE_FORMAT(A.MDT, '%Y-%m-%d') MDT,
+			IFNULL(IMG_WIDTH, 1) IMG_WIDTH,
+			IFNULL(IMG_HEIGHT, 1) IMG_HEIGHT,
+			IFNULL(SF_USER_NM(A.WRITER), 'GUEST') WRITER_NM
+		FROM
+			(
+					SELECT
+						X.*,
+				    	SF_BRD_PREATCL(#{srch_ctgry_idx}, X.BRD_ID, X.CONT_IDX, 'PRE', 'IDX', X.IS_NOTICE) PRE_ATCL,
+						SF_BRD_PREATCL(#{srch_ctgry_idx}, X.BRD_ID, X.CONT_IDX, 'PRE', 'SBJ', X.IS_NOTICE) PRE_SUBJ,
+						SF_BRD_PREATCL(#{srch_ctgry_idx}, X.BRD_ID, X.CONT_IDX, 'POS', 'IDX', X.IS_NOTICE) NEXT_ATCL,
+						SF_BRD_PREATCL(#{srch_ctgry_idx}, X.BRD_ID, X.CONT_IDX, 'POS', 'SBJ', X.IS_NOTICE) NEXT_SUBJ
+				    FROM 
+				    	${tbl_nm} X
+				    WHERE
+				    	BRD_ID = #{brd_id}
+				    	
+			)  A
+			LEFT JOIN 
+			(
+				SELECT 
+					* 
+				FROM 
+					CMS_ATACH
+				WHERE
+					ATCKEY_1ST = #{brd_id} AND
+					ATCKEY_2ND = #{cont_idx} AND
+					ATCKEY_3RD = 1 AND
+					ATCKEY_4TH = 1 AND
+					IS_THUMB = 'N'
+			) B ON A.BRD_ID = B.ATCKEY_1ST AND A.CONT_IDX = B.ATCKEY_2ND
+		WHERE
+			A.BRD_ID = #{brd_id} AND
+			A.CONT_IDX = #{cont_idx}
+
+	</select>
+	
+	<select id="selectBoardthmList" parameterType="boardthmVO" resultType="boardthmVO">
+
+		SELECT * FROM ( SELECT @RNUM := @RNUM + 1 AS rn, TB.* FROM (
+
+			SELECT
+				BRD_ID,
+				CONT_IDX,
+				SUBJECT,
+				BRD_CONT,
+				BRD_UTB,
+				IMG_IDX,   
+				THM_IMG_IDX,
+				HITS,
+				IFNULL(SF_ATCFILE_INFO(BRD_ID, CONCAT(CONT_IDX), 0, 0, 'N', 'COUNT'),0) IMG_CNT,
+                SF_ATCFILE_INFO(BRD_ID, CONCAT(CONT_IDX), 0, 0, 'N', 'VCODE') VCHKCODE,
+				PRE_ATCL,
+				PRE_SUBJ,
+				NEXT_ATCL,
+				NEXT_SUBJ,
+				<choose>
+					<when test="reply_gb == 'R'.toString()">
+	                	(SELECT COUNT(*) FROM ${reply_tbl_nm} WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX) REPLY_CNT,
+	                </when>        
+	                <when test="reply_gb == 'B'.toString()">
+	                	(SELECT COUNT(*) FROM ${reply_tbl_nm} WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX) REPLY_CNT,
+	                </when>
+	                <when test="reply_gb == 'A'.toString()">
+	                 	0 REPLY_CNT,
+	                </when>
+	                <when test="reply_gb == 'N'.toString()">
+	                	0 REPLY_CNT,
+	                </when>  
+                </choose>
+				WRITER,
+				IFNULL(SF_USER_NM(WRITER), 'GUEST') WRITER_NM,
+				DATE_FORMAT(WDT, '%Y-%m-%d') WDT,
+				MODIFIER,
+				DATE_FORMAT(MDT, 'YYYY.MM.DD') MAIN_MDT,
+				DATE_FORMAT(MDT, '%Y-%m-%d %H:%i:%s') MDT
+			FROM
+		    	(
+					SELECT
+						X.*,
+				    	'' PRE_ATCL,
+				    	'' PRE_SUBJ,
+				    	'' NEXT_ATCL,
+				    	'' NEXT_SUBJ
+				    FROM 
+				    	${tbl_nm} X
+				    WHERE
+				    	BRD_ID = #{brd_id} 
+				)  A 
+			WHERE
+				1 = 1 
+				<if test="searchKeyword != null and searchKeyword != ''">
+					AND
+					<choose>
+						<when test="searchCondition == 'SC_ALL'.toString()">
+							( SUBJECT LIKE '%' || #{searchKeyword} || '%' OR BRD_CONT LIKE '%' || #{searchKeyword} || '%' )
+						</when>
+						<otherwise>
+							${searchCondition} LIKE CONCAT('%', #{searchKeyword}, '%')
+						</otherwise>
+					</choose>
+				</if>
+		) TB, ( SELECT @RNUM := 0 ) R 
+		ORDER BY WDT DESC, CONT_IDX DESC
+		) AL  WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+		
+	</select>
+	
+	<select id="selectBoardthmListTotCnt" parameterType="boardthmVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			(
+				SELECT 
+					A.*,
+					SF_USER_NM(WRITER) WRITER_NM 
+				FROM
+					${tbl_nm} A
+			) A
+		WHERE
+			BRD_ID = #{brd_id} 
+			<if test="searchKeyword != null and searchKeyword != ''">
+				AND
+				<choose>
+					<when test="searchCondition == 'SC_ALL'.toString()">
+						( SUBJECT LIKE '%' || #{searchKeyword} || '%' OR BRD_CONT LIKE '%' || #{searchKeyword} || '%' )
+					</when>
+					<otherwise>
+						${searchCondition} LIKE CONCAT('%', #{searchKeyword}, '%')
+					</otherwise>
+				</choose>
+			</if>			
+			<if test="srch_ctgry_idx != null and srch_ctgry_idx != ''">
+				AND CTGRY_IDX = #{srch_ctgry_idx}
+			</if>
+
+	</select>
+	
+	
+
+</mapper>
+

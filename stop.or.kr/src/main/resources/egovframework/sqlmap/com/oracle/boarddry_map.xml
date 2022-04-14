@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="boarddry">
+
+	<typeAlias  alias="boarddryVO" type="egovframework.plani.template.brdartcl.vo.BoarddryVO"/>
+	
+	
+	<insert id="boarddryDAO.insertBoarddry" parameterClass="boarddryVO">
+
+		<selectKey resultClass="java.lang.Integer" keyProperty="cont_idx">
+		
+			SELECT NVL(MAX(CONT_IDX) + 1, 1) AS CONT_IDX FROM $tbl_nm$ WHERE
+				BRD_ID = #brd_id#
+		
+		</selectKey>
+		
+		INSERT INTO $tbl_nm$
+		(
+			BRD_ID,
+			CONT_IDX,
+			SUBJECT,
+			BRD_CONT,
+			REPEAT_YN,
+			ALLDAY_YN,
+			HOLIDAY_YN,
+			STARTDT,
+			ENDDT,
+			WRITER,
+			WDT,
+			REFERENCE_KEY
+		)
+		VALUES
+		(
+			#brd_id#,
+			#cont_idx#,
+			#subject#,
+			#brd_cont#,
+			#repeat_yn#,
+			#allday_yn#,
+			#holiday_yn#,
+			TO_DATE(#startdt#, 'YYYY-MM-DD HH24:MI'),
+			TO_DATE(#enddt#, 'YYYY-MM-DD HH24:MI'),
+			#writer#,
+			SYSDATE,
+			#reference_key#
+		)
+
+	</insert>
+	
+	<update id="boarddryDAO.updateBoarddry" parameterClass="boarddryVO">
+
+		UPDATE $tbl_nm$ SET
+			SUBJECT = #subject#,
+			BRD_CONT = #brd_cont#,
+			REPEAT_YN = #repeat_yn#,
+			ALLDAY_YN = #allday_yn#,
+			HOLIDAY_YN = #holiday_yn#,
+			STARTDT = TO_DATE(#startdt#, 'YYYY-MM-DD HH24:MI'),
+			ENDDT = TO_DATE(#enddt#, 'YYYY-MM-DD HH24:MI'),
+			MODIFIER = #modifier#,
+			MDT = SYSDATE
+		WHERE
+			BRD_ID = #brd_id# AND
+		<isEmpty property="reference_key">
+			CONT_IDX = #cont_idx#
+		</isEmpty>
+		<isNotEmpty property="reference_key">
+			REFERENCE_KEY = #reference_key#
+		</isNotEmpty>
+			
+	</update>
+	
+	<delete id="boarddryDAO.deleteBoarddry" parameterClass="boarddryVO">
+
+		DELETE FROM $tbl_nm$
+		WHERE
+			BRD_ID = #brd_id# AND
+		<isEmpty property="reference_key">
+			CONT_IDX = #cont_idx#
+		</isEmpty>
+		<isNotEmpty property="reference_key">
+			REFERENCE_KEY = #reference_key#
+		</isNotEmpty>
+			
+	</delete>
+	
+	<select id="boarddryDAO.selectBoarddry" parameterClass="boarddryVO" resultClass="boarddryVO">
+
+		SELECT
+			BRD_ID,
+			CONT_IDX,
+			SUBJECT,
+			BRD_CONT,
+			REPEAT_YN,
+			ALLDAY_YN,
+			HOLIDAY_YN,
+			TO_CHAR(STARTDT, 'YYYY-MM-DD HH24:MI') STARTDT,
+			TO_CHAR(ENDDT, 'YYYY-MM-DD HH24:MI') ENDDT,
+			WRITER,
+			TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+			MODIFIER,
+			TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+		FROM
+			$tbl_nm$
+		WHERE
+			BRD_ID = #brd_id# AND
+			CONT_IDX = #cont_idx#
+
+	</select>
+	
+	<select id="boarddryDAO.selectBoarddryList" parameterClass="boarddryVO" resultClass="boarddryVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+	
+			SELECT
+				BRD_ID,
+				CONT_IDX,
+				SUBJECT,
+				BRD_CONT,
+				REPEAT_YN,
+				ALLDAY_YN,
+				HOLIDAY_YN,
+				TO_CHAR(STARTDT, 'YYYY-MM-DD HH24:MI') STARTDT,
+				TO_CHAR(ENDDT, 'YYYY-MM-DD HH24:MI') ENDDT,
+				WRITER,
+				SF_USER_NM(WRITER) WRITER_NM,
+				TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+				MODIFIER,
+				TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+			FROM
+				$tbl_nm$
+			WHERE
+				BRD_ID = #brd_id# 
+				<isNotEmpty property="startdt" prepend="AND">
+					((TO_DATE(#startdt#, 'YYYY-MM-DD') BETWEEN TO_DATE(TO_CHAR(STARTDT, 'YYYY-MM-DD'), 'YYYY-MM-DD') AND TO_DATE(TO_CHAR(ENDDT, 'YYYY-MM-DD'), 'YYYY-MM-DD')) OR
+					(TO_DATE(#enddt#, 'YYYY-MM-DD') BETWEEN TO_DATE(TO_CHAR(STARTDT, 'YYYY-MM-DD'), 'YYYY-MM-DD') AND TO_DATE(TO_CHAR(ENDDT, 'YYYY-MM-DD'), 'YYYY-MM-DD')) OR
+          			(TO_DATE(TO_CHAR(STARTDT, 'YYYY-MM-DD'), 'YYYY-MM-DD') BETWEEN TO_DATE(#startdt#, 'YYYY-MM-DD') AND TO_DATE(#enddt#, 'YYYY-MM-DD')))
+				</isNotEmpty>
+				<isNotEmpty property="searchKeyword" prepend="AND">
+					TO_DATE(#searchKeyword#, 'YYYY-MM-DD') BETWEEN TO_DATE(TO_CHAR(STARTDT, 'YYYY-MM-DD'), 'YYYY-MM-DD') AND TO_DATE(TO_CHAR(ENDDT, 'YYYY-MM-DD'), 'YYYY-MM-DD')
+				</isNotEmpty>
+			ORDER BY STARTDT DESC
+		) TB )
+
+	</select>
+	
+	
+	
+	<select id="boarddryDAO.selectBoarddryListTotCnt" parameterClass="boarddryVO" resultClass="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			$tbl_nm$
+		WHERE
+			BRD_ID = #brd_id#
+			<isNotEmpty property="startdt" prepend="AND">
+				((TO_DATE(#startdt#, 'YYYY-MM-DD') BETWEEN TO_DATE(TO_CHAR(STARTDT, 'YYYY-MM-DD'), 'YYYY-MM-DD') AND TO_DATE(TO_CHAR(ENDDT, 'YYYY-MM-DD'), 'YYYY-MM-DD')) OR
+					(TO_DATE(#enddt#, 'YYYY-MM-DD') BETWEEN TO_DATE(TO_CHAR(STARTDT, 'YYYY-MM-DD'), 'YYYY-MM-DD') AND TO_DATE(TO_CHAR(ENDDT, 'YYYY-MM-DD'), 'YYYY-MM-DD')) OR
+          			(TO_DATE(TO_CHAR(STARTDT, 'YYYY-MM-DD'), 'YYYY-MM-DD') BETWEEN TO_DATE(#startdt#, 'YYYY-MM-DD') AND TO_DATE(#enddt#, 'YYYY-MM-DD')))
+			</isNotEmpty>
+			<isNotEmpty property="searchKeyword" prepend="AND">
+				TO_DATE(#searchKeyword#, 'YYYY-MM-DD') BETWEEN TO_DATE(TO_CHAR(STARTDT, 'YYYY-MM-DD'), 'YYYY-MM-DD') AND TO_DATE(TO_CHAR(ENDDT, 'YYYY-MM-DD'), 'YYYY-MM-DD')
+			</isNotEmpty>
+
+	</select>
+	
+	<select id="boarddryDAO.xlsBoarddryList" parameterClass="boarddryVO" resultClass="boarddryVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+	
+			SELECT
+				BRD_ID,
+				CONT_IDX,
+				SUBJECT,
+				BRD_CONT,
+				REPEAT_YN,
+				ALLDAY_YN,
+				HOLIDAY_YN,
+				TO_CHAR(STARTDT, 'YYYY-MM-DD HH24:MI') STARTDT,
+				TO_CHAR(ENDDT, 'YYYY-MM-DD HH24:MI') ENDDT,
+				WRITER,
+				TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+				MODIFIER,
+				TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+			FROM
+				$tbl_nm$
+			WHERE
+				BRD_ID = #brd_id# AND
+				CONT_IDX = #cont_idx#
+			ORDER BY STARTDT DESC
+		) TB ) 
+
+	</select>
+	
+	
+	<select id="boarddryDAO.selectBoarddryMainList" parameterClass="boarddryVO" resultClass="boarddryVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+	
+			SELECT
+				BRD_ID,
+				CONT_IDX,
+				SUBJECT,
+				BRD_CONT,
+				REPEAT_YN,
+				ALLDAY_YN,
+				HOLIDAY_YN,
+				TO_CHAR(STARTDT, 'YYYY-MM-DD HH24:MI') STARTDT,
+				TO_CHAR(ENDDT, 'YYYY-MM-DD HH24:MI') ENDDT,
+				WRITER,
+				TO_CHAR(WDT, 'YY.MM.DD') MAIN_WDT,
+				TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+				MODIFIER,
+				TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+			FROM
+				$tbl_nm$
+			WHERE
+				BRD_ID = #brd_id# 
+				<isNotEmpty property="startdt" prepend="AND">
+					((TO_DATE(#startdt#, 'YYYY-MM-DD') BETWEEN TO_DATE(TO_CHAR(STARTDT, 'YYYY-MM-DD'), 'YYYY-MM-DD') AND TO_DATE(TO_CHAR(ENDDT, 'YYYY-MM-DD'), 'YYYY-MM-DD')) OR
+					(TO_DATE(#enddt#, 'YYYY-MM-DD') BETWEEN TO_DATE(TO_CHAR(STARTDT, 'YYYY-MM-DD'), 'YYYY-MM-DD') AND TO_DATE(TO_CHAR(ENDDT, 'YYYY-MM-DD'), 'YYYY-MM-DD')) OR
+          			(TO_DATE(TO_CHAR(STARTDT, 'YYYY-MM-DD'), 'YYYY-MM-DD') BETWEEN TO_DATE(#startdt#, 'YYYY-MM-DD') AND TO_DATE(#enddt#, 'YYYY-MM-DD')))
+				</isNotEmpty>
+				<isNotEmpty property="searchKeyword" prepend="AND">
+					TO_DATE(#searchKeyword#, 'YYYY-MM-DD') BETWEEN TO_DATE(TO_CHAR(STARTDT, 'YYYY-MM-DD'), 'YYYY-MM-DD') AND TO_DATE(TO_CHAR(ENDDT, 'YYYY-MM-DD'), 'YYYY-MM-DD')
+				</isNotEmpty>
+			ORDER BY STARTDT DESC
+		) TB )  WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+
+	</select>
+
+</sqlMap>
+

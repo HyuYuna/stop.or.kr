@@ -1,0 +1,847 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.brdartcl.dao.BoardarticleDAO">
+	
+	<resultMap id="boardarticle" type="boardarticleVO"> 
+		<result property="rn" column="rn"/>
+		<result property="brd_id" column="brd_id"/>
+		<result property="cont_idx" column="cont_idx"/>
+		<result property="ctgry_idx" column="ctgry_idx"/>
+		<result property="ctgry_nm" column="ctgry_nm"/>
+		<result property="subject" column="subject"/>
+		<result property="brd_cont" column="brd_cont"/>
+		<result property="hits" column="hits"/>
+		<result property="rcmnd_cnt" column="rcmnd_cnt"/>
+		<result property="rjct_cnt" column="rjct_cnt"/>
+		<result property="grp_no" column="grp_no"/>
+		<result property="grp_lv" column="grp_lv"/>
+		<result property="grp_ord" column="grp_ord"/>
+		<result property="is_notice" column="is_notice"/>
+		<result property="is_scrt" column="is_scrt"/>
+		<result property="writer" column="writer"/>
+		<result property="dfr_wdt" column="dfr_wdt"/>
+		<result property="pre_atcl" column="pre_atcl"/>
+		<result property="pre_subj" column="pre_subj"/>
+		<result property="next_atcl" column="next_atcl"/>
+		<result property="next_subj" column="next_subj"/>
+		<result property="kogl" column="kogl"/>
+		<result property="atach_cnt" column="atach_cnt"/>
+		<result property="vchkcode" column="vchkcode"/>
+		<result property="reply_cnt" column="reply_cnt"/>
+		<result property="add_info_01" column="add_info_01"/>
+		<result property="add_info_02" column="add_info_02"/>
+		<result property="add_info_03" column="add_info_03"/>
+		<result property="add_info_04" column="add_info_04"/>
+		<result property="add_info_05" column="add_info_05"/>
+		<result property="writer_nm" column="writer_nm"/>
+		<result property="wdt" column="wdt"/>
+		<result property="modifier" column="modifier"/>
+		<result property="mdt" column="mdt"/>
+	</resultMap>
+	
+	<resultMap id="boardarticleXML" type="boardarticleVO">
+		<result property="brd_id" column="brd_id"/>
+		<result property="cont_idx" column="cont_idx"/>
+		<result property="ctgry_idx" column="ctgry_idx"/>
+		<result property="ctgry_nm" column="ctgry_nm"/>
+		<result property="subject" column="subject"/>
+		<result property="brd_cont" column="brd_cont"/>
+		<result property="hits" column="hits"/>
+		<result property="rcmnd_cnt" column="rcmnd_cnt"/>
+		<result property="rjct_cnt" column="rjct_cnt"/>
+		<result property="grp_no" column="grp_no"/>
+		<result property="grp_lv" column="grp_lv"/>
+		<result property="grp_ord" column="grp_ord"/>
+		<result property="is_notice" column="is_notice"/>
+		<result property="is_scrt" column="is_scrt"/>
+		<result property="writer" column="writer"/>
+		<result property="dfr_wdt" column="dfr_wdt"/>
+		<result property="pre_atcl" column="pre_atcl"/>
+		<result property="pre_subj" column="pre_subj"/>
+		<result property="next_atcl" column="next_atcl"/>
+		<result property="next_subj" column="next_subj"/>
+		<result property="kogl" column="kogl"/>
+		<result property="atach_cnt" column="atach_cnt"/>
+		<result property="vchkcode" column="vchkcode"/>
+		<result property="rname" column="rname"/>
+		
+		<result property="reply_cnt" column="reply_cnt"/>
+		<result property="add_info_01" column="add_info_01"/>
+		<result property="add_info_02" column="add_info_02"/>
+		<result property="add_info_03" column="add_info_03"/>
+		<result property="add_info_04" column="add_info_04"/>
+		<result property="add_info_05" column="add_info_05"/>
+		<result property="writer_nm" column="writer_nm"/>
+		<result property="wdt" column="wdt"/>
+		<result property="modifier" column="modifier"/>
+		<result property="mdt" column="mdt"/>
+	</resultMap>  
+	
+	
+	<insert id="insertBoardarticle" parameterType="boardarticleVO">
+		
+		<selectKey resultType="java.lang.Integer" keyProperty="cont_idx" order="BEFORE">
+		
+			SELECT IFNULL(MAX(CONT_IDX) + 1, 1) AS CONT_IDX FROM ${tbl_nm} WHERE
+				BRD_ID = #{brd_id}
+		
+		</selectKey>
+		
+		INSERT INTO ${tbl_nm}
+		(
+			BRD_ID,
+			CONT_IDX,
+			CTGRY_IDX,
+			SUBJECT,
+			BRD_CONT,
+			HITS,
+			GRP_NO,
+			GRP_LV,
+			GRP_ORD,
+			IS_NOTICE,
+			IS_SCRT,
+			KOGL,
+			ADD_INFO_01,
+			ADD_INFO_02,
+			ADD_INFO_03,
+			ADD_INFO_04,
+			ADD_INFO_05,
+			WRITER,
+			WDT
+		)
+		VALUES
+		(
+			#{brd_id},
+			#{cont_idx},
+			#{ctgry_idx},
+			#{subject},
+			#{brd_cont},
+			#{hits},
+			<choose>
+				<when test="edomweivgp == 'A'.toString()">
+					(SELECT * FROM (SELECT IFNULL(MAX(GRP_NO) + 1, 1) FROM ${tbl_nm} WHERE BRD_ID = #{brd_id}) INN),
+					#{grp_lv},
+					#{grp_ord},
+				</when >
+				<when test="edomweivgp == 'P'.toString()">
+					#{grp_no},
+					#{grp_lv} + 1,
+					#{grp_ord} + 1,
+				</when>
+			</choose>
+			#{is_notice},
+			#{is_scrt},
+			#{kogl},
+			#{add_info_01},
+			#{add_info_02},
+			#{add_info_03},
+			#{add_info_04},
+			#{add_info_05},
+			#{writer},
+			<choose>
+				<when test="wdt == null or wdt == ''">
+					NOW()
+				</when>
+				<otherwise>
+					 STR_TO_DATE(CONCAT(#{wdt} , ' ', DATE_FORMAT(NOW(), '%H:%i:%s')), '%Y-%m-%d %H:%i:%s')
+				</otherwise>
+			</choose>
+		)
+	
+	</insert>
+	
+	<update id="updateBoardarticlereply" parameterType="boardarticleVO">
+		
+		UPDATE ${tbl_nm} SET
+			GRP_ORD = GRP_ORD + 1 
+		WHERE
+			GRP_NO = #{grp_no} AND
+			GRP_ORD <![CDATA[ > ]]> #{grp_ord}
+				
+	</update>
+	
+	
+	<update id="updateBoardarticle" parameterType="boardarticleVO">
+		
+		UPDATE ${tbl_nm} SET
+			<if test="subject != null and subject != ''">
+				CTGRY_IDX = #{ctgry_idx},
+				SUBJECT = #{subject},
+				BRD_CONT = #{brd_cont},
+			</if>
+			<if test="is_notice != null and is_notice != ''">
+				IS_NOTICE = #{is_notice},
+			</if>
+			<if test="is_scrt != null and is_scrt != ''">
+				IS_SCRT = #{is_scrt},
+			</if>
+			<if test="kogl != null and kogl != ''">
+				KOGL = #{kogl},
+			</if>
+			<if test="add_info_01 != null and add_info_01 != ''">
+				ADD_INFO_01 = #{add_info_01},
+			</if>
+			<if test="add_info_02 != null and add_info_02 != ''">
+				ADD_INFO_02 = #{add_info_02},
+			</if>
+			<if test="add_info_03 != null and add_info_03 != ''">
+				ADD_INFO_03 = #{add_info_03},
+			</if>
+			<if test="add_info_04 != null and add_info_04 != ''">
+				ADD_INFO_04 = #{add_info_04},
+			</if>
+			<if test="add_info_05 != null and add_info_05 != ''">
+				ADD_INFO_05 = #{add_info_05},
+			</if>
+			<if test="wdt != null and wdt != ''">
+				WDT = STR_TO_DATE(#{wdt}, '%Y-%m-%d %H:%i:%s'),
+			</if>
+			MODIFIER = #{modifier},
+			MDT = NOW()
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}
+	
+	</update>
+	
+	<update id="updateBoardxcount" parameterType="boardarticleVO" >
+		UPDATE ${tbl_nm} SET
+			<if test="hits != '0'.toString()">
+				HITS = #{hits},
+			</if>
+			MDT = MDT
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}
+	</update>
+
+	
+	<delete id="deleteBoard" parameterType="boardarticleVO">
+	
+		DELETE FROM
+			${tbl_nm}
+		WHERE
+			BRD_ID = #{brd_id} 
+	
+	</delete>
+	
+	<delete id="deleteBoardarticle" parameterType="boardarticleVO">
+	
+		DELETE FROM
+			${tbl_nm}
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}	
+	
+	</delete>
+	
+	<select id="selectBoardarticle" parameterType="boardarticleVO" resultType="boardarticleVO">
+	
+		SELECT
+			1 AS RN,
+			BRD_ID,
+			CONT_IDX,
+			CTGRY_IDX,
+			SF_CTGRY_NM(CTGRY_IDX) CTGRY_NM,
+			SUBJECT,
+			BRD_CONT,
+			HITS,
+			<if test="use_rcmnd != null and use_rcmnd != ''">
+				<choose>
+					<when test="use_rcmnd == 'N'.toString()">
+						0 RCMND_CNT,
+					</when>
+					<otherwise>
+						(SELECT COUNT(*) FROM CMS_BRD_RCMND WHERE BRD_ID = X.BRD_ID AND CONT_IDX = X.CONT_IDX AND RCMND_GB = 'R') RCMND_CNT,
+					</otherwise>
+				</choose>
+			</if>
+			<if test="use_rjct != null and use_rjct != ''">
+				<choose>
+					<when test="use_rjct == 'N'.toString()">
+						0 RJCT_CNT,
+					</when>
+					<otherwise>
+						(SELECT COUNT(*) FROM CMS_BRD_RCMND WHERE BRD_ID = X.BRD_ID AND CONT_IDX = X.CONT_IDX AND RCMND_GB = 'J') RJCT_CNT,
+					</otherwise>
+				</choose>
+			</if>
+			GRP_NO,
+			GRP_LV,
+			GRP_ORD,
+			IS_NOTICE,
+			IS_SCRT,
+			KOGL,
+			0 REPLY_CNT,
+			ADD_INFO_01, 
+			ADD_INFO_02,
+			ADD_INFO_03,
+			ADD_INFO_04,
+			ADD_INFO_05,
+			X.WRITER,
+			DATE_FORMAT(X.WDT, '%Y-%m-%d') WDT,
+			X.MODIFIER,
+			DATE_FORMAT(X.MDT, '%Y-%m-%d') MDT,
+			IFNULL(SF_USER_NM(WRITER), 'GUEST') WRITER_NM,
+			TO_DAYS(NOW()) - TO_DAYS(X.WDT) DFR_WDT,
+			1 ATACH_CNT, 
+			SF_BRD_PREATCL(X.CTGRY_IDX, X.BRD_ID, X.CONT_IDX, 'PRE', 'IDX', X.IS_NOTICE) PRE_ATCL,
+			SF_BRD_PREATCL(X.CTGRY_IDX, X.BRD_ID, X.CONT_IDX, 'PRE', 'SBJ', X.IS_NOTICE) PRE_SUBJ,
+			SF_BRD_PREATCL(X.CTGRY_IDX, X.BRD_ID, X.CONT_IDX, 'POS', 'IDX', X.IS_NOTICE) NEXT_ATCL,
+			SF_BRD_PREATCL(X.CTGRY_IDX, X.BRD_ID, X.CONT_IDX, 'POS', 'SBJ', X.IS_NOTICE) NEXT_SUBJ,
+	        '' VCHKCODE
+		FROM
+	    	${tbl_nm} X
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}	
+	
+	</select>
+	
+	
+	<select id="selectBoardarticleGrpwriterCnt" parameterType="boardarticleVO" resultType="int">
+	
+		SELECT
+			COUNT(*)
+		FROM
+	    	${tbl_nm} X
+		WHERE
+			BRD_ID = #{brd_id} AND
+			GRP_NO = #{grp_no} AND
+			WRITER = #{writer}	
+	
+	</select>
+	
+	<select id="selectBoardarticlePwd" parameterType="boardarticleVO" resultType="boardarticleVO">
+	
+		SELECT
+			CONT_IDX
+		FROM
+			${tbl_nm}
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx} AND
+			ADD_INFO_04 = #{add_info_04}
+
+	
+	</select>
+	
+	<select id="selectBoardarticleList" parameterType="boardarticleVO" resultType="boardarticleVO">
+		<choose>
+			<when test="is_notice == 'N'.toString()">
+				
+				SELECT * FROM ( SELECT @RNUM := @RNUM + 1 AS rn, TB.* FROM (
+				
+					SELECT
+						BRD_ID,
+						CONT_IDX,
+						CTGRY_IDX,
+						SF_CTGRY_NM(CTGRY_IDX) CTGRY_NM,
+						SUBJECT,
+						BRD_CONT,
+						HITS,
+						<if test="use_rcmnd != null and use_rcmnd != ''">
+							<choose>
+								<when test="use_rcmnd == 'N'.toString()">
+									0 RCMND_CNT,
+								</when>
+								<otherwise>
+									(SELECT COUNT(*) FROM CMS_BRD_RCMND WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX AND RCMND_GB = 'R') RCMND_CNT,
+								</otherwise>
+							</choose>
+						</if>
+						<if test="use_rjct != null and use_rjct != ''">
+							<choose>
+								<when test="use_rjct == 'N'.toString()">
+									0 RJCT_CNT,
+								</when>
+								<otherwise>
+									(SELECT COUNT(*) FROM CMS_BRD_RCMND WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX AND RCMND_GB = 'J') RJCT_CNT,
+								</otherwise>
+							</choose>
+						</if>
+						GRP_NO,
+						GRP_LV,
+						GRP_ORD,
+						IS_NOTICE,
+						IS_SCRT,
+						'' PRE_ATCL,
+						'' PRE_SUBJ,
+						'' NEXT_ATCL,
+						'' NEXT_SUBJ,
+		                KOGL,
+						ADD_INFO_01,
+						ADD_INFO_02,
+						ADD_INFO_03,
+						ADD_INFO_04,
+						ADD_INFO_05,
+		                A.WRITER,
+		                DATE_FORMAT(A.WDT, '%Y.%m.%d') MAIN_WDT,
+		                DATE_FORMAT(A.WDT, '%Y-%m-%d') WDT,
+		                A.MODIFIER,
+		                DATE_FORMAT(A.MDT, '%Y-%m-%d') MDT,
+						IFNULL(SF_USER_NM(WRITER), 'GUEST') WRITER_NM,
+		                TO_DAYS(NOW()) - TO_DAYS(A.WDT) DFR_WDT,
+		                <choose>
+			                <when test="reply_gb == 'R'.toString()">
+			                	(SELECT COUNT(*) FROM ${reply_tbl_nm} WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX) REPLY_CNT,
+			                </when>        
+			                <when test="reply_gb == 'B'.toString()">
+			                	(SELECT COUNT(*) FROM ${reply_tbl_nm} WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX) REPLY_CNT,
+			                </when>
+			                <when test="reply_gb == 'A'.toString()">
+			                 	0 REPLY_CNT,
+			                </when>
+			                <when test="reply_gb == 'N'.toString()">
+			                	0 REPLY_CNT,
+			                </when>
+		                </choose>
+						IFNULL(CAST(SF_ATCFILE_INFO(BRD_ID, CAST(CONT_IDX AS CHAR), 0, 0, 'N', 'COUNT') AS UNSIGNED),0) ATACH_CNT,
+		                SF_ATCFILE_INFO(BRD_ID, CAST(CONT_IDX AS CHAR), 0, 0, 'N', 'VCODE') VCHKCODE
+					FROM
+				        ${tbl_nm} A
+					WHERE
+						BRD_ID = #{brd_id} AND
+						IS_NOTICE = 'N'
+						<if test="searchKeyword != null and searchKeyword != ''">
+							<if test="searchCondition != null and searchCondition != ''">
+								AND
+								<choose>
+									<when test="searchCondition == 'SC_ALL'.toString()">
+										( SUBJECT LIKE CONCAT('%', #{searchKeyword}, '%') OR BRD_CONT LIKE CONCAT('%', #{searchKeyword}, '%') OR ADD_INFO_01 LIKE CONCAT('%', #{searchKeyword}, '%') )
+									</when>
+									<otherwise>
+										${searchCondition} LIKE CONCAT('%', #{searchKeyword}, '%')
+									</otherwise>
+								</choose>
+							</if>
+						</if>
+						<if test="srch_ctgry_idx != null and srch_ctgry_idx != ''">
+							AND CTGRY_IDX = #{srch_ctgry_idx}
+						</if>
+	
+										
+				) TB, ( SELECT @RNUM := 0 ) R 
+					<choose>
+						<when test="reply_gb != 'N'.toString()">
+							ORDER BY 
+								IS_NOTICE DESC, GRP_NO DESC, GRP_ORD ASC
+						</when>
+						<otherwise>
+							ORDER BY 
+								WDT DESC, CONT_IDX DESC
+						</otherwise>
+					</choose>
+				) AL  WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+				
+			</when>
+		
+			<when test="is_notice == 'Y'.toString()">
+				
+				SELECT * FROM ( SELECT @RNUM := @RNUM + 1 AS rn, TB.* FROM (
+					SELECT
+						BRD_ID,
+						CONT_IDX,
+						CTGRY_IDX,
+						SF_CTGRY_NM(CTGRY_IDX) CTGRY_NM,
+						SUBJECT,
+						'' BRD_CONT,
+						HITS,
+						<if test="use_rcmnd != null and use_rcmnd != ''">
+							<choose>
+								<when test="use_rcmnd == 'N'.toString()">
+									0 RCMND_CNT,
+								</when>
+								<otherwise>
+									(SELECT COUNT(*) FROM CMS_BRD_RCMND WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX AND RCMND_GB = 'R') RCMND_CNT,
+								</otherwise>
+							</choose>
+						</if>
+						<if test="use_rjct != null and use_rjct != ''">
+							<choose>
+								<when test="use_rjct == 'N'.toString()">
+									0 RJCT_CNT,
+								</when>
+								<otherwise>
+									(SELECT COUNT(*) FROM CMS_BRD_RCMND WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX AND RCMND_GB = 'J') RJCT_CNT,
+								</otherwise>
+							</choose>
+						</if>
+						GRP_NO,
+						GRP_LV, 
+						GRP_ORD,
+						IS_NOTICE,
+						IS_SCRT,
+						'' PRE_ATCL,
+						'' PRE_SUBJ,
+						'' NEXT_ATCL,
+						'' NEXT_SUBJ,
+						KOGL,
+						ADD_INFO_01,
+						ADD_INFO_02,
+						ADD_INFO_03,
+						ADD_INFO_04,
+						ADD_INFO_05,
+		                A.WRITER,
+						IFNULL(SF_USER_NM(WRITER), 'GUEST') WRITER_NM,
+		                DATE_FORMAT(A.WDT, 'YY.MM.DD') MAIN_WDT,
+		                DATE_FORMAT(A.WDT, '%Y-%m-%d') WDT,
+		                A.MODIFIER,
+		                DATE_FORMAT(A.MDT, '%Y-%m-%d') MDT,
+		                ROUND(NOW() - A.WDT) DFR_WDT,
+		                <choose>
+			               	<when test="reply_gb == 'R'.toString()">
+			                	(SELECT COUNT(*) FROM ${reply_tbl_nm} WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX) REPLY_CNT,
+			                </when>        
+			                <when test="reply_gb == 'B'.toString()">
+			                	(SELECT COUNT(*) FROM ${reply_tbl_nm} WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX) REPLY_CNT,
+			                </when>
+			                <when test="reply_gb == 'A'.toString()">
+			                 	0 REPLY_CNT,
+			                </when>
+			                <when test="reply_gb == 'N'.toString()">
+			                	0 REPLY_CNT,
+			                </when> 
+		                </choose>
+						CAST(SF_ATCFILE_INFO(BRD_ID, CAST(CONT_IDX AS CHAR), 0, 0, 'N', 'COUNT') AS UNSIGNED) ATACH_CNT,
+		                SF_ATCFILE_INFO(BRD_ID, CAST(CONT_IDX AS CHAR), 0, 0, 'N', 'VCODE') VCHKCODE
+					FROM
+						${tbl_nm} A
+					WHERE
+						BRD_ID = #{brd_id} AND
+						IS_NOTICE = 'Y'
+						<if test="srch_ctgry_idx != null and srch_ctgry_idx != ''">
+							AND CTGRY_IDX = #{srch_ctgry_idx}
+						</if>
+				) TB, ( SELECT @RNUM := 0 ) R 
+					<choose>
+						<when test="reply_gb != 'N'.toString()">
+							ORDER BY 
+								IS_NOTICE DESC, GRP_NO DESC, GRP_ORD ASC
+						</when>
+						<otherwise>
+							ORDER BY 
+								WDT DESC, CONT_IDX DESC
+						</otherwise>
+					</choose>
+				) AL
+			
+			</when>
+			
+		</choose>
+	</select>
+	
+	
+	
+	<select id="selectBoardarticleListTotCnt" parameterType="boardarticleVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS "totcnt"
+		FROM
+			(
+				SELECT 
+					A.*,
+					SF_USER_NM(WRITER) WRITER_NM 
+				FROM
+					${tbl_nm} A
+			) INN
+		WHERE
+			BRD_ID = #{brd_id}
+			<choose>
+				<when test="is_notice == 'Y'.toString()">
+					AND IS_NOTICE = 'Y'
+				</when>
+				<when test="is_notice == 'N'.toString()">
+					AND IS_NOTICE = 'N'
+					<if test="searchKeyword != null and searchKeyword != ''">
+						<if test="searchCondition != null and searchCondition != ''">
+							AND
+							<choose>
+								<when test="searchCondition == 'SC_ALL'.toString()">
+									( SUBJECT LIKE CONCAT('%', #{searchKeyword}, '%') OR BRD_CONT LIKE CONCAT('%', #{searchKeyword}, '%') )
+								</when>
+								<otherwise>
+									${searchCondition} LIKE CONCAT('%', #{searchKeyword}, '%')
+								</otherwise>
+							</choose>
+						</if>
+					</if>			
+					<if test="srch_ctgry_idx != null and srch_ctgry_idx != ''">
+						AND CTGRY_IDX = #{srch_ctgry_idx}
+					</if>	
+				</when>
+			</choose>
+			
+	</select>
+	
+	<select id="selectBoardarticlegroupList" parameterType="boardarticleVO" resultType="boardarticleVO">
+	
+		SELECT
+			brd_id,
+		    cont_idx
+		FROM
+		    ${tbl_nm}
+		WHERE
+		    BRD_ID = #{brd_id} AND
+		    GRP_NO = #{grp_no} AND
+		    <![CDATA[
+		    GRP_ORD  >=  #{grp_ord} AND  GRP_ORD < ( SELECT IFNULL(MIN(GRP_ORD), 1024 * 1024) FROM ${tbl_nm} 
+		    	WHERE GRP_NO = #{grp_no} AND GRP_ORD > #{grp_ord} AND GRP_LV <= #{grp_lv})
+			]]> 
+		ORDER BY
+		    GRP_ORD
+	
+	</select>
+
+	<select id="selectTotalSearchList" parameterType="boardarticleVO" resultType="boardarticleVO">
+	
+		SELECT * FROM ( SELECT @RNUM := @RNUM + 1 AS rn, TB.* FROM (
+		
+			<choose>
+		
+				<when test="searchType == 'BRD'.toString()">
+			
+				SELECT
+					A.BRD_ID,
+				    BRD_NM,
+				    CONT_IDX,
+					SUBJECT,
+				    BRD_CONT,
+				    WRITER_NM,
+				    (SELECT MIN(MENU_NIX) FROM CMS_SYS_MENU WHERE MENU_NM = B.BRD_NM) MENU_NIX,
+				    '' CONT_PATH,
+				    BRD_GB,
+				    A.WRITER,
+				    DATE_FORMAT(A.WDT, 'YY-MM-DD') WDT
+				FROM
+				  (
+				    SELECT
+				        BRD_ID,
+				        CONT_IDX,
+				        SUBJECT,
+				        BRD_CONT,
+				        SF_USER_NM(WRITER) WRITER_NM,
+				        WRITER,
+				        STR_TO_DATE(WDT, '%Y-%m-%d') WDT
+				    FROM	
+				        CMS_BRD_TXT_IDX_VXD5L880
+				    UNION ALL
+				    SELECT
+				        BRD_ID,
+				        CONT_IDX,
+				        SUBJECT,
+				        BRD_CONT,
+				        SF_USER_NM(WRITER) WRITER_NM,
+				        WRITER,
+				        STR_TO_DATE(WDT, '%Y-%m-%d') WDT
+				    FROM	
+				        CMS_BRD_TXT_IDX_FAD1X223
+				    UNION ALL
+				    SELECT
+				        BRD_ID,
+				        CONT_IDX,
+				        SUBJECT,
+				        BRD_CONT,
+				        SF_USER_NM(WRITER) WRITER_NM,
+				        WRITER,
+				        STR_TO_DATE(WDT, '%Y-%m-%d') WDT
+				    FROM	
+				        CMS_BRD_THM_IDX_CF68M3GZ
+				  ) A,
+				  CMS_BRD_INFO B
+				WHERE
+					A.BRD_ID = B.BRD_ID    
+					<if test="searchKeyword != null and searchKeyword != ''">
+						AND
+						<if test="searchCondition == 'SC_ALL'.toString()">
+							( WRITER_NM LIKE '%' || #{searchKeyword} || '%' OR SUBJECT LIKE '%' || #{searchKeyword} || '%' OR BRD_CONT LIKE '%' || #{searchKeyword} || '%' )
+						</if>
+						<if test="searchCondition != 'SC_ALL'.toString()">
+							${searchCondition} LIKE CONCAT('%', #{searchKeyword}, '%')
+						</if>
+					</if>
+					
+					ORDER BY A.BRD_ID ASC, CONT_IDX DESC
+	
+				</when>
+				
+				<when test="searchType == 'CONT'.toString()">
+					SELECT
+						BRD_ID,
+					    BRD_NM,
+						BRD_GB,
+					    CONT_IDX,
+						SUBJECT,
+					    BRD_CONT,
+					    WRITER_NM,
+					  	MENU_NIX,
+					    WRITER,
+					    WDT
+					FROM
+						(
+							SELECT
+								UCONT_ID BRD_ID,
+								'USR_CONTENT' BRD_NM,
+								'' BRD_GB,
+							    0 CONT_IDX,
+								UCONT_VERSION,
+								UCONT_SUBJECT SUBJECT,
+								UCONT_CONT BRD_CONT,
+							    (SELECT MENU_NIX FROM CMS_SYS_MENU WHERE MENU_NM = UCONT_SUBJECT) MENU_NIX,
+							    (SELECT MENU_IDX FROM CMS_SYS_MENU WHERE MENU_NM = UCONT_SUBJECT) MENU_IDX,
+							    (SELECT TABMENU_YN FROM CMS_SYS_MENU WHERE MENU_NM = UCONT_SUBJECT) TABMENU_YN,
+							    SF_USER_NM(WRITER) WRITER_NM,
+								WRITER,
+								WDT
+							FROM
+								(
+									SELECT
+										UCONT_ID,
+										UCONT_VERSION,
+										UCONT_SUBJECT,
+										UCONT_CSS,
+										UCONT_CONT,
+										WRITER,
+										DATE_FORMAT(WDT, '%Y-%m-%d') WDT,
+										RANK() OVER (PARTITION BY UCONT_ID ORDER BY UCONT_VERSION DESC) RANKORD
+									FROM
+										CMS_USR_CONTENTS
+								)
+								WHERE RANKORD = 1					
+						)
+					WHERE
+						1 = 1
+						AND TABMENU_YN='N'
+						<if test="searchKeyword != null and searchKeyword != ''">
+							AND
+							<if test="searchCondition == 'SC_ALL'.toString()">
+								( WRITER_NM LIKE '%' || #{searchKeyword} || '%' OR SUBJECT LIKE '%' || #{searchKeyword} || '%' OR BRD_CONT LIKE '%' || #{searchKeyword} || '%' )
+							</if>
+							<if test="searchCondition != 'SC_ALL'.toString()">
+								${searchCondition} LIKE CONCAT('%', #{searchKeyword}, '%')
+							</if>
+						</if>
+				</when>
+				
+			</choose>
+		) TB, ( SELECT @RNUM := 0 ) R ) AL
+	</select>
+
+	
+	<select id="selectBoardarticleMainList" parameterType="boardarticleVO" resultType="boardarticleVO">
+
+		SELECT * FROM (
+			
+			SELECT
+				ROWNUM RN,
+				BRD_ID,
+				CONT_IDX,
+				CTGRY_IDX,
+				SF_CTGRY_NM(CTGRY_IDX) CTGRY_NM,
+				SUBJECT,
+				'' BRD_CONT,
+				HITS,
+				<if test="use_rcmnd != null and use_rcmnd != ''">
+					<if test="use_rcmnd == 'N'.toString()">
+						0 RCMND_CNT,
+					</if>
+					<if test="use_rcmnd != 'N'.toString()">
+						(SELECT COUNT(*) FROM CMS_BRD_RCMND WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX AND RCMND_GB = 'R') RCMND_CNT,
+					</if>
+				</if>
+				<if test="use_rjct != null and use_rjct != ''">
+					<if test="use_rjct == 'N'.toString()">
+						0 RJCT_CNT,
+					</if>
+					<if test="use_rjct != 'N'.toString()">
+						(SELECT COUNT(*) FROM CMS_BRD_RCMND WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX AND RCMND_GB = 'J') RJCT_CNT,
+					</if>
+				</if>
+				GRP_NO,
+				GRP_LV,
+				GRP_ORD,
+				IS_NOTICE,
+				IS_SCRT,
+				'' PRE_ATCL,
+				'' PRE_SUBJ,
+				'' NEXT_ATCL,
+				'' NEXT_SUBJ,
+	               KOGL,
+				ADD_INFO_01,
+				ADD_INFO_02,
+				ADD_INFO_03,
+				ADD_INFO_04,
+				ADD_INFO_05,
+	            A.WRITER,
+	            DATE_FORMAT(A.WDT, '%Y.%m.%d') MAIN_WDT,
+	            DATE_FORMAT(A.WDT, '%Y-%m-%d') WDT,
+	            A.MODIFIER,
+	            DATE_FORMAT(A.MDT, '%Y-%m-%d') MDT,
+				IFNULL(SF_USER_NM(WRITER), 'GUEST') WRITER_NM,
+	            0 REPLY_CNT,
+				ROUND(NOW() - A.WDT) DFR_WDT,
+				IFNULL(SF_ATCFILE_INFO(BRD_ID, CONCAT(CONT_IDX), 0, 0, 'N', 'COUNT'),0) ATACH_CNT,
+	            SF_ATCFILE_INFO(BRD_ID, CONCAT(CONT_IDX), 0, 0, 'N', 'VCODE') VCHKCODE,
+	            RANK() OVER (PARTITION BY BRD_ID ORDER BY CONT_IDX DESC) RANKORD
+			FROM
+		        ${tbl_nm} A
+			WHERE
+				BRD_ID IN (${brd_id_list})
+				<if test="searchKeyword != null and searchKeyword != ''">
+					<if test="searchCondition != null and searchCondition != ''">AND
+						<if test="searchCondition == 'SC_ALL'.toString()">
+							( SUBJECT LIKE '%' || #{searchKeyword} || '%' OR BRD_CONT LIKE '%' || #{searchKeyword} || '%')
+						</if>
+						<if test="searchCondition != 'SC_ALL'.toString()">
+							${searchCondition} LIKE CONCAT('%', #{searchKeyword}, '%')
+						</if>
+					</if>
+				</if>
+				<if test="srch_ctgry_idx != null and srch_ctgry_idx != ''">AND
+					CTGRY_IDX = #{srch_ctgry_idx}
+				</if>
+	
+			<if test="reply_gb != 'N'.toString()">
+				ORDER BY 
+					BRD_ID ASC, IS_NOTICE DESC, GRP_NO DESC, GRP_ORD ASC
+			</if>
+			<if test="reply_gb == 'N'.toString()">
+				ORDER BY 
+					BRD_ID ASC, WDT DESC, CONT_IDX DESC
+			</if>
+		
+		) TB WHERE RANKORD BETWEEN #{firstIndex} + 1 AND #{recordCountPerPage}
+	</select>
+	
+	
+		
+	<select id="selectBoardarticleAnonimChk" parameterType="boardarticleVO" resultType="int">
+			
+			<!-- SELECT
+				COUNT (*)
+			FROM
+		        ${tbl_nm} A
+			WHERE
+				BRD_ID = #{brd_id} AND
+				ADD_INFO_02 = #{add_info_02} AND
+				TO_DAYS(NOW()) - TO_DAYS(WDT) * 24 * 60 * 60 <![CDATA[ < ]]> 180 -->
+				
+			SELECT
+				COUNT(*)
+			FROM
+		        ${tbl_nm} A
+			WHERE
+				BRD_ID = #{brd_id} AND
+				ADD_INFO_02 = #{add_info_02} AND
+				TIMESTAMPDIFF(SECOND, WDT, NOW()) <![CDATA[ < ]]> 60
+				
+				
+				
+				  			
+	</select>
+	
+
+
+</mapper>
+

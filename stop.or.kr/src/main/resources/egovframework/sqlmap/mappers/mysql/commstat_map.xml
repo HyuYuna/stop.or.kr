@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.man.stat.dao.CommstatDAO">
+
+	<insert id="insertCommstat" parameterType="commstatVO">
+
+		INSERT INTO CMS_COMM_STAT
+		(
+			STAT_KEY,
+			STAT_SESSID,
+			STAT_KEY_NM,
+			STAT_CITY,
+			STAT_NAT,
+			STAT_NAT_CD,
+			STAT_BW,
+			STAT_OS,
+			STAT_REFERER,
+			STAT_DT,
+			STAT_RADDR,
+			STAT_UID
+		)
+		VALUES
+		(
+			#{stat_key},
+			#{stat_sessid},
+			#{stat_key_nm},
+			#{stat_city},
+			#{stat_nat},
+			#{stat_nat_cd},
+			#{stat_bw},
+			#{stat_os},
+			#{stat_referer},
+			NOW(),
+			#{stat_raddr},
+			#{stat_uid}			
+		)
+
+	</insert>
+	
+
+	<select id="selectCommstatList" parameterType="commstatVO" resultType="commstatVO">
+
+		SELECT * FROM ( SELECT @RNUM := @RNUM + 1 AS rn, TB.* FROM (
+
+			SELECT 
+				STAT_KEY,
+				STAT_SESSID,
+				STAT_KEY_NM,
+				STAT_CITY,
+				STAT_NAT,
+				STAT_NAT_CD,
+				STAT_OS,
+				STAT_BW,
+				STAT_REFERER,
+				STAT_DT,
+				STAT_RADDR,
+				STAT_UID,
+				STAT_UNM
+			FROM
+				(
+					SELECT 
+						STAT_KEY,
+						STAT_SESSID,
+						STAT_KEY_NM,
+						UPPER(STAT_CITY) STAT_CITY,
+						UPPER(STAT_NAT) STAT_NAT,
+						STAT_NAT_CD,
+						STAT_OS,
+						STAT_BW,
+						STAT_REFERER,
+						DATE_FORMAT(STAT_DT, '%Y-%m-%d %H:%i:%s') STAT_DT,
+						STAT_RADDR,
+						STAT_UID,
+						SF_USER_NM(STAT_UID) STAT_UNM
+					FROM 
+						CMS_COMM_STAT
+				) INN
+			WHERE
+				1 = 1 
+				<choose>
+					<when test="stat_key == null or stat_key == ''">
+						AND STAT_KEY IN ('USERMAN', 'APPLMAN')
+					</when>
+					<otherwise>
+						AND STAT_KEY = #{stat_key}
+					</otherwise>
+				</choose>
+				<if test="srchFromDT != null and srchFromDT != ''">
+					<if test="srchToDT != null and srchToDT != ''">
+						AND STAT_DT BETWEEN CONCAT(#{srchFromDT}, ' 00:00:00') AND CONCAT(#{srchToDT}, ' 23:59:59')
+					</if>				
+				</if>
+				
+			ORDER BY STAT_DT DESC
+		) TB, ( SELECT @RNUM := 0 ) R ) AL  WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+
+	</select>
+	
+
+
+	<select id="selectCommstatListTotCnt" parameterType="commstatVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			(
+				SELECT 
+					STAT_KEY,
+					STAT_SESSID,
+					STAT_KEY_NM,
+					UPPER(STAT_CITY) STAT_CITY,
+					UPPER(STAT_NAT) STAT_NAT,
+					STAT_NAT_CD,
+					STAT_OS,
+					STAT_BW,
+					STAT_REFERER,
+					DATE_FORMAT(STAT_DT, '%Y-%m-%d %H:%i:%s') STAT_DT,
+					STAT_RADDR,
+					STAT_UID,
+					SF_USER_NM(STAT_UID) STAT_UNM
+				FROM 
+					CMS_COMM_STAT
+				) INN		
+		WHERE
+			1 = 1 
+			<choose>
+				<when test="stat_key == null or stat_key == ''">
+					AND STAT_KEY IN ('USERMAN', 'APPLMAN')
+				</when>
+				<otherwise>
+					AND STAT_KEY = #{stat_key}
+				</otherwise>
+			</choose>
+			<if test="srchFromDT != null and srchFromDT != ''">
+				<if test="srchToDT != null and srchToDT != ''">
+					AND STAT_DT BETWEEN CONCAT(#{srchFromDT}, ' 00:00:00') AND CONCAT(#{srchToDT}, ' 23:59:59')
+				</if>					
+			</if>
+
+	</select>
+
+ 	
+	<select id="selectCommstatCnt" parameterType="commstatVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_COMM_STAT			
+		WHERE
+			STAT_KEY = #{stat_key} AND
+			STAT_SESSID = #{stat_sessid}
+
+	</select>
+	
+		<select id="xlsCommstatList" parameterType="commstatVO" resultType="commstatVO">
+
+		SELECT * FROM ( SELECT @RNUM := @RNUM + 1 AS rn, TB.* FROM (
+
+			SELECT 
+				STAT_KEY,
+				STAT_SESSID,
+				STAT_KEY_NM,
+				STAT_CITY,
+				STAT_NAT,
+				STAT_NAT_CD,
+				STAT_OS,
+				STAT_BW,
+				STAT_REFERER,
+				STAT_DT,
+				STAT_RADDR,
+				STAT_UID,
+				STAT_UNM
+			FROM
+				(
+					SELECT 
+						STAT_KEY,
+						STAT_SESSID,
+						STAT_KEY_NM,
+						UPPER(STAT_CITY) STAT_CITY,
+						UPPER(STAT_NAT) STAT_NAT,
+						STAT_NAT_CD,
+						STAT_OS,
+						STAT_BW,
+						STAT_REFERER,
+						DATE_FORMAT(STAT_DT, '%Y-%m-%d %H:%i:%s') STAT_DT,
+						STAT_RADDR,
+						STAT_UID,
+						SF_USER_NM(STAT_UID) STAT_UNM
+					FROM 
+						CMS_COMM_STAT
+				) INN
+			WHERE
+				1 = 1 
+				<choose>
+					<when test="stat_key == null or stat_key == ''">
+						AND STAT_KEY IN ('USERMAN', 'APPLMAN')
+					</when>
+					<otherwise>
+						AND STAT_KEY = #{stat_key}
+					</otherwise>
+				</choose>
+				<if test="srchFromDT != null and srchFromDT != ''">
+					<if test="srchToDT != null and srchToDT != ''">
+						AND STAT_DT BETWEEN CONCAT(#{srchFromDT}, ' 00:00:00') AND CONCAT(#{srchToDT}, ' 23:59:59')
+					</if>				
+				</if>
+				
+			ORDER BY STAT_DT DESC
+		) TB, ( SELECT @RNUM := 0 ) R ) AL  
+
+	</select>
+	
+	<select id="viewstatCountry" parameterType="commstatVO" resultType="commstatVO">
+		
+		SELECT 
+			IFNULL(UPPER(STAT_NAT), 'UNKNOWN') CHARTDATA_KEY,  
+		  	COUNT(*) CHARTDATA_VAL
+		FROM 
+			CMS_COMM_STAT
+		WHERE 
+			STAT_KEY = 'MAIN'
+			<if test="date_choice != null and date_choice != ''">
+				<choose>
+					<when test="date_choice == 'YY'.toString()">
+						AND DATE_FORMAT(STAT_DT, '%Y') BETWEEN #{srchFromDT} AND #{srchToDT}
+					</when>
+					<when test="date_choice == 'MM'.toString()">
+						AND DATE_FORMAT(STAT_DT, '%Y%m') BETWEEN #{srchFromDT} AND #{srchToDT}
+					</when>
+					<when test="date_choice == 'DD'.toString()">
+						AND DATE_FORMAT(STAT_DT, '%Y%m%d') BETWEEN #{srchFromDT} AND #{srchToDT}
+					</when>
+				</choose>
+			</if>	
+		GROUP BY UPPER(STAT_NAT)
+		ORDER BY CHARTDATA_VAL
+		
+	</select>
+
+	<select id="viewstatCity" parameterType="commstatVO" resultType="commstatVO">
+
+		SELECT 
+			IFNULL(UPPER(STAT_CITY), 'UNKNOWN') CHARTDATA_KEY,  
+			COUNT(*) CHARTDATA_VAL
+		FROM 
+			CMS_COMM_STAT
+		WHERE 
+			STAT_KEY = 'MAIN'
+			<if test="date_choice != null and date_choice != ''">
+				<choose>
+					<when test="date_choice == 'YY'.toString()">
+						AND DATE_FORMAT(STAT_DT, '%Y') BETWEEN #{srchFromDT} AND #{srchToDT}
+					</when>
+					<when test="date_choice == 'MM'.toString()">
+						AND DATE_FORMAT(STAT_DT, '%Y%m') BETWEEN #{srchFromDT} AND #{srchToDT}
+					</when>
+					<when test="date_choice == 'DD'.toString()">
+						AND DATE_FORMAT(STAT_DT, '%Y%m%d') BETWEEN #{srchFromDT} AND #{srchToDT}
+					</when>
+				</choose>
+			</if>		
+		GROUP BY UPPER(STAT_CITY)		
+		ORDER BY CHARTDATA_VAL
+		
+	</select>
+
+	<select id="viewstatOS" parameterType="commstatVO" resultType="commstatVO">
+
+		SELECT 
+			IFNULL(STAT_OS, 'UNKNOWN') CHARTDATA_KEY,  
+		  	COUNT(*) CHARTDATA_VAL
+		FROM 
+			CMS_COMM_STAT
+		WHERE 
+			STAT_KEY = 'MAIN'
+			<if test="date_choice != null and date_choice != ''">
+				<choose>
+					<when test="date_choice == 'YY'.toString()">
+						AND DATE_FORMAT(STAT_DT, '%Y') BETWEEN #{srchFromDT} AND #{srchToDT}
+					</when>
+					<when test="date_choice == 'MM'.toString()">
+						AND DATE_FORMAT(STAT_DT, '%Y%m') BETWEEN #{srchFromDT} AND #{srchToDT}
+					</when>
+					<when test="date_choice == 'DD'.toString()">
+						AND DATE_FORMAT(STAT_DT, '%Y%m%d') BETWEEN #{srchFromDT} AND #{srchToDT}
+					</when>
+				</choose>
+			</if>
+		GROUP BY STAT_OS
+		ORDER BY CHARTDATA_VAL
+		
+	</select>
+
+	<select id="viewstatBrowser" parameterType="commstatVO" resultType="commstatVO">
+		
+		SELECT 
+			IFNULL(STAT_BW, 'UNKNOWN') CHARTDATA_KEY,  
+		  	COUNT(*) CHARTDATA_VAL
+		FROM 
+			CMS_COMM_STAT
+		WHERE 
+			STAT_KEY = 'MAIN'
+			<if test="date_choice != null and date_choice != ''">
+				<choose>
+					<when test="date_choice == 'YY'.toString()">
+						AND DATE_FORMAT(STAT_DT, '%Y') BETWEEN #{srchFromDT} AND #{srchToDT}
+					</when>
+					<when test="date_choice == 'MM'.toString()">
+						AND DATE_FORMAT(STAT_DT, '%Y%m') BETWEEN #{srchFromDT} AND #{srchToDT}
+					</when>
+					<when test="date_choice == 'DD'.toString()">
+						AND DATE_FORMAT(STAT_DT, '%Y%m%d') BETWEEN #{srchFromDT} AND #{srchToDT}
+					</when>
+				</choose>
+			</if>			
+		GROUP BY STAT_BW
+		ORDER BY CHARTDATA_VAL
+		
+	</select>
+
+	<select id="viewstatVisitHourly" parameterType="commstatVO" resultType="commstatVO">
+		
+		SELECT 
+			'0' AS CHARTDATA_SRZ, 
+	    	B.CTDATE AS CHARTDATA_KEY, 
+	    	IFNULL(CNT, 0) AS CHARTDATA_VAL
+	  	FROM 
+	    (
+	    	SELECT 
+	    		STAT_DT, 
+	    		COUNT(*) CNT 
+	    	FROM 
+	   		(
+	   			SELECT 
+	   				DATE_FORMAT(STAT_DT, '%H') STAT_DT 
+	   			FROM 
+	   				CMS_COMM_STAT A 
+	   			WHERE 
+	   				STAT_KEY = 'MAIN' 			
+					<if test="date_choice != null and date_choice != ''">
+		   				<choose>
+			   				<when test="date_choice == 'YY'.toString()">
+			   					AND DATE_FORMAT(STAT_DT, '%Y') BETWEEN #{srchFromDT} AND #{srchToDT}
+							</when>
+							<when test="date_choice == 'MM'.toString()">
+								AND DATE_FORMAT(STAT_DT, '%Y%m') BETWEEN #{srchFromDT} AND #{srchToDT}
+							</when>
+							<when test="date_choice == 'DD'.toString()">
+								AND DATE_FORMAT(STAT_DT, '%Y%m%d') BETWEEN #{srchFromDT} AND #{srchToDT}
+							</when>
+						</choose>
+					</if>
+	   		) INN
+		    GROUP BY STAT_DT 
+	    ) A RIGHT OUTER JOIN 
+	    (
+	    	SELECT
+	    		CTDATE
+	    	FROM
+	    	(
+				SELECT
+					@RNUM := @RNUM + 1  CTDATE
+				FROM
+					CMS_MAN_LOG, ( SELECT @RNUM := -1 ) R
+			) DT
+			WHERE CTDATE BETWEEN 0 AND 23
+	    	
+	    ) B 
+	 	ON A.STAT_DT = B.CTDATE 
+		ORDER BY CTDATE
+	</select>
+
+	<select id="viewstatVisitDaily" parameterType="commstatVO" resultType="commstatVO">
+		
+		SELECT 
+			'0' CHARTDATA_SRZ, 
+	    	B.CTDATE CHARTDATA_KEY, 
+	    	IFNULL(CNT, 0) CHARTDATA_VAL
+	  	FROM 
+	    (
+	    	SELECT 
+	    		STAT_DT, 
+	    		COUNT(*) CNT 
+	    	FROM 
+	   		(
+	   			SELECT 
+	   				DATE_FORMAT(STAT_DT, '%Y%m%d') STAT_DT 
+	   			FROM 
+	   				CMS_COMM_STAT A 
+	   			WHERE 
+	   				STAT_KEY = 'MAIN' AND
+					DATE_FORMAT(STAT_DT, '%Y%m%d') BETWEEN #{srchFromDT} AND #{srchToDT} 				
+	   				
+	   		) INN
+		    GROUP BY STAT_DT 
+	    ) A RIGHT OUTER JOIN 
+	    (
+	    	SELECT
+				CTDATE
+			FROM
+			(
+				SELECT
+					DATE_FORMAT(DATE_ADD(STR_TO_DATE(#{srchFromDT}, '%Y%m%d'), INTERVAL @RNUM := @RNUM + 1 DAY), '%Y%m%d') CTDATE
+				FROM
+					CMS_MAN_LOG, ( SELECT @RNUM := -1 ) R
+			) DT
+			WHERE 
+				CTDATE BETWEEN #{srchFromDT} AND #{srchToDT}
+	    	
+	    ) B 
+	 	ON A.STAT_DT = B.CTDATE 
+		ORDER BY CTDATE
+		
+	</select>
+
+	<select id="viewstatVisitMonthly" parameterType="commstatVO" resultType="commstatVO">
+		
+		SELECT 
+			'0' CHARTDATA_SRZ, 
+	    	B.CTDATE CHARTDATA_KEY, 
+	    	IFNULL(CNT, 0) CHARTDATA_VAL
+	  	FROM 
+	    (
+	    	SELECT 
+	    		STAT_DT, 
+	    		COUNT(*) CNT 
+	    	FROM 
+	   		(
+	   			SELECT 
+	   				DATE_FORMAT(STAT_DT, '%Y%m') STAT_DT 
+	   			FROM 
+	   				CMS_COMM_STAT A 
+	   			WHERE 
+	   				STAT_KEY = 'MAIN' AND
+					DATE_FORMAT(STAT_DT, '%Y%m') BETWEEN #{srchFromDT} AND #{srchToDT} 
+	   		) INN
+		    GROUP BY STAT_DT 
+	    ) A RIGHT OUTER JOIN
+	    (
+			SELECT
+				SUBSTR(CTDATE, 1, 6) CTDATE
+			FROM
+			(
+				SELECT
+					DATE_FORMAT(DATE_ADD(STR_TO_DATE(CONCAT(#{srchFromDT}, '01'), '%Y%m%d'), INTERVAL @RNUM := @RNUM + 1 MONTH), '%Y%m%d') CTDATE
+				FROM
+					CMS_MAN_LOG, ( SELECT @RNUM := -1 ) R
+			) DT
+			WHERE 
+				CTDATE BETWEEN CONCAT(#{srchFromDT}, '01') AND CONCAT(#{srchToDT}, '01')
+            
+	    ) B 
+	 	ON A.STAT_DT = B.CTDATE 
+		ORDER BY CTDATE
+		
+	</select>
+	
+	<select id="viewstatVisitYearly" parameterType="commstatVO" resultType="commstatVO">
+		
+		SELECT 
+			'0' CHARTDATA_SRZ, 
+	    	B.CTDATE CHARTDATA_KEY, 
+	    	IFNULL(CNT, 0) CHARTDATA_VAL
+	  	FROM 
+	    (
+	    	SELECT 
+	    		STAT_DT, 
+	    		COUNT(*) CNT 
+	    	FROM 
+	   		(
+	   			SELECT 
+	   				DATE_FORMAT(STAT_DT, '%Y') STAT_DT 
+	   			FROM 
+	   				CMS_COMM_STAT A 
+	   			WHERE 
+	   				STAT_KEY = 'MAIN' AND
+					DATE_FORMAT(STAT_DT, '%Y') BETWEEN #{srchFromDT} AND #{srchToDT}
+	   		) INN 
+		    GROUP BY STAT_DT 
+	    ) A RIGHT OUTER JOIN
+	    (
+
+			SELECT
+				SUBSTR(CTDATE, 1, 4) CTDATE
+			FROM
+			(
+				SELECT
+					DATE_FORMAT(DATE_ADD(STR_TO_DATE(CONCAT(#{srchFromDT}, '0101'), '%Y%m%d'), INTERVAL @RNUM := @RNUM + 1 YEAR), '%Y%m%d') CTDATE
+				FROM
+					CMS_MAN_LOG, ( SELECT @RNUM := -1 ) R
+			) DT
+			WHERE 
+				CTDATE BETWEEN CONCAT(#{srchFromDT}, '0101') AND CONCAT(#{srchToDT}, '0101')
+            
+	    ) B 
+	 	ON A.STAT_DT = B.CTDATE 
+		ORDER BY CTDATE
+		
+	</select>
+	
+	<select id="viewstatVisitDailyTotCnt" parameterType="commstatVO" resultType="commstatVO">
+	
+		SELECT 
+			COUNT(CONTACT_CNT) TOT_CNT, 
+			IFNULL(SUM(CONTACT_CNT), 0) TOT_CNT_IGNORE_DUP 
+		FROM 
+			CMS_COMM_STAT 
+		WHERE 
+			STAT_KEY = 'MAIN' AND
+			DATE_FORMAT(STAT_DT, '%Y%m%d') BETWEEN #{srchFromDT} AND #{srchToDT} 
+		ORDER BY STAT_DT
+			
+	</select>
+	
+	<select id="viewstatVisitMonthlyTotCnt" parameterType="commstatVO" resultType="commstatVO">
+	
+		SELECT 
+			COUNT(CONTACT_CNT) TOT_CNT, 
+			IFNULL(SUM(CONTACT_CNT), 0) TOT_CNT_IGNORE_DUP 
+		FROM 
+			CMS_COMM_STAT 
+		WHERE 
+			STAT_KEY = 'MAIN' AND
+			DATE_FORMAT(STAT_DT, '%Y%m') BETWEEN #{srchFromDT} AND #{srchToDT} ORDER BY STAT_DT
+			
+	</select>
+	
+	<select id="viewstatVisitYearlyTotCnt" parameterType="commstatVO" resultType="commstatVO">
+	
+		SELECT 
+			COUNT(CONTACT_CNT) TOT_CNT, 
+			IFNULL(SUM(CONTACT_CNT), 0) TOT_CNT_IGNORE_DUP 
+		FROM 
+			CMS_COMM_STAT 
+		WHERE 
+			STAT_KEY = 'MAIN' AND
+			DATE_FORMAT(STAT_DT, '%Y') BETWEEN #{srchFromDT} AND #{srchToDT} ORDER BY STAT_DT
+			
+	</select>
+	
+	<update id="updateCommstatContactCnt" parameterType="commstatVO">
+		
+		UPDATE CMS_COMM_STAT SET
+			CONTACT_CNT = CONTACT_CNT + 1 
+		WHERE
+			STAT_KEY = #{stat_key} AND
+			STAT_SESSID = #{stat_sessid}
+				
+	</update>
+
+	<select id="viewstatVisitPage" parameterType="commstatVO" resultType="commstatVO">
+		
+		SELECT 
+			STAT_KEY_NM CHARTDATA_KEY,  
+		  	COUNT(*) CHARTDATA_VAL
+		FROM 
+			CMS_COMM_STAT
+		WHERE
+			( STAT_KEY <![CDATA[ <> ]]> 'MAIN' AND STAT_KEY <![CDATA[ <> ]]> 'LOGIN_USR' )  
+			<if test="srchFromDT != null and srchFromDT != ''">
+				<if test="srchToDT != null and srchToDT != ''">
+					AND DATE_FORMAT(STAT_DT, '%Y%m%d') BETWEEN #{srchFromDT} AND #{srchToDT}
+				</if>
+			</if>			
+		GROUP BY STAT_KEY, STAT_KEY_NM
+		ORDER BY CHARTDATA_KEY
+		
+	</select>
+
+
+</mapper>
+

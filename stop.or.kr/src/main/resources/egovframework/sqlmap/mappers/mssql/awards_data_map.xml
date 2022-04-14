@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.plani.template.man.metsys.dao.AwardsDataDAO">
+	
+	
+	
+	<resultMap id="selectAwardsData" type="awardsDataVO"> 
+		<result column="RN" property="rn"/>
+		<result column="DATA_ID" property="data_id"/>
+		<result column="GROUP_ID" property="group_id"/>
+		<result column="AWARDS" property="awards"/>
+		<result column="AUTHOR" property="author"/>
+		<result column="SUBJECT" property="subject"/>
+		<result column="CONTENT" property="content"/>
+		<result column="YOUTUBE" property="youtube"/>
+		<result column="WRITER" property="writer"/>
+		<result column="WRITER_NM" property="writer_nm"/>
+		<result column="WDT" property="wdt"/>
+		<result column="MODIFIER" property="modifier"/>
+		<result column="MDT" property="mdt"/>
+		<collection property="atchfileVO" resultMap="awardsAtchfile"/>
+	</resultMap>
+	
+	<resultMap type="AtchfileVO" id="awardsAtchfile">
+	    <result column="ATCKEY_1ST" property="atckey_1st"/>
+	    <result column="ATCKEY_2ND" property="atckey_2nd"/>
+	    <result column="ATCKEY_3RD" property="atckey_3rd"/>
+	    <result column="ATCKEY_4TH" property="atckey_4th"/>
+	    <result column="VCHKCODE" property="vchkcode"/>
+	    <result column="FPATH" property="fpath"/>
+	    <result column="FNAME" property="fname"/>
+	    <result column="RNAME" property="rname"/>
+	    <result column="FEXT" property="fext"/>
+	    <result column="SIZE_KB" property="size_kb"/>
+	</resultMap>
+	
+	
+	<!-- 수상작 리스트 -->
+	<!-- <select id="selectAwardsDataList" parameterType="awardsDataVO" resultType="awardsDataVO">  -->
+	<select id="selectAwardsDataList" parameterType="awardsDataVO" resultMap="selectAwardsData">
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY WDT DESC) RN, TB.* FROM (
+			SELECT
+				DATA.DATA_ID,
+				DATA.GROUP_ID,
+				DATA.AWARDS,
+				DATA.AUTHOR,
+				DATA.SUBJECT,
+				DATA.YOUTUBE,
+				DATA.CONTENT,
+				DATA.WRITER,
+				dbo.SF_USER_NM(DATA.WRITER) WRITER_NM,
+				CONVERT(VARCHAR(19), DATA.WDT, 20) WDT,
+				DATA.MODIFIER,
+				CONVERT(VARCHAR(19),DATA.MDT, 20) MDT,
+				
+		        ATACH.ATCKEY_1ST,
+		        ATACH.ATCKEY_2ND,
+		        ATACH.ATCKEY_3RD,
+		        ATACH.ATCKEY_4TH,
+		        ATACH.VCHKCODE,
+		        ATACH.FPATH,
+		        ATACH.FNAME,
+		        ATACH.RNAME,
+		        ATACH.FEXT,
+		        ATACH.SIZE_KB
+				
+			FROM
+				CMS_AWARDS_DATA AS DATA
+			LEFT JOIN
+	    		CMS_ATACH AS ATACH
+	    	ON
+	    		DATA.DATA_ID = ATACH.ATCKEY_2ND  AND
+	    		ATACH.ATCKEY_1ST = 'AWARDS_THUMBNAIL'
+			WHERE
+				DATA.GROUP_ID=#{group_id} AND DATA.IS_NOTICE='N'
+				<if test="searchCondition != null and searchCondition != '' and searchKeyword != null and searchKeyword != ''">
+					<if test="searchCondition == 'SUBJECT' || searchCondition == 'CONTENT'">
+						AND DATA.${searchCondition} LIKE '%' + #{searchKeyword} + '%'
+					</if>
+				</if>
+				
+			
+		) TB ) MORG   WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+		ORDER BY MORG.AWARDS ASC, MORG.SUBJECT DESC
+	</select>	
+	
+	<!-- 수상작 전체 개수 -->
+	<select id="selectAwardsDataListTotalCount" parameterType="awardsDataVO" resultType="int">
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			(
+				SELECT
+					DATA_ID,
+					GROUP_ID,
+					AWARDS,
+					AUTHOR,
+					SUBJECT,
+					CONTENT,
+					WRITER,
+					dbo.SF_USER_NM(WRITER) WRITER_NM,
+					CONVERT(VARCHAR(19), WDT, 20) WDT,
+					MODIFIER,
+					CONVERT(VARCHAR(19), MDT, 20) MDT
+				FROM
+					CMS_AWARDS_DATA
+				WHERE
+				GROUP_ID=#{group_id} AND IS_NOTICE='N'
+				<if test="searchCondition != null and searchCondition != '' and searchKeyword != null and searchKeyword != ''">
+					<if test="searchCondition == 'SUBJECT' || searchCondition == 'CONTENT'">
+						AND ${searchCondition} LIKE '%' + #{searchKeyword} + '%'
+					</if>
+				</if>
+			) INNB
+	</select>
+	
+	<!-- 수상작 정보 -->
+	<select id="selectAwardsData" parameterType="awardsDataVO" resultMap="awardsData">
+		SELECT
+			DATA_ID,
+			GROUP_ID,
+			AWARDS,
+			AUTHOR,
+			SUBJECT,
+			CONTENT,
+			YOUTUBE,
+			WRITER,
+			dbo.SF_USER_NM(WRITER) WRITER_NM,
+			CONVERT(VARCHAR(19), WDT, 20) WDT,
+			MODIFIER,
+			CONVERT(VARCHAR(19), MDT, 20) MDT
+		FROM
+			CMS_AWARDS_DATA
+		WHERE
+			DATA_ID=#{data_id}
+	</select>
+	
+	<resultMap id="awardsData" type="awardsDataVO"> 
+		<result property="data_id" column="data_id"/>
+		<result property="group_id" column="group_id"/>
+		<result property="is_notice" column="is_notice"/>
+		<result property="date_start" column="date_start"/>
+		<result property="date_end" column="date_end"/>
+		<result property="subject" column="subject"/>
+		<result property="content" column="content"/>
+		<result property="writer" column="writer"/>
+		<result property="writer_nm" column="writer_nm"/>
+		<result property="wdt" column="wdt"/>
+		<result property="modifier" column="modifier"/>
+		<result property="mdt" column="mdt"/>
+	</resultMap>
+
+	<!-- 수상작 등록 -->
+	<insert id="insertAwardsData" parameterType="awardsDataVO">
+		<selectKey keyProperty="data_id" resultType="int" order="BEFORE">
+			SELECT ISNULL(MAX(DATA_ID), 0) + 1 FROM CMS_AWARDS_DATA
+		</selectKey>		
+		INSERT INTO CMS_AWARDS_DATA
+		(
+			DATA_ID,
+			GROUP_ID,
+			AWARDS,
+			AUTHOR,
+			SUBJECT,
+			CONTENT,
+			YOUTUBE,
+			WRITER,
+			WDT, 
+			MODIFIER,
+			MDT 
+		)
+		VALUES
+		(
+			#{data_id},
+			#{group_id},
+			#{awards},
+			#{author},
+			#{subject},
+			#{content},
+			#{youtube},
+			#{writer},
+			GETDATE(),
+			#{modifier},
+			GETDATE()
+		)
+	</insert>
+	
+	<!-- 수상작 수정 -->
+	<update id="updateAwardsData" parameterType="awardsDataVO">
+		UPDATE CMS_AWARDS_DATA SET
+			AWARDS = #{awards},
+			AUTHOR = #{author},
+			SUBJECT = #{subject},
+			CONTENT = #{content},
+			MODIFIER = #{modifier},
+			YOUTUBE = #{youtube},
+			MDT = GETDATE()
+		WHERE
+			DATA_ID = #{data_id}
+	</update>	
+	
+	<!-- 수상작 삭제 -->
+	<delete id="deleteAwardsData" parameterType="awardsDataVO">
+		DELETE FROM CMS_AWARDS_DATA
+		WHERE
+			DATA_ID = #{data_id}
+	</delete>	
+	
+	<!-- 공지리스트 -->
+	<select id="selectAwardsDataNoticeList" parameterType="awardsDataVO" resultMap="awardsData">
+		SELECT
+			DATA_ID,
+			GROUP_ID,
+			AWARDS,
+			AUTHOR,
+			SUBJECT,
+			CONTENT,
+			WRITER,
+			dbo.SF_USER_NM(WRITER) WRITER_NM,
+			CONVERT(VARCHAR(19), WDT, 20) WDT,
+			MODIFIER,
+			CONVERT(VARCHAR(19), MDT, 20) MDT
+		FROM
+			CMS_AWARDS_DATA
+		WHERE
+			GROUP_ID=#{group_id} AND IS_NOTICE='Y'
+	</select>
+	
+	<!-- 전체 수상작 리스트 -->
+	<select id="selectAwardsDataAllList" parameterType="awardsDataVO" resultMap="awardsData">
+		SELECT
+			DATA_ID,
+			GROUP_ID,
+			AWARDS,
+			AUTHOR,
+			SUBJECT,
+			CONTENT,
+			WRITER,
+			dbo.SF_USER_NM(WRITER) WRITER_NM,
+			CONVERT(VARCHAR(19), WDT, 20) WDT,
+			MODIFIER,
+			CONVERT(VARCHAR(19), MDT, 20) MDT
+		FROM
+			CMS_AWARDS_DATA
+		WHERE
+			GROUP_ID=#{group_id}
+	</select>
+	
+	<!-- 수상작 그룹 삭제 -->
+	<delete id="deleteAwardsDataAll" parameterType="awardsGroupVO">
+		DELETE FROM CMS_AWARDS_DATA
+		WHERE
+			GROUP_ID = #{group_id}
+	</delete>	
+	
+	
+	
+	
+</mapper>

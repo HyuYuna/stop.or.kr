@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.man.metsys.dao.TablecrudDAO">
+
+	<select id="selectTableList" parameterType="TablecrudVO" resultType="tablecrudVO">
+	
+		SELECT 
+			TABLE_NAME  
+  		FROM 
+  			INFORMATION_SCHEMA.TABLES  
+ 		WHERE 
+ 			(
+ 				TABLE_NAME LIKE 'CMS_%'
+	 			<if test="table_prefix_01 != null and table_prefix_01 != ''">
+	 				OR TABLE_NAME LIKE #{table_prefix_01} || '%'
+	 			</if>
+	 			<if test="table_prefix_02 != null and table_prefix_02 != ''">
+	 				OR TABLE_NAME LIKE #{table_prefix_02} || '%'
+	 			</if>
+ 			)
+ 			<if test="owner != null and owner != ''">AND
+ 				TABLE_SCHEMA = #{owner}
+ 			</if>
+ 		ORDER BY TABLE_NAME
+	
+	</select>
+
+	<select id="selectTablecolList" parameterType="TablecrudVO" resultType="tablecrudVO">
+		 
+		 SELECT
+			OWNER,
+			TABLE_NAME,
+			COLUMN_NAME,
+			UPPER(IF(TYPE_IDX = 0, COLUMN_TYPE, SUBSTR(COLUMN_TYPE, 1, TYPE_IDX - 1))) DATA_TYPE,
+		    IF(TYPE_IDX = 0, 0, SUBSTR(COLUMN_TYPE, TYPE_IDX + 1, LENGTH(COLUMN_TYPE) - (TYPE_IDX + 1))) DATA_LENGTH,
+			NULLABLE,         
+			COLUMN_ID,
+			COMMENTS,             
+			CONSTRAINT_TYPE
+		FROM
+		(
+		
+			SELECT  
+				TABLE_SCHEMA OWNER,
+				TABLE_NAME,
+				COLUMN_NAME,
+				INSTR(COLUMN_TYPE, '(') TYPE_IDX,
+				COLUMN_TYPE,
+				IF(IS_NULLABLE='YES', 'Y', 'N') NULLABLE,
+				ORDINAL_POSITION COLUMN_ID,
+				COLUMN_COMMENT COMMENTS,
+				IF(COLUMN_KEY = 'PRI', 'PK', COLUMN_KEY) CONSTRAINT_TYPE
+			FROM INFORMATION_SCHEMA.COLUMNS
+			WHERE TABLE_SCHEMA = #{owner}  AND TABLE_NAME= #{table_name}
+		) INN    
+ 
+	</select>
+	
+	<!--
+	<insert id="insertTablecrud" parameterType="TablecrudVO>
+	</insert>
+	
+	<update id="updateTablecrud" parameterType="TablecrudVO>
+	</update>
+	
+	<delete id="deleteTablecrud" parameterType="TablecrudVO>
+	</delete>
+	
+	<select id="selectTablecrud" parameterType="TablecrudVO" resultType="TablecrudVO">
+	</select>
+	
+	
+	<select id="selectTablecrudListTotCnt" parameterType="TablecrudVO" resultType="int">
+	</select>
+	
+	-->
+	
+</mapper>
+

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 
+	 <definition name="/multicms/wp/multiCmsUsrList" extends="ContDefinitionContentEng">
+		 <put-attribute name="contTitle"	value="WHRIK Publication List" />
+		 <put-attribute name="contScript"	value="/WEB-INF/jsp/layout/custom/web/eng/contents/script/script_cont.jsp"/>
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/eng/contents/multicms/multiCmsUsrList_wp.jsp" />
+	 </definition>
+	 
+	 
+	 
+</tiles-definitions>
+

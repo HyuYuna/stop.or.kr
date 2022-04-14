@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.custom.memsvc.dao.MemberDAO">
+
+	<insert id="insertMember" parameterType="memberVO">
+
+		INSERT INTO CMS_USR_INFO
+		(
+			USER_ID,
+			USER_SCRT,
+			USER_NM,
+			USER_EMAIL,
+			USER_BIRTH,
+			USER_CP_1,
+			USER_CP_2,
+			USER_CP_3,
+			USER_TEL_1,
+			USER_TEL_2,
+			USER_TEL_3,
+			USER_ZIP,
+			USER_ADDR_1,
+			USER_ADDR_2,
+			USER_DEPT,
+			USER_GRADE,
+			USER_AUTH_CD,
+			USER_DUP_INFO,
+			USER_NAME_CHK,
+			MAILING_YN,
+			ALLOW_IP,
+			WRITER,
+			WDT
+		)
+		VALUES
+		(
+			#{user_id},
+			#{user_scrt},
+			#{user_nm},
+			#{user_email},
+			#{user_birth},
+			#{user_cp_1},
+			#{user_cp_2},
+			#{user_cp_3},
+			#{user_tel_1},
+			#{user_tel_2},
+			#{user_tel_3},
+			#{user_zip},
+			#{user_addr_1},
+			#{user_addr_2},
+			#{user_dept},
+			#{user_grade},
+			#{user_auth_cd},
+			#{user_dupinfo},
+			#{user_name_chk},
+			#{mailing_yn},
+			#{allow_ip},
+			#{writer},
+			SYSDATE
+		)
+
+	</insert>
+	
+	<update id="updateMember" parameterType="memberVO">
+
+		UPDATE CMS_USR_INFO SET
+			<if test="user_scrt != null and user_scrt != ''">
+				USER_SCRT = #{user_scrt},
+			</if>
+			<if test="user_nm != null and user_nm != ''">
+				USER_NM = #{user_nm},
+			</if>
+			<if test="user_email != null and user_email != ''">
+				USER_EMAIL = #{user_email},
+			</if>
+			USER_BIRTH = #{user_birth},
+			USER_CP_1 = #{user_cp_1},
+			USER_CP_2 = #{user_cp_2},
+			USER_CP_3 = #{user_cp_3},
+			USER_TEL_1 = #{user_tel_1},
+			USER_TEL_2 = #{user_tel_2},
+			USER_TEL_3 = #{user_tel_3},
+			<if test="user_zip != null and user_zip != ''">
+				USER_ZIP = #{user_zip},
+				USER_ADDR_1 = #{user_addr_1},
+				USER_ADDR_2 = #{user_addr_2},
+			</if>
+			<if test="user_dept != null and user_dept != ''">
+				USER_DEPT = #{user_dept},
+			</if>
+			<if test="user_grade != null and user_grade != ''">
+				USER_GRADE = #{user_grade},
+			</if>
+			<if test="user_auth_cd != null and user_auth_cd != ''">
+				USER_AUTH_CD = #{user_auth_cd},
+			</if>
+			<if test="mailing_yn != null and mailing_yn != ''">
+				MAILING_YN = #{mailing_yn},
+			</if>
+			<if test="allow_ip != null and allow_ip != ''">
+				ALLOW_IP = #{allow_ip},
+			</if>
+			MODIFIER = #{modifier},
+			MDT = SYSDATE
+		WHERE
+			USER_ID = #{user_id}
+
+	</update>
+	
+	<update id="updateMemberAuth" parameterType="memberVO">
+
+		UPDATE CMS_USR_INFO SET
+			USER_AUTH_CD = #{user_auth_cd}
+		WHERE
+			USER_ID = #{user_id}
+
+	</update>
+	
+	<update id="updateMemberLastlogin" parameterType="memberVO">
+
+		UPDATE CMS_USR_INFO SET
+			LAST_LOGIN = SYSDATE
+		WHERE
+			USER_ID = #{user_id}
+
+	</update>
+
+	<update id="updateMemberValid" parameterType="memberVO">
+
+		UPDATE CMS_USR_INFO SET
+			USER_AUTH_CD = 'U0003'
+		WHERE
+			SF_AUTH_LV(USER_AUTH_CD) <![CDATA[ >= 9998 ]]>  
+
+	</update>
+
+	<update id="updateMemberUnvalid" parameterType="memberVO">
+
+		UPDATE CMS_USR_INFO SET
+			USER_AUTH_CD = 'U0001'
+		WHERE
+			SF_AUTH_LV(USER_AUTH_CD) <![CDATA[ > 1002 ]]>  
+
+	</update>
+	
+	<update id="updateMemberDupinfo" parameterType="memberVO">
+
+		UPDATE CMS_USR_INFO SET
+			USER_DUP_INFO = #{user_dup_info}
+		WHERE
+			USER_ID = #{user_id}
+
+	</update>
+	
+	<delete id="deleteMember" parameterType="memberVO">
+		DELETE FROM CMS_USR_INFO
+		WHERE
+			USER_ID = #{user_id}
+		<!-- 
+		UPDATE CMS_USR_INFO SET
+		 	VALID_YN = 'N',
+		 	USER_CP_1 = '',
+			USER_CP_2 = '',
+			USER_CP_3 = '',
+		 	MODIFIER = #{modifier},
+			MDT = SYSDATE
+		WHERE
+			USER_ID = #{user_id}
+		-->	
+		 
+	</delete>
+	
+	<select id="selectMember" parameterType="memberVO" resultType="memberVO">
+
+		SELECT
+			USER_ID,
+			USER_NM,
+			USER_EMAIL,
+			USER_BIRTH,
+			USER_CP_1,
+			USER_CP_2,
+			USER_CP_3,
+			USER_TEL_1,
+			USER_TEL_2,
+			USER_TEL_3,
+			USER_ZIP,
+			USER_ADDR_1,
+			USER_ADDR_2,
+			USER_DEPT,
+			USER_GRADE,
+			USER_AUTH_CD,
+			SF_AUTH_NM(USER_AUTH_CD) USER_AUTH_NM,
+			MAILING_YN,
+			ALLOW_IP,
+			WRITER,
+			TO_CHAR(WDT, 'YYYY-MM-DD') WDT,
+			MODIFIER,
+			TO_CHAR(MDT, 'YYYY-MM-DD') MDT
+		FROM
+			CMS_USR_INFO
+		WHERE
+			USER_ID = #{user_id} AND
+			VALID_YN = 'Y'
+
+	</select>
+	
+	<select id="selectMemberByDupInfo" parameterType="memberVO" resultType="memberVO">
+
+		SELECT
+			USER_ID,
+			USER_NM,
+			USER_EMAIL,
+			USER_BIRTH,
+			USER_CP_1,
+			USER_CP_2,
+			USER_CP_3,
+			USER_TEL_1,
+			USER_TEL_2,
+			USER_TEL_3,
+			USER_ZIP,
+			USER_ADDR_1,
+			USER_ADDR_2,
+			USER_DEPT,
+			USER_GRADE,
+			USER_AUTH_CD,
+			SF_AUTH_NM(USER_AUTH_CD) USER_AUTH_NM,
+			MAILING_YN,
+			ALLOW_IP,
+			WRITER,
+			TO_CHAR(WDT, 'YYYY-MM-DD') WDT,
+			MODIFIER,
+			TO_CHAR(MDT, 'YYYY-MM-DD') MDT
+		FROM
+			CMS_USR_INFO
+		WHERE
+			USER_DUP_INFO = #{user_dupinfo} AND
+			VALID_YN = 'Y'
+
+	</select>
+	
+	<select id="recoverMember" parameterType="memberVO" resultType="memberVO">
+
+		SELECT
+			USER_ID,
+			USER_EMAIL,
+			USER_SCRT
+		FROM
+			CMS_USR_INFO
+		WHERE
+			1 = 1
+			<if test="user_nm != null and user_nm != ''">
+				AND USER_NM = #{user_nm}
+			</if>
+			<if test="user_id != null and user_id != ''">
+				AND USER_ID = #{user_id}
+			</if>
+			<if test="user_email != null and user_email != ''">
+				AND USER_EMAIL = #{user_email}
+			</if>
+			<if test="user_cp_1 != null and user_cp_1 != ''">
+				AND
+					USER_CP_1 = #{user_cp_1} AND
+					USER_CP_2 = #{user_cp_2} AND
+					USER_CP_3 = #{user_cp_3}
+			</if>
+			<if test="user_birth != null and user_birth != ''">
+				AND
+					USER_BIRTH = #{user_birth}
+			</if>
+
+	</select>
+	
+	<select id="checkDuplication" parameterType="memberVO" resultType="int">
+
+		SELECT
+			COUNT(*)
+		FROM
+			CMS_USR_INFO
+		WHERE
+			1 = 1
+			<if test="user_id != null and user_id != ''">
+				AND
+					USER_ID = #{user_id}
+			</if>
+			<if test="user_email != null and user_email != ''">
+				AND
+					USER_EMAIL = #{user_email}
+			</if>
+			<if test="user_cp_1 != null and user_cp_1 != ''">
+				AND
+					USER_CP_1 = #{user_cp_1} AND
+					USER_CP_2 = #{user_cp_2} AND
+					USER_CP_3 = #{user_cp_3}
+			</if>
+
+	</select>
+	
+	<select id="checkMember" parameterType="memberVO" resultType="memberVO">
+
+		SELECT
+			USER_ID,
+			USER_NM,
+			USER_EMAIL,
+			USER_BIRTH,
+			USER_CP_1,
+			USER_CP_2,
+			USER_CP_3,
+			USER_ZIP,
+			USER_ADDR_1,
+			USER_ADDR_2,
+			USER_DEPT,
+			USER_GRADE,
+			USER_AUTH_CD,
+			SF_AUTH_NM(USER_AUTH_CD) USER_AUTH_NM,
+			B.AUTH_LV USER_AUTH_LV,
+			MAILING_YN,
+			ALLOW_IP,
+			A.WRITER,
+			TO_CHAR(A.WDT, 'YYYY-MM-DD') WDT,
+			A.MODIFIER,
+			TO_CHAR(A.MDT, 'YYYY-MM-DD') MDT
+		FROM
+			CMS_USR_INFO A,
+			CMS_SYS_AUTH B
+		WHERE
+			A.USER_AUTH_CD = B.AUTH_CD AND
+			USER_ID = #{user_id} AND
+			USER_SCRT = #{user_scrt} AND
+			VALID_YN = 'Y'
+
+	</select>
+	
+	<select id="selectMemberList" parameterType="memberVO" resultType="memberVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+			
+			SELECT
+				* 
+			FROM
+			(
+				SELECT
+					USER_ID,
+					USER_NM,
+					USER_EMAIL,
+					USER_BIRTH,
+					USER_CP_1,
+					USER_CP_2,
+					USER_CP_3,
+					USER_TEL_1,
+					USER_TEL_2,
+					USER_TEL_3,
+					USER_ZIP,
+					USER_ADDR_1,
+					USER_ADDR_2,
+					USER_DEPT,
+					USER_GRADE,
+					USER_AUTH_CD,
+					USER_AUTH_LV,
+					USER_AUTH_NM,
+					MAILING_YN,
+					VALID_YN,
+					ALLOW_IP,
+					WRITER,
+					WDT,
+					MODIFIER,
+					MDT
+				FROM
+					(
+						SELECT
+							USER_ID,
+							USER_NM,
+							USER_EMAIL,
+							USER_BIRTH,
+							USER_CP_1,
+							USER_CP_2,
+							USER_CP_3,
+							USER_TEL_1,
+							USER_TEL_2,
+							USER_TEL_3,
+							USER_ZIP,
+							USER_ADDR_1,
+							USER_ADDR_2,
+							USER_DEPT,
+							USER_GRADE,
+							USER_AUTH_CD,
+							TO_NUMBER(SF_AUTH_LV(USER_AUTH_CD)) USER_AUTH_LV,
+							SF_AUTH_NM(USER_AUTH_CD) USER_AUTH_NM,
+							MAILING_YN,
+							VALID_YN,
+							ALLOW_IP,
+							WRITER,
+							TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+							MODIFIER,
+							TO_CHAR(MDT, 'YYYY-MM-DD') MDT
+						FROM
+							CMS_USR_INFO	
+						ORDER BY USER_AUTH_LV ASC, WDT ASC, USER_NM ASC		
+					)
+				WHERE
+					VALID_YN = 'Y' AND
+					SUBSTR(USER_AUTH_CD, 1, 1) NOT IN ('D')
+					<if test="user_id != null and user_id != ''">
+						AND USER_ID = #{user_id}
+					</if>			
+					<choose>
+						<when test="user_auth_lv == 100">
+							AND USER_AUTH_LV <![CDATA[ < ]]> #{user_auth_lv}
+						</when>
+						<when test="user_auth_lv == 10000">
+							AND USER_AUTH_LV BETWEEN 101 AND 10000 
+						</when>
+					</choose>
+					<if test="mailing_yn == 'Y'.toString()">
+						AND mailing_yn = 'Y'
+					</if>
+					<if test="searchKeyword != null and searchKeyword != ''">
+						AND
+							( USER_ID LIKE '%' || #{searchKeyword} || '%' OR 
+							USER_NM LIKE '%' || #{searchKeyword} || '%' OR 
+							USER_EMAIL LIKE '%' || #{searchKeyword} || '%' OR 
+							USER_CP_3 LIKE '%' || #{searchKeyword} || '%' )
+					</if>
+ 			)
+			
+		) TB )  WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+		
+		
+	</select>
+	
+	<select id="selectMemberListTotCnt" parameterType="memberVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+		(
+			SELECT
+				USER_ID,
+				USER_NM,
+				USER_EMAIL,
+				USER_BIRTH,
+				USER_CP_1,
+				USER_CP_2,
+				USER_CP_3,
+				USER_ZIP,
+				USER_ADDR_1,
+				USER_ADDR_2,
+				USER_DEPT,
+				USER_GRADE,
+				USER_AUTH_CD,
+				SF_AUTH_LV(USER_AUTH_CD) USER_AUTH_LV,
+				SF_AUTH_NM(USER_AUTH_CD) USER_AUTH_NM,
+				MAILING_YN,
+				VALID_YN,
+				ALLOW_IP,
+				WRITER,
+				TO_CHAR(WDT, 'YYYY-MM-DD') WDT,
+				MODIFIER,
+				TO_CHAR(MDT, 'YYYY-MM-DD') MDT
+			FROM
+				CMS_USR_INFO
+		)
+		WHERE
+			VALID_YN = 'Y' AND
+			SUBSTR(USER_AUTH_CD, 1, 1) NOT IN ('D')
+			<if test="user_id != null and user_id != ''">AND
+				USER_ID = #{user_id}
+			</if>		
+			<choose>
+				<when test="user_auth_lv == 100">
+					AND USER_AUTH_LV <![CDATA[ < ]]> #{user_auth_lv}
+				</when>
+				<when test="user_auth_lv == 10000">
+					AND USER_AUTH_LV <![CDATA[ > ]]> 100 AND USER_AUTH_LV <![CDATA[ < ]]> #{user_auth_lv} 
+				</when>
+			</choose>
+			<if test="mailing_yn == 'Y'.toString()">
+				AND mailing_yn = 'Y'
+			</if>
+			<if test="searchKeyword != null and searchKeyword != ''">
+				AND
+					( USER_ID LIKE '%' || #{searchKeyword} || '%' OR 
+					USER_NM LIKE '%' || #{searchKeyword} || '%' OR 
+					USER_EMAIL LIKE '%' || #{searchKeyword} || '%' OR 
+					USER_CP_3 LIKE '%' || #{searchKeyword} || '%' )
+			</if>
+	</select>
+	
+	<select id="xlsMemberList" parameterType="memberVO" resultType="memberVO">
+
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+			
+			SELECT
+				* 
+			FROM
+			(
+				SELECT
+					USER_ID,
+					USER_NM,
+					USER_EMAIL,
+					USER_BIRTH,
+					USER_CP_1,
+					USER_CP_2,
+					USER_CP_3,
+					USER_TEL_1,
+					USER_TEL_2,
+					USER_TEL_3,
+					USER_ZIP,
+					USER_ADDR_1,
+					USER_ADDR_2,
+					USER_DEPT,
+					USER_GRADE,
+					USER_AUTH_CD,
+					USER_AUTH_LV,
+					USER_AUTH_NM,
+					MAILING_YN,
+					VALID_YN,
+					ALLOW_IP,
+					WRITER,
+					WDT,
+					MODIFIER,
+					MDT
+				FROM
+					(
+						SELECT
+							USER_ID,
+							USER_NM,
+							USER_EMAIL,
+							USER_BIRTH,
+							USER_CP_1,
+							USER_CP_2,
+							USER_CP_3,
+							USER_TEL_1,
+							USER_TEL_2,
+							USER_TEL_3,
+							USER_ZIP,
+							USER_ADDR_1,
+							USER_ADDR_2,
+							USER_DEPT,
+							USER_GRADE,
+							USER_AUTH_CD,
+							TO_NUMBER(SF_AUTH_LV(USER_AUTH_CD)) USER_AUTH_LV,
+							SF_AUTH_NM(USER_AUTH_CD) USER_AUTH_NM,
+							MAILING_YN,
+							VALID_YN,
+							ALLOW_IP,
+							WRITER,
+							TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+							MODIFIER,
+							TO_CHAR(MDT, 'YYYY-MM-DD') MDT
+						FROM
+							CMS_USR_INFO
+						ORDER BY USER_AUTH_LV ASC, WDT ASC, USER_NM ASC		
+					)
+				WHERE
+					VALID_YN = 'Y' AND
+					SUBSTR(USER_AUTH_CD, 1, 1) NOT IN ('D')
+					<choose>
+						<when test="user_auth_lv == 100">
+							AND USER_AUTH_LV <![CDATA[ < ]]> #{user_auth_lv}
+						</when>
+						<when test="user_auth_lv == 10000">
+							AND USER_AUTH_LV BETWEEN 101 AND 10000 
+						</when>
+					</choose>
+					<if test="mailing_yn == 'Y'.toString()">
+						AND mailing_yn = 'Y'
+					</if>					
+					<if test="searchKeyword != null and searchKeyword != ''">
+						AND USER_ID LIKE '%' || #{searchKeyword} || '%' OR USER_NM LIKE '%' || #{searchKeyword} || '%'  
+					</if>
+			)
+			
+		) TB ) 
+		
+		
+
+	</select>
+	
+	
+
+</mapper>
+

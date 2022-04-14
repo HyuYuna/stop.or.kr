@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.brdartcl.dao.BoarddryDAO">
+
+	<insert id="insertBoarddry" parameterType="boarddryVO">
+
+		<selectKey resultType="java.lang.Integer" keyProperty="cont_idx" order="BEFORE">
+		
+			SELECT ISNULL(MAX(CONT_IDX) + 1, 1) AS CONT_IDX FROM ${tbl_nm} WHERE
+				BRD_ID = #{brd_id}
+		
+		</selectKey>
+		
+		INSERT INTO ${tbl_nm}
+		(
+			BRD_ID,
+			CONT_IDX,
+			SUBJECT,
+			BRD_CONT,
+			REPEAT_YN,
+			ALLDAY_YN,
+			HOLIDAY_YN,
+			STARTDT,
+			ENDDT,
+			WRITER,
+			WDT,
+			REFERENCE_KEY
+		)
+		VALUES
+		(
+			#{brd_id},
+			#{cont_idx},
+			#{subject},
+			#{brd_cont},
+			#{repeat_yn},
+			#{allday_yn},
+			#{holiday_yn},
+			CONVERT(DATETIME, #{startdt}),
+			CONVERT(DATETIME, #{enddt}),
+			#{writer},
+			GETDATE(),
+			#{reference_key}
+		)
+
+	</insert>
+	
+	<update id="updateBoarddry" parameterType="boarddryVO">
+
+		UPDATE ${tbl_nm} SET
+			SUBJECT = #{subject},
+			BRD_CONT = #{brd_cont},
+			REPEAT_YN = #{repeat_yn},
+			ALLDAY_YN = #{allday_yn},
+			HOLIDAY_YN = #{holiday_yn},
+			STARTDT = CONVERT(DATETIME, #{startdt}),
+			ENDDT = CONVERT(DATETIME, #{enddt}),
+			MODIFIER = #{modifier},
+			MDT = GETDATE()
+		WHERE
+			BRD_ID = #{brd_id} AND
+		<if test="reference_key == null or reference_key == ''">
+			CONT_IDX = #{cont_idx}
+		</if>
+		<if test="reference_key != null and reference_key != ''">
+			REFERENCE_KEY = #{reference_key}
+		</if>
+			
+	</update>
+	
+	<delete id="deleteBoarddry" parameterType="boarddryVO">
+
+		DELETE FROM ${tbl_nm}
+		WHERE
+			BRD_ID = #{brd_id} AND
+		<if test="reference_key == null or reference_key == ''">
+			CONT_IDX = #{cont_idx}
+		</if>
+		<if test="reference_key != null and reference_key != ''">
+			REFERENCE_KEY = #{reference_key}
+		</if>
+			
+	</delete>
+	
+	<select id="selectBoarddry" parameterType="boarddryVO" resultType="boarddryVO">
+
+		SELECT
+			BRD_ID,
+			CONT_IDX,
+			SUBJECT,
+			BRD_CONT,
+			REPEAT_YN,
+			ALLDAY_YN,
+			HOLIDAY_YN,
+			CONVERT(VARCHAR(19), STARTDT, 20) STARTDT,
+			CONVERT(VARCHAR(19), ENDDT, 20) ENDDT,
+			WRITER,
+			CONVERT(VARCHAR(19), WDT, 20) WDT,
+			MODIFIER,
+			CONVERT(VARCHAR(19), MDT, 20) MDT
+		FROM
+			${tbl_nm}
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}
+
+	</select>
+	
+	<select id="selectBoarddryList" parameterType="boarddryVO" resultType="boarddryVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY STARTDT DESC) rn, TB.* FROM (
+	
+			SELECT
+				BRD_ID,
+				CONT_IDX,
+				SUBJECT,
+				BRD_CONT,
+				REPEAT_YN,
+				ALLDAY_YN,
+				HOLIDAY_YN,
+				CONVERT(VARCHAR(19), STARTDT, 20) STARTDT,
+				CONVERT(VARCHAR(19), ENDDT, 20) ENDDT,
+				WRITER,
+				dbo.SF_USER_NM(WRITER) WRITER_NM,
+				CONVERT(VARCHAR(19), WDT, 20) WDT,
+				MODIFIER,
+				CONVERT(VARCHAR(19), MDT, 20) MDT
+			FROM
+				${tbl_nm}
+			WHERE
+				BRD_ID = #{brd_id} 
+				<if test="startdt != null and startdt != ''">AND
+					((CONVERT(DATETIME, #{startdt}) BETWEEN CONVERT(DATETIME, CONVERT(VARCHAR(10), STARTDT, 20)) AND CONVERT(DATETIME, CONVERT(VARCHAR(10), ENDDT, 20))) OR
+					(CONVERT(DATETIME, #{enddt}) BETWEEN CONVERT(DATETIME, CONVERT(VARCHAR(10), STARTDT, 20)) AND CONVERT(DATETIME, CONVERT(VARCHAR(10), ENDDT, 20))) OR
+          			(CONVERT(DATETIME, CONVERT(VARCHAR(10), STARTDT, 20)) BETWEEN CONVERT(DATETIME, #{startdt}) AND CONVERT(DATETIME, #{enddt})))
+				</if>
+				<if test="searchKeyword != null and searchKeyword != ''">AND
+					CONVERT(DATETIME, #{searchKeyword}) BETWEEN CONVERT(DATETIME, CONVERT(VARCHAR(10), STARTDT, 20)) AND CONVERT(DATETIME, CONVERT(VARCHAR(10), ENDDT, 20))
+				</if>
+			
+		) TB ) MORG 
+
+	</select>
+	
+	
+	
+	<select id="selectBoarddryListTotCnt" parameterType="boarddryVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			${tbl_nm}
+		WHERE
+			BRD_ID = #{brd_id}
+			<if test="startdt != null and startdt != ''">AND
+				((CONVERT(DATETIME, #{startdt}) BETWEEN CONVERT(DATETIME, CONVERT(VARCHAR(10), STARTDT, 20)) AND CONVERT(DATETIME, CONVERT(VARCHAR(10), ENDDT, 20))) OR
+					(CONVERT(DATETIME, #{enddt}) BETWEEN CONVERT(DATETIME, CONVERT(VARCHAR(10), STARTDT, 20)) AND CONVERT(DATETIME, CONVERT(VARCHAR(10), ENDDT, 20))) OR
+          			(CONVERT(DATETIME, CONVERT(VARCHAR(10), STARTDT, 20)) BETWEEN CONVERT(DATETIME, #{startdt}) AND CONVERT(DATETIME, #{enddt})))
+			</if>
+			<if test="searchKeyword != null and searchKeyword != ''">AND
+				CONVERT(DATETIME, #{searchKeyword}) BETWEEN CONVERT(DATETIME, CONVERT(VARCHAR(10), STARTDT, 20)) AND CONVERT(DATETIME, CONVERT(VARCHAR(10), ENDDT, 20))
+			</if>
+
+	</select>
+	
+	<select id="xlsBoarddryList" parameterType="boarddryVO" resultType="boarddryVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY STARTDT DESC) rn, TB.* FROM (
+	
+			SELECT
+				BRD_ID,
+				CONT_IDX,
+				SUBJECT,
+				BRD_CONT,
+				REPEAT_YN,
+				ALLDAY_YN,
+				HOLIDAY_YN,
+				CONVERT(VARCHAR(19), STARTDT, 20) STARTDT,
+				CONVERT(VARCHAR(19), ENDDT, 20) ENDDT,
+				WRITER,
+				CONVERT(VARCHAR(19), WDT, 20) WDT,
+				MODIFIER,
+				CONVERT(VARCHAR(19), MDT, 20) MDT
+			FROM
+				${tbl_nm}
+			WHERE
+				BRD_ID = #{brd_id} AND
+				CONT_IDX = #{cont_idx}
+			
+		) TB ) MORG  
+
+	</select>
+	
+	
+	<select id="selectBoarddryMainList" parameterType="boarddryVO" resultType="boarddryVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY STARTDT DESC) rn, TB.* FROM (
+	
+			SELECT
+				BRD_ID,
+				CONT_IDX,
+				SUBJECT,
+				BRD_CONT,
+				REPEAT_YN,
+				ALLDAY_YN,
+				HOLIDAY_YN,
+				CONVERT(VARCHAR(19), STARTDT, 20) STARTDT,
+				CONVERT(VARCHAR(19), ENDDT, 20) ENDDT,
+				WRITER,
+				CONVERT(VARCHAR(10), MDT, 20) MAIN_WDT,
+				CONVERT(VARCHAR(19), WDT, 20) WDT,
+				MODIFIER,
+				CONVERT(VARCHAR(19), MDT, 20) MDT
+			FROM
+				${tbl_nm}
+			WHERE
+				BRD_ID = #{brd_id} 
+				<if test="startdt != null and startdt != ''">AND
+					((CONVERT(DATETIME, #{startdt}) BETWEEN CONVERT(DATETIME, CONVERT(VARCHAR(10), STARTDT, 20)) AND CONVERT(DATETIME, CONVERT(VARCHAR(10), ENDDT, 20))) OR
+					(CONVERT(DATETIME, #{enddt}) BETWEEN CONVERT(DATETIME, CONVERT(VARCHAR(10), STARTDT, 20)) AND CONVERT(DATETIME, CONVERT(VARCHAR(10), ENDDT, 20))) OR
+          			(CONVERT(DATETIME, CONVERT(VARCHAR(10), STARTDT, 20)) BETWEEN CONVERT(DATETIME, #{startdt}) AND CONVERT(DATETIME, #{enddt})))
+				</if>
+				<if test="searchKeyword != null and searchKeyword != ''">AND
+					CONVERT(DATETIME, #{searchKeyword}) BETWEEN CONVERT(DATETIME, CONVERT(VARCHAR(10), STARTDT, 20)) AND CONVERT(DATETIME, CONVERT(VARCHAR(10), ENDDT, 20))
+				</if>
+			
+		) TB ) MORG   WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+
+	</select>
+
+</mapper>
+

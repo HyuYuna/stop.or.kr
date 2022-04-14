@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 
+	 
+	 <definition name="MainDefinitionContentEng" template="/WEB-INF/jsp/layout/custom/web/eng/main/mainLayout.jsp">
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/eng/script.jsp"/>
+		 <put-attribute name="mainHeader"	value="/WEB-INF/jsp/layout/template/cmmn/eng/header.jsp"/>
+		 <put-attribute name="mainScript"	value="/WEB-INF/jsp/layout/custom/web/eng/main/script_main.jsp"/>
+		 <put-attribute name="mainFooter"	value="/WEB-INF/jsp/layout/template/cmmn/eng/footer.jsp"/>
+	 </definition>
+	 
+	 
+	 <definition name="/*/contents/mainView" extends="MainDefinitionContentEng">
+		 <put-attribute name="mainMeta"	value="/WEB-INF/jsp/layout/custom/web/eng/main/meta.jsp"/>
+		 <put-attribute name="mainTitle"	value="Women's Human Rights Institute of Korea" />
+		 <put-attribute name="mainContent"	value="/WEB-INF/jsp/wpages/custom/web/eng/contents/main/siteMain.jsp" />
+	 </definition>
+
+	 <definition name="/*/contents/mainSearch" extends="ContDefinitionContentEng">
+		 <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/web/eng/contents/meta/meta_content.jsp"/>
+		 <put-attribute name="contTitle"	value="Search Result" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/eng/contents/gsearch/mainSearch.jsp" />
+	 </definition>
+	
+	 
+
+</tiles-definitions>
+

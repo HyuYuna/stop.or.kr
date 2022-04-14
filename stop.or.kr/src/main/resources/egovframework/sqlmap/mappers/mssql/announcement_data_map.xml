@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.plani.template.man.metsys.dao.AnnouncementDataDAO">
+	
+	<!-- 공고 리스트 -->
+	<select id="selectAnnouncementDataList" parameterType="announcementDataVO" resultType="announcementDataVO">
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY WDT DESC) RN, TB.* FROM (
+			SELECT
+				DATA_ID,
+				GROUP_ID,
+	 			IS_NOTICE,
+				DATE_START,
+				DATE_END,
+				SUBJECT,
+				CONTENT,
+				WRITER,
+				dbo.SF_USER_NM(WRITER) WRITER_NM,
+				CONVERT(VARCHAR(19), WDT, 20) WDT,
+				MODIFIER,
+				CONVERT(VARCHAR(19), MDT, 20) MDT
+			FROM
+				CMS_ANNOUNCEMENT_DATA
+			WHERE
+				GROUP_ID=#{group_id} AND IS_NOTICE='N'
+				<if test="searchCondition != null and searchCondition != '' and searchKeyword != null and searchKeyword != ''">
+					<if test="searchCondition == 'SUBJECT' || searchCondition == 'CONTENT'">
+						AND ${searchCondition} LIKE '%' + #{searchKeyword} + '%'
+					</if>
+				</if>
+		) TB ) MORG   WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+	</select>	
+	
+	<!-- 공고 전체 개수 -->
+	<select id="selectAnnouncementDataListTotalCount" parameterType="announcementDataVO" resultType="int">
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			(
+				SELECT
+					DATA_ID,
+					GROUP_ID,
+		 			IS_NOTICE,
+					DATE_START,
+					DATE_END,
+					SUBJECT,
+					CONTENT,
+					WRITER,
+					dbo.SF_USER_NM(WRITER) WRITER_NM,
+					CONVERT(VARCHAR(19), WDT, 20) WDT,
+					MODIFIER,
+					CONVERT(VARCHAR(19), MDT, 20) MDT
+				FROM
+					CMS_ANNOUNCEMENT_DATA
+				WHERE
+				GROUP_ID=#{group_id} AND IS_NOTICE='N'
+				<if test="searchCondition != null and searchCondition != '' and searchKeyword != null and searchKeyword != ''">
+					<if test="searchCondition == 'SUBJECT' || searchCondition == 'CONTENT'">
+						AND ${searchCondition} LIKE '%' + #{searchKeyword} + '%'
+					</if>
+				</if>
+			) INNB
+	</select>
+	
+	<!-- 공고 정보 -->
+	<select id="selectAnnouncementData" parameterType="announcementDataVO" resultMap="announcementData">
+		SELECT
+			DATA_ID,
+			GROUP_ID,
+ 			IS_NOTICE,
+			DATE_START,
+			DATE_END,
+			SUBJECT,
+			CONTENT,
+			WRITER,
+			dbo.SF_USER_NM(WRITER) WRITER_NM,
+			CONVERT(VARCHAR(19), WDT, 20) WDT,
+			MODIFIER,
+			CONVERT(VARCHAR(19), MDT, 20) MDT
+		FROM
+			CMS_ANNOUNCEMENT_DATA
+		WHERE
+			DATA_ID=#{data_id}
+	</select>
+	
+	<resultMap id="announcementData" type="announcementDataVO"> 
+		<result property="data_id" column="data_id"/>
+		<result property="group_id" column="group_id"/>
+		<result property="is_notice" column="is_notice"/>
+		<result property="date_start" column="date_start"/>
+		<result property="date_end" column="date_end"/>
+		<result property="subject" column="subject"/>
+		<result property="content" column="content"/>
+		<result property="writer" column="writer"/>
+		<result property="writer_nm" column="writer_nm"/>
+		<result property="wdt" column="wdt"/>
+		<result property="modifier" column="modifier"/>
+		<result property="mdt" column="mdt"/>
+	</resultMap>
+
+	<!-- 공고 등록 -->
+	<insert id="insertAnnouncementData" parameterType="announcementDataVO">
+		<selectKey keyProperty="data_id" resultType="int" order="BEFORE">
+			SELECT ISNULL(MAX(DATA_ID), 0) + 1 FROM CMS_ANNOUNCEMENT_DATA
+		</selectKey>		
+		INSERT INTO CMS_ANNOUNCEMENT_DATA
+		(
+			DATA_ID,
+			GROUP_ID,
+ 			IS_NOTICE,
+			DATE_START,
+			DATE_END,
+			SUBJECT,
+			CONTENT,
+			WRITER,
+			WDT, 
+			MODIFIER,
+			MDT 
+		)
+		VALUES
+		(
+			#{data_id},
+			#{group_id},
+ 			#{is_notice},
+			#{date_start},
+			#{date_end},
+			#{subject},
+			#{content},
+			#{writer},
+			GETDATE(),
+			#{modifier},
+			GETDATE()
+		)
+	</insert>
+	
+	<!-- 공고 수정 -->
+	<update id="updateAnnouncementData" parameterType="announcementDataVO">
+		UPDATE CMS_ANNOUNCEMENT_DATA SET
+			IS_NOTICE = #{is_notice},
+			DATE_START = #{date_start},
+			DATE_END = #{date_end},
+			SUBJECT = #{subject},
+			CONTENT = #{content},
+			MODIFIER = #{modifier},
+			MDT = GETDATE()
+		WHERE
+			DATA_ID = #{data_id}
+	</update>	
+	
+	<!-- 공고 삭제 -->
+	<delete id="deleteAnnouncementData" parameterType="announcementDataVO">
+		DELETE FROM CMS_ANNOUNCEMENT_DATA
+		WHERE
+			DATA_ID = #{data_id}
+	</delete>	
+	
+	<!-- 공지리스트 -->
+	<select id="selectAnnouncementDataNoticeList" parameterType="announcementDataVO" resultMap="announcementData">
+		SELECT
+			DATA_ID,
+			GROUP_ID,
+ 			IS_NOTICE,
+			DATE_START,
+			DATE_END,
+			SUBJECT,
+			CONTENT,
+			WRITER,
+			dbo.SF_USER_NM(WRITER) WRITER_NM,
+			CONVERT(VARCHAR(19), WDT, 20) WDT,
+			MODIFIER,
+			CONVERT(VARCHAR(19), MDT, 20) MDT
+		FROM
+			CMS_ANNOUNCEMENT_DATA
+		WHERE
+			GROUP_ID=#{group_id} AND IS_NOTICE='Y'
+	</select>
+	
+	<!-- 전체 공고 리스트 -->
+	<select id="selectAnnouncementDataAllList" parameterType="announcementDataVO" resultMap="announcementData">
+		SELECT
+			DATA_ID,
+			GROUP_ID,
+ 			IS_NOTICE,
+			DATE_START,
+			DATE_END,
+			SUBJECT,
+			CONTENT,
+			WRITER,
+			dbo.SF_USER_NM(WRITER) WRITER_NM,
+			CONVERT(VARCHAR(19), WDT, 20) WDT,
+			MODIFIER,
+			CONVERT(VARCHAR(19), MDT, 20) MDT
+		FROM
+			CMS_ANNOUNCEMENT_DATA
+		WHERE
+			GROUP_ID=#{group_id}
+	</select>
+	
+	<!-- 공고 그룹 삭제 -->
+	<delete id="deleteAnnouncementDataAll" parameterType="announcementGroupVO">
+		DELETE FROM CMS_ANNOUNCEMENT_DATA
+		WHERE
+			GROUP_ID = #{group_id}
+	</delete>	
+	
+	
+	
+	
+</mapper>

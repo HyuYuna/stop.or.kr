@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="syscategory">
+
+	<typeAlias  alias="syscodeVO" type="egovframework.plani.template.man.menuctgry.vo.SyscodeVO"/>
+	
+	<insert id="syscodeDAO.insertSyscode" parameterClass="syscodeVO">
+		
+		<selectKey resultClass="java.lang.String" keyProperty="code_idx">
+			<!-- 			
+	     	SELECT 
+	     		'CDIDX' || LPAD((NVL(MAX(TO_NUMBER(REPLACE(CODE_IDX, 'CDIDX', ''))), 0) + 1), 5, '0') AS CODE_IDX
+	     	FROM 
+	     		CMS_SYS_CODE
+	     	 -->	
+                
+			SELECT 
+				DECODE(
+					#up_code_idx#, 
+					NULL, 
+					(
+						SELECT 
+							'CDIDX' || LPAD( (COUNT(CODE_IDX) * 20) + 1, 5, '0')
+                        FROM 
+                        	CMS_SYS_CODE
+                        WHERE
+                        	UP_CODE_IDX IS NULL 
+     				), 
+     				(
+     					SELECT 
+     						'CDIDX' || LPAD((NVL(MAX(TO_NUMBER(REPLACE(CODE_IDX, 'CDIDX', ''))), TO_NUMBER(REPLACE(#up_code_idx#, 'CDIDX', ''))) + 1), 5, '0') AS CODE_IDX
+			    		FROM 
+		     				CMS_SYS_CODE 
+		     			WHERE 
+		     				UP_CODE_IDX = #up_code_idx#
+		     		)
+				) 
+			FROM 
+				DUAL
+	     		
+		</selectKey>
+
+		INSERT INTO CMS_SYS_CODE
+		(
+			CODE_IDX,
+			UP_CODE_IDX,
+			CODE_NM,
+			CODE_ORD,
+			WRITER,
+			WDT
+		)
+		VALUES
+		(
+			#code_idx#,
+			#up_code_idx#,
+			#code_nm#,
+			<isEqual property="code_ord" compareValue="1">
+			(
+				SELECT 
+					NVL(MAX(CODE_ORD), 0) + 1
+				FROM
+					CMS_SYS_CODE
+				WHERE
+					UP_CODE_IDX 
+					<isEmpty property="up_code_idx">
+						IS NULL
+					</isEmpty>
+					<isNotEmpty property="up_code_idx">
+						= #up_code_idx#
+					</isNotEmpty> 
+			),
+			</isEqual>
+			<isNotEqual property="code_ord" compareValue="1">
+				#code_ord#,
+			</isNotEqual>
+			#writer#,
+			SYSDATE
+		)
+
+	</insert>
+	
+	<update id="syscodeDAO.updateSyscode" parameterClass="syscodeVO">
+
+		UPDATE CMS_SYS_CODE SET
+			CODE_IDX = #code_idx#,
+			UP_CODE_IDX = #up_code_idx#,
+			CODE_NM = #code_nm#,
+			CODE_ORD = #code_ord#,
+			USE_YN = #use_yn#,
+			MODIFIER = #modifier#,
+			MDT = SYSDATE
+		WHERE
+			CODE_IDX = #code_idx#
+
+	</update>
+	
+	<update id="syscodeDAO.updateSyscodeOrderP" parameterClass="syscodeVO">
+
+		UPDATE CMS_SYS_CODE SET
+			CODE_ORD = CODE_ORD + 1
+		WHERE
+			UP_CODE_IDX
+				<isEmpty property="up_code_idx">
+					IS NULL
+				</isEmpty>
+				<isNotEmpty property="up_code_idx">
+					= #up_code_idx#
+				</isNotEmpty> AND
+			CODE_ORD <![CDATA[ >= ]]> #code_ord#
+
+	</update>
+
+	<update id="syscodeDAO.updateSyscodeOrderM" parameterClass="syscodeVO">
+
+		UPDATE CMS_SYS_CODE SET
+			CODE_ORD = CODE_ORD + ($add_ord$)
+		WHERE
+			UP_CODE_IDX
+				<isEmpty property="up_code_idx">
+					IS NULL
+				</isEmpty>
+				<isNotEmpty property="up_code_idx">
+					= #up_code_idx#
+				</isNotEmpty> AND
+			CODE_ORD  BETWEEN #from_ord# AND #to_ord#
+
+	</update>
+	
+	<delete id="syscodeDAO.deleteSyscode" parameterClass="syscodeVO">
+		<!-- 
+		DELETE FROM CMS_SYS_CODE
+		WHERE
+			CODE_IDX = #code_idx# OR
+			UP_CODE_IDX = #code_idx#
+ 		-->
+
+ 		UPDATE CMS_SYS_CODE SET
+ 			USE_YN = 'N'
+ 		WHERE 
+			CODE_IDX = #code_idx# OR
+			UP_CODE_IDX = #code_idx#
+			
+	</delete>
+	
+	<select id="syscodeDAO.selectSyscode" parameterClass="syscodeVO" resultClass="syscodeVO">
+
+		SELECT
+			CODE_IDX,
+			UP_CODE_IDX,
+			CODE_NM,
+			CODE_ORD,
+			USE_YN,
+			WRITER,
+			TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+			MODIFIER,
+			TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+		FROM
+			CMS_SYS_CODE
+		WHERE
+			CODE_IDX = #code_idx# 
+
+	</select>
+	
+	<select id="syscodeDAO.selectSyscodeList" parameterClass="syscodeVO" resultClass="syscodeVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+	
+			SELECT
+				CODE_IDX,
+				UP_CODE_IDX,
+				CODE_NM,
+				CODE_ORD,
+				USE_YN,
+				WRITER,
+				TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+				MODIFIER,
+				TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+			FROM
+				CMS_SYS_CODE
+			WHERE
+				1 = 1		
+				<isNotEmpty property="use_yn" prepend="AND">
+					USE_YN = #use_yn#
+				</isNotEmpty>
+				<isEmpty property="up_code_idx" prepend="AND">
+					UP_CODE_IDX IS NULL
+				</isEmpty>
+				<isNotEmpty property="up_code_idx" prepend="AND">
+					UP_CODE_IDX = #up_code_idx#
+				</isNotEmpty>
+				<isNotEmpty property="except_codes" prepend="AND">
+					CODE_IDX NOT IN ($except_codes$)
+				</isNotEmpty>
+			
+			ORDER BY USE_YN DESC, CODE_ORD ASC
+		) TB )
+
+	</select>
+	
+	<select id="syscodeDAO.selectSyscodeListTotCnt" parameterClass="syscodeVO" resultClass="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_SYS_CODE			
+		WHERE
+			CODE_IDX = #code_idx#
+
+	</select>
+	
+	
+
+</sqlMap>
+

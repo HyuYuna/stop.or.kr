@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 <definition name="AnnouncementDefinitionContent" template="/WEB-INF/jsp/layout/custom/web/kor/contents/layout/contentsLayout.jsp">
+		 <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/meta/meta_content.jsp"/>
+		 <put-attribute name="contHeader"	value="/WEB-INF/jsp/layout/template/cmmn/kor/header.jsp"/>
+		 <put-attribute name="contSidemenu"	value="/WEB-INF/jsp/layout/template/cmmn/kor/sidemenu.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/kor/script.jsp"/>
+		 <put-attribute name="contQuicklink"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/quickLink.jsp"/>
+		 <put-attribute name="contFooter"	value="/WEB-INF/jsp/layout/template/cmmn/kor/footer.jsp"/>
+	 </definition>
+
+	 <definition name="AnnouncementDefinitionEditor" template="/WEB-INF/jsp/layout/custom/web/kor/contents/layout/contentsLayout.jsp">
+		 <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/meta/meta_editor.jsp"/>
+		 <put-attribute name="contHeader"	value="/WEB-INF/jsp/layout/template/cmmn/kor/header.jsp"/>
+		 <put-attribute name="contSidemenu"	value="/WEB-INF/jsp/layout/template/cmmn/kor/sidemenu.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/kor/script.jsp"/>
+		 <put-attribute name="contFooter"	value="/WEB-INF/jsp/layout/template/cmmn/kor/footer.jsp"/>
+	 </definition>
+	 
+	 <definition name="/announcement/list" extends="AnnouncementDefinitionContent">
+		 <put-attribute name="contTitle"	value="공고 목록" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/announcement/list.jsp" />
+	 </definition>
+	 
+	 <definition name="/announcement/view" extends="AnnouncementDefinitionContent">
+		 <put-attribute name="contTitle"	value="공고 상세 보기" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/announcement/view.jsp" />
+	 </definition>
+	 
+</tiles-definitions>

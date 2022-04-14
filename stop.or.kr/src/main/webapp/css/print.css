@@ -1,0 +1,15 @@
+@charset "utf-8";
+/*-------------------------------------------------
+Author : ㅈㅁㅈ
+Create date : 2018-08-16
+-------------------------------------------------*/
+
+@media print 
+{
+	#header,
+	#spot,
+	#snb,
+	#footer {display:none;}
+	
+	.cont-wrap {width:100%; max-width:9999%; margin:10px 0; padding-left:0 !important;}
+}

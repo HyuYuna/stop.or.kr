@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 	 
+	 <definition name="engBoardDefinitionContent" template="/WEB-INF/jsp/layout/custom/web/kor/board/boardLayout.jsp">
+		 <put-attribute name="boardMeta"	value="/WEB-INF/jsp/layout/custom/web/eng/meta/meta_type_content.jsp"/>
+		 <put-attribute name="boardHeader"	value="/WEB-INF/jsp/layout/custom/web/eng/header.jsp"/>
+		 <put-attribute name="boardSidemenu"	value="/WEB-INF/jsp/layout/template/cmmn/sidemenu.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/script.jsp"/>
+		 <put-attribute name="boardScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_content.jsp"/>
+		 <put-attribute name="boardFooter"	value="/WEB-INF/jsp/layout/custom/web/eng/footer.jsp"/>
+	 </definition>
+
+	 <definition name="engBoardDefinitionEditor" template="/WEB-INF/jsp/layout/custom/web/kor/board/boardLayout.jsp">
+		 <put-attribute name="boardMeta"	value="/WEB-INF/jsp/layout/custom/web/eng/meta/meta_type_editor.jsp"/>
+		 <put-attribute name="boardHeader"	value="/WEB-INF/jsp/layout/custom/web/eng/header.jsp"/>
+		 <put-attribute name="boardSidemenu"	value="/WEB-INF/jsp/layout/template/cmmn/sidemenu.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/script.jsp"/>
+		 <put-attribute name="boardScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_editor.jsp"/>
+		 <put-attribute name="boardFooter"	value="/WEB-INF/jsp/layout/custom/web/eng/footer.jsp"/>
+	 </definition>
+	 
+	 
+	 <definition name="/*/brdartcl/boardarticleList" extends="{1}BoardDefinitionContent">
+		 <put-attribute name="boardTitle"	value="일반 게시판 목록" />
+		 <put-attribute name="boardContent"	value="/WEB-INF/jsp/wpages/custom/web/{1}/brdartcl/boardarticleList.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdartcl/boardarticleWrite" extends="{1}BoardDefinitionEditor">
+		 <put-attribute name="boardTitle"	value="일반 게시판 글쓰기" />
+		 <put-attribute name="boardContent"	value="/WEB-INF/jsp/wpages/custom/web/{1}/brdartcl/boardarticleWrite.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdartcl/boardarticleView" extends="{1}BoardDefinitionEditor">
+		 <put-attribute name="boardTitle"	value="일반 게시판 보기" />
+		 <put-attribute name="boardContent"	value="/WEB-INF/jsp/wpages/custom/web/{1}/brdartcl/boardarticleView.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdartcl/boardarticleUpdate" extends="{1}BoardDefinitionEditor">
+		 <put-attribute name="boardTitle"	value="일반 게시판 수정" />
+		 <put-attribute name="boardContent"	value="/WEB-INF/jsp/wpages/custom/web/{1}/brdartcl/boardarticleWrite.jsp" />
+	 </definition>
+	 
+	 
+	 <definition name="/*/brdartcl/boardanonimList" extends="{1}BoardDefinitionContent">
+		 <put-attribute name="boardTitle"	value="익명 게시판 목록" />
+		 <put-attribute name="boardContent"	value="/WEB-INF/jsp/wpages/custom/web/{1}/brdartcl/boardanonimList.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdartcl/boardanonimWrite" extends="{1}BoardDefinitionEditor">
+		 <put-attribute name="boardTitle"	value="익명 게시판 글쓰기" />
+		 <put-attribute name="boardContent"	value="/WEB-INF/jsp/wpages/custom/web/{1}/brdartcl/boardanonimWrite.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdartcl/boardanonimView" extends="{1}BoardDefinitionEditor">
+		 <put-attribute name="boardTitle"	value="익명 게시판 보기" />
+		 <put-attribute name="boardContent"	value="/WEB-INF/jsp/wpages/custom/web/{1}/brdartcl/boardanonimView.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdartcl/boardanonimUpdate" extends="{1}BoardDefinitionEditor">
+		 <put-attribute name="boardTitle"	value="익명 게시판 수정" />
+		 <put-attribute name="boardContent"	value="/WEB-INF/jsp/wpages/custom/web/{1}/brdartcl/boardanonimWrite.jsp" />
+	 </definition>
+	 
+	 	 
+	 
+	 
+	 <definition name="/*/brdartcl/boardjosaList" extends="{1}BoardDefinitionContent">
+		 <put-attribute name="boardTitle"	value="횡단조사 게시판 목록" />
+		 <put-attribute name="boardContent"	value="/WEB-INF/jsp/wpages/custom/web/{1}/brdartcl/boardjosaList.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdartcl/boardjosaWrite" extends="{1}BoardDefinitionEditor">
+		 <put-attribute name="boardTitle"	value="횡단조사 게시판 글쓰기" />
+		 <put-attribute name="boardContent"	value="/WEB-INF/jsp/wpages/custom/web/{1}/brdartcl/boardjosaWrite.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdartcl/boardjosaView" extends="{1}BoardDefinitionEditor">
+		 <put-attribute name="boardTitle"	value="횡단조사 게시판 보기" />
+		 <put-attribute name="boardContent"	value="/WEB-INF/jsp/wpages/custom/web/{1}/brdartcl/boardjosaView.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdartcl/boardjosaUpdate" extends="{1}BoardDefinitionEditor">
+		 <put-attribute name="boardTitle"	value="횡단조사 게시판 수정" />
+		 <put-attribute name="boardContent"	value="/WEB-INF/jsp/wpages/custom/web/{1}/brdartcl/boardjosaWrite.jsp" />
+	 </definition>
+	 
+	 
+	 
+	 <definition name="/*/brdthm/boardthmList" extends="{1}BoardDefinitionContent">
+		 <put-attribute name="boardTitle"	value="이미지 게시판 목록" />
+		 <put-attribute name="boardContent"	value="/WEB-INF/jsp/wpages/custom/web/{1}/brdartcl/boardthmList.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdthm/boardthmListB" extends="{1}BoardDefinitionContent">
+		 <put-attribute name="boardTitle"	value="이미지 게시판 목록" />
+		 <put-attribute name="boardContent"	value="/WEB-INF/jsp/wpages/custom/web/{1}/brdartcl/boardthmListB.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdthm/boardthmWrite" extends="{1}BoardDefinitionEditor">
+		 <put-attribute name="boardTitle"	value="이미지 게시판 글쓰기" />
+		 <put-attribute name="boardContent"	value="/WEB-INF/jsp/wpages/custom/web/{1}/brdartcl/boardthmWrite.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdthm/boardthmView" extends="{1}BoardDefinitionEditor">
+		 <put-attribute name="boardTitle"	value="이미지 게시판 보기" />
+		 <put-attribute name="boardContent"	value="/WEB-INF/jsp/wpages/custom/web/{1}/brdartcl/boardthmView.jsp" />
+	 </definition>
+	 
+	 <definition name="/*/brdthm/boardthmUpdate" extends="{1}BoardDefinitionEditor">
+		 <put-attribute name="boardTitle"	value="이미지 게시판 수정" />
+		 <put-attribute name="boardContent"	value="/WEB-INF/jsp/wpages/custom/web/{1}/brdartcl/boardthmWrite.jsp" />
+	 </definition>
+	 
+	 
+</tiles-definitions>
+

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC 
+    "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1//EN" 
+    "http://jakarta.apache.org/commons/dtds/validator_1_1.dtd">
+
+<form-validation>
+
+    <formset>
+        <form name="cnslreqVO">
+        	<field property="cnsl_nm" depends="required">
+        		<arg0 key="이름" resource="false"/>
+			</field>
+			<field property="cnsl_tel" depends="required, maxlength, mask">
+                <arg0 key="연락처" resource="false"/>
+        		<arg1 key="13" resource="false"/>
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>13</var-value>
+				</var>
+                <var>
+					<var-name>mask</var-name>
+                    <var-value>^0[0-9]{1,2}-*[0-9]{3,4}-*[0-9]{4}$</var-value>
+                </var>
+            </field>
+        	<field property="cnsl_cont" depends="required">
+                <arg0 key="문의내용" resource="false"/>
+			</field>
+        </form>
+    </formset>
+  
+</form-validation>

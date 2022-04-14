@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<CMS_SYS_MENU MENU_IDX="MNIDX02006" UP_MENU_IDX="" MENU_NM="테스트" MENU_NIX="ych" MENU_LINK="/ych/test" MENU_ORD="2"/>
+	<CMS_SYS_MENU MENU_IDX="MNIDX02007" UP_MENU_IDX="MNIDX02006" MENU_NM="테스트" MENU_NIX="ych2" MENU_LINK="/ych2/test" MENU_ORD="2"/>
+</dataset>

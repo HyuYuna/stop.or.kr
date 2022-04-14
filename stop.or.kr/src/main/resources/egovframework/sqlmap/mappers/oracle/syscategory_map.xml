@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.man.menuctgry.dao.SyscategoryDAO">
+
+	
+	<insert id="insertSyscategory" parameterType="syscategoryVO">
+		
+		<selectKey resultType="java.lang.String" keyProperty="ctgry_idx" order="BEFORE">
+		<!--
+	     	SELECT 
+	     		'CTIDX' || LPAD((NVL(MAX(TO_NUMBER(REPLACE(CTGRY_IDX, 'CTIDX', ''))), 0) + 1), 5, '0') AS CTGRY_IDX
+	     	FROM 
+	     		CMS_SYS_CTGRY
+	     -->
+	          
+			SELECT 
+				DECODE(
+					#{up_ctgry_idx}, 
+					NULL, 
+					(
+						SELECT 
+							'CTIDX' || LPAD( (COUNT(CTGRY_IDX) * 20) + 1, 5, '0')
+                        FROM 
+                        	CMS_SYS_CTGRY
+                        WHERE
+                        	UP_CTGRY_IDX IS NULL 
+     				), 
+     				(
+     					SELECT 
+     						'CTIDX' || LPAD((NVL(MAX(TO_NUMBER(REPLACE(CTGRY_IDX, 'CTIDX', ''))), TO_NUMBER(REPLACE(#{up_ctgry_idx}, 'CTIDX', ''))) + 1), 5, '0') AS CTGRY_IDX
+			    		FROM 
+		     				CMS_SYS_CTGRY 
+		     			WHERE 
+		     				UP_CTGRY_IDX = #{up_ctgry_idx}
+		     		)
+				) 
+			FROM 
+				DUAL
+	     
+		</selectKey>
+
+		INSERT INTO CMS_SYS_CTGRY
+		(
+			CTGRY_IDX,
+			UP_CTGRY_IDX,
+			CTGRY_NM,
+			CTGRY_ORD,
+			WRITER,
+			WDT
+		)
+		VALUES
+		(
+			#{ctgry_idx},
+			#{up_ctgry_idx},
+			#{ctgry_nm},
+			<choose>
+				<when test="ctgry_ord == 1">
+					(
+						SELECT 
+							NVL(MAX(CTGRY_ORD), 0) + 1
+						FROM
+							CMS_SYS_CTGRY
+						WHERE
+							UP_CTGRY_IDX
+							<if test="up_ctgry_idx == null or up_ctgry_idx == ''">
+								IS NULL
+							</if>
+							<if test="up_ctgry_idx != null and up_ctgry_idx != ''">
+								= #{up_ctgry_idx}
+							</if> 
+					),
+				</when>
+				<otherwise>
+					#{ctgry_ord},
+				</otherwise>
+			</choose>
+			#{writer},
+			SYSDATE
+		)
+
+	</insert>
+	
+	<update id="updateSyscategory" parameterType="syscategoryVO">
+
+		UPDATE CMS_SYS_CTGRY SET
+			CTGRY_IDX = #{ctgry_idx},
+			UP_CTGRY_IDX = #{up_ctgry_idx},
+			CTGRY_NM = #{ctgry_nm},
+			CTGRY_ORD = #{ctgry_ord},
+			USE_YN = #{use_yn},
+			MODIFIER = #{modifier},
+			MDT = SYSDATE
+		WHERE
+			CTGRY_IDX = #{ctgry_idx}
+
+	</update>
+
+	<update id="updateSyscategoryOrderP" parameterType="syscategoryVO">
+
+		UPDATE CMS_SYS_CTGRY SET
+			CTGRY_ORD = CTGRY_ORD + 1
+		WHERE
+			UP_CTGRY_IDX
+			<choose>
+				<when test="up_ctgry_idx == null or up_ctgry_idx == ''">
+					IS NULL
+				</when>
+				<otherwise>
+					= #{up_ctgry_idx}
+				</otherwise>
+			</choose>
+			AND CTGRY_ORD <![CDATA[ >= ]]> #{ctgry_ord}
+
+	</update>
+
+	<update id="updateSyscategoryOrderM" parameterType="syscategoryVO">
+
+		UPDATE CMS_SYS_CTGRY SET
+			CTGRY_ORD = CTGRY_ORD + TO_NUMBER(#{add_ord})
+		WHERE
+			UP_CTGRY_IDX
+			<choose>
+				<when test="up_ctgry_idx == null or up_ctgry_idx == ''">
+					IS NULL
+				</when>
+				<otherwise>
+					= #{up_ctgry_idx}
+				</otherwise>
+			</choose>
+			AND CTGRY_ORD BETWEEN #{from_ord} AND #{to_ord}
+
+	</update>
+	
+	<delete id="deleteSyscategory" parameterType="syscategoryVO">
+		<!-- 
+		DELETE FROM CMS_SYS_CTGRY
+		WHERE
+			CTGRY_IDX = #{ctgry_idx} OR
+			UP_CTGRY_IDX = #{ctgry_idx}
+		 -->
+		 
+		UPDATE CMS_SYS_CTGRY SET
+ 			USE_YN = 'N'
+ 		WHERE 
+			CTGRY_IDX = #{ctgry_idx} OR
+			UP_CTGRY_IDX = #{ctgry_idx}
+			
+	</delete>
+	
+	<select id="selectSyscategory" parameterType="syscategoryVO" resultType="syscategoryVO">
+
+		SELECT
+			CTGRY_IDX,
+			UP_CTGRY_IDX,
+			CTGRY_NM,
+			CTGRY_ORD,
+			USE_YN,
+			WRITER,
+			TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+			MODIFIER,
+			TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+		FROM
+			CMS_SYS_CTGRY
+		WHERE
+			CTGRY_IDX = #{ctgry_idx}
+
+	</select>
+	
+	<select id="selectSyscategoryList" parameterType="syscategoryVO" resultType="syscategoryVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+	
+			SELECT
+				CTGRY_IDX,
+				UP_CTGRY_IDX,
+				CTGRY_NM,
+				CTGRY_ORD,
+				USE_YN,
+				WRITER,
+				TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+				MODIFIER,
+				TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+			FROM
+				CMS_SYS_CTGRY
+			WHERE
+				1 = 1
+				<if test="use_yn != null and use_yn != ''">AND
+					USE_YN = #{use_yn}
+				</if>
+				<choose>
+					<when test="up_ctgry_idx == null or up_ctgry_idx == ''">
+						AND UP_CTGRY_IDX IS NULL
+					</when>
+					<otherwise>
+						AND UP_CTGRY_IDX = #{up_ctgry_idx}
+					</otherwise>
+				</choose>
+			
+			ORDER BY USE_YN DESC, CTGRY_ORD ASC
+		) TB )
+
+	</select>
+	
+	<select id="selectSyscategoryListTotCnt" parameterType="syscategoryVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_SYS_CTGRY			
+		WHERE
+			CTGRY_IDX = #{ctgry_idx}
+
+	</select>
+	
+	
+
+</mapper>
+

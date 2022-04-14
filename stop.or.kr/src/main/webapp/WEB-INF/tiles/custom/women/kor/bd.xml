@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 
+	 <definition name="WomenBoardDefinitionContent" template="/WEB-INF/jsp/layout/custom/women/kor/contents/layout/contentsLayout.jsp">
+		 <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/women/kor/contents/meta/meta_content.jsp"/>
+		 <put-attribute name="contHeader"	value="/WEB-INF/jsp/layout/template/cmmn/women/header.jsp"/>
+		 <put-attribute name="contSidemenu"	value="/WEB-INF/jsp/layout/template/cmmn/women/sidemenu.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/women/script.jsp"/>
+		 <put-attribute name="boardScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_content.jsp"/>
+		 <put-attribute name="contQuicklink"	value="/WEB-INF/jsp/layout/custom/women/kor/contents/quickLink.jsp"/>
+		 <put-attribute name="contFooter"	value="/WEB-INF/jsp/layout/template/cmmn/women/footer.jsp"/>
+	 </definition>
+	 
+	 <definition name="WomenBoardDefinitionEditor" template="/WEB-INF/jsp/layout/custom/women/kor/contents/layout/contentsLayout.jsp">
+	 	 <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/web/kor/board/meta/meta_type_editor.jsp"/>
+		 <put-attribute name="contHeader"	value="/WEB-INF/jsp/layout/template/cmmn/women/header.jsp"/>
+		 <put-attribute name="contSidemenu"	value="/WEB-INF/jsp/layout/template/cmmn/women/sidemenu.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/women/script.jsp"/>
+		 <put-attribute name="boardScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_editor.jsp"/>
+		 <put-attribute name="contQuicklink"	value="/WEB-INF/jsp/layout/custom/women/kor/contents/quickLink.jsp"/>
+		 <put-attribute name="contFooter"	value="/WEB-INF/jsp/layout/template/cmmn/women/footer.jsp"/>
+	 </definition>
+
+
+	 <definition name="/women/brdthm/boardthmList" extends="WomenBoardDefinitionContent">
+		 <put-attribute name="contTitle"	value="이미지 게시판 목록" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardthmList.jsp" />
+	 </definition>
+	 
+	 	 <definition name="/women/brdthm/boardthmListB" extends="WomenBoardDefinitionContent">
+		 <put-attribute name="contTitle"	value="이미지 게시판 목록" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardthmListB.jsp" />
+	 </definition>
+		 
+	 <definition name="/women/brdthm/boardthmWrite" extends="WomenBoardDefinitionEditor">
+		 <put-attribute name="contTitle"	value="이미지 게시판 글쓰기" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardthmWrite.jsp" />
+	 </definition>	 
+	 
+	 <definition name="/women/brdthm/boardthmView" extends="WomenBoardDefinitionEditor">
+		 <put-attribute name="contTitle"	value="이미지 게시판 보기" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardthmView.jsp" />
+	 </definition>
+		 
+	 <definition name="/women/brdthm/boardthmUpdate" extends="WomenBoardDefinitionEditor">
+		 <put-attribute name="contTitle"	value="이미지 게시판 수정" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardthmWrite.jsp" />
+	 </definition>
+
+	 <!-- 공모전 -->
+<!-- 	 <definition name="ComplicityBoardDefinitionContent" template="/WEB-INF/jsp/layout/custom/complicity/kor/contents/layout/contentsLayout.jsp">
+		 <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/web/kor/contents/meta/meta_content.jsp"/>
+		 <put-attribute name="contHeader"	value="/WEB-INF/jsp/layout/template/complicity/header.jsp"/>
+		 <put-attribute name="contSidemenu"	value="/WEB-INF/jsp/layout/template/complicity/sidemenu.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/kor/script.jsp"/>
+		 <put-attribute name="boardScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_content.jsp"/>
+		 <put-attribute name="contQuicklink"	value="/WEB-INF/jsp/layout/custom/complicity/kor/contents/quickLink.jsp"/>
+		 <put-attribute name="contFooter"	value="/WEB-INF/jsp/layout/template/complicity/footer.jsp"/>
+	 </definition>
+	 <definition name="ComplicityBoardDefinitionEditor" template="/WEB-INF/jsp/layout/custom/complicity/kor/contents/layout/contentsLayout.jsp">
+		 <put-attribute name="contMeta"	value="/WEB-INF/jsp/layout/custom/web/kor/board/meta/meta_type_editor.jsp"/>
+		 <put-attribute name="contHeader"	value="/WEB-INF/jsp/layout/template/complicity/header.jsp"/>
+		 <put-attribute name="contSidemenu"	value="/WEB-INF/jsp/layout/template/complicity/sidemenu.jsp"/>
+		 <put-attribute name="cmmnScript"	value="/WEB-INF/jsp/layout/template/cmmn/kor/script.jsp"/>
+		 <put-attribute name="boardScript"	value="/WEB-INF/jsp/layout/custom/web/kor/board/script/script_editor.jsp"/>
+		 <put-attribute name="contQuicklink"	value="/WEB-INF/jsp/layout/custom/complicity/kor/contents/quickLink.jsp"/>
+		 <put-attribute name="contFooter"	value="/WEB-INF/jsp/layout/template/complicity/footer.jsp"/>
+	 </definition>
+	 
+	 
+	 <definition name="/complicity/brdartcl/boardarticleList" extends="ComplicityBoardDefinitionContent">
+		 <put-attribute name="contTitle"	value="일반 게시판 목록" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardarticleList.jsp" />
+	 </definition>
+	 
+	 <definition name="/complicity/brdartcl/boardarticleWrite" extends="ComplicityBoardDefinitionEditor">
+		 <put-attribute name="contTitle"	value="일반 게시판 글쓰기" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardarticleWrite.jsp" />
+	 </definition>
+	 
+	 <definition name="/complicity/brdartcl/boardarticleView" extends="ComplicityBoardDefinitionEditor">
+		 <put-attribute name="contTitle"	value="일반 게시판 보기" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardarticleView.jsp" />
+	 </definition>
+	 
+	 <definition name="/complicity/brdartcl/boardarticleUpdate" extends="ComplicityBoardDefinitionEditor">
+		 <put-attribute name="contTitle"	value="일반 게시판 수정" />
+		 <put-attribute name="contContent"	value="/WEB-INF/jsp/wpages/custom/web/kor/brdartcl/boardarticleWrite.jsp" />
+	 </definition>
+	  -->
+	 
+	 
+</tiles-definitions>
+

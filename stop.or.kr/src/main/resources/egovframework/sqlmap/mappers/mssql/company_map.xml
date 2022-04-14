@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.custom.man.company.dao.CompanyDAO">
+
+	<insert id="insertCompany" parameterType="companyVO">
+	
+		<selectKey resultType="java.lang.Integer" keyProperty="com_idx" order="BEFORE">
+			SELECT ISNULL(MAX(COM_IDX) + 1, 1) AS SCH_IDX FROM CMS_COMPANY
+		</selectKey>
+	
+		INSERT INTO CMS_COMPANY
+		(
+			COM_IDX,
+			DIV,
+			NAME,
+			WDT,
+			VCHKCODE,
+			SEQ
+		)
+		VALUES
+		(
+			#{com_idx},
+			#{div},
+			#{name},
+			GETDATE(),
+			#{vchkcode},
+			#{seq}
+		)
+
+	</insert>
+	
+	<select id="xlsCompanyList" parameterType="companyVO" resultType="companyVO">
+
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY COM_IDX ASC) rn, TB.* FROM (
+	
+			SELECT
+				COM_IDX,
+				DIV,
+				NAME,
+				CONVERT(VARCHAR(19), WDT, 23) WDT,
+				SEQ,
+				VCHKCODE
+			FROM
+			(
+				SELECT
+					COM_IDX,
+					DIV,
+					<!-- (SELECT BRD_NM FROM CMS_BRD_INFO WHERE BRD_ID = DIV) DIV, -->
+					NAME,
+					CONVERT(VARCHAR(19), WDT, 23) WDT,
+					SEQ,
+					VCHKCODE
+				FROM
+					CMS_COMPANY
+			) A
+			WHERE
+				1 = 1
+			
+		) TB ) MORG 
+
+	</select>
+	
+</mapper>
+

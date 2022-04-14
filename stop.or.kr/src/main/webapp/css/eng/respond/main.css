@@ -1,0 +1,99 @@
+@charset "utf-8";
+@import url("layout.css");
+/*-------------------------------------------------
+Author : ㅈㅁㅈ
+Create date : 2018-06-07
+-------------------------------------------------*/
+
+@media screen and (max-width:1300px)
+{
+	/* 비주얼 */
+	#visual .paging p {top:-65px; transform:scale(.7); -webkit-transform:scale(.7);}
+}
+
+@media screen and (max-width:1278px)
+{
+	/* 트위터 */
+	article.twitter h2 {padding-top:6.5px; padding-bottom:6.5px;}
+}
+
+@media screen and (max-width:1150px)
+{
+	/* 비주얼 */
+	#visual .paging p {display:none;}
+	#visual > .desc {right:auto; left:30px; width:490px; max-width:100%;}
+
+	/* 콘텐츠 */
+	#contents {padding:35px 0;}
+}
+
+@media screen and (max-width:1024px)
+{
+	/* 상단 */
+	.util div.search .form {border:2px solid #5c2e98; background-color:#fff;}
+	.util div.search .control:before {color:#fff;}
+	.util div.search input[type="text"] {color:#afb2b3;}
+	
+	#header.active .util .language a {border-color:#7d58ad; color:#fff;}
+	#header.active .util div.search .control:before {color:#000022;}
+
+	/* 비주얼 */
+	#visual .bx-viewport {margin-bottom:-50px;}
+	#visual .paging:before,
+	#visual .paging:after,
+	#visual > .desc:before {display:none;}
+	#visual > .desc {top:auto; bottom:100px;}
+	#visual > .desc p {margin:0 0 25px;}
+	#visual .paging {top:auto; bottom:0; height:120px; line-height:115px;}
+	#visual .bx-controls-direction {top:auto; bottom:0; height:120px;}
+	#visual .bx-controls-direction a {top:20px;}
+	#visual .bx-controls-direction .bx-next {top:auto; bottom:20px;}
+	
+	/* 뉴스 */
+	.news {float:none; width:100%; margin:0;}
+	
+	/* 트위터 */
+	article.twitter {float:none; width:100%; margin:30px 0 20px;}
+	article.twitter .item {height:auto;}
+	article.twitter ul {padding:20px;}
+	article.twitter li {padding:10px 0;}
+	article.twitter .more {top:20px;}
+	
+	/* .publication */
+	.publication {float:none; width:auto; position:absolute; left:0; top:auto; right:420px;} 
+	
+	/* 아이콘 */
+	.icon {float:right; width:390px;}
+}
+
+@media screen and (max-width:768px)
+{
+	/* 비주얼 */
+	#visual,
+	#visual img {min-height:180px;}
+	#visual > .desc {bottom:80px; letter-spacing:-1px;}
+	#visual > .desc p {width:280px; margin-bottom:15px; font-size:4rem;}
+	#visual > .desc strong {margin-top:5px;}
+	
+	/* 트위터 */
+	article.twitter h2 {padding:10px 50px;}
+	article.twitter h2:before {width:50px;}
+	article.twitter h2:after {right:50px;}
+	article.twitter li p {max-height:50px;}
+	article.twitter .more {top:20px; right:20px;}
+	
+	/* .publication */
+	.publication {position:relative; right:auto;}
+	
+	/* 아이콘 */
+	.icon {float:none; width:100%; height:150px; margin:20px 0 0;}
+	.icon li {padding-top:100px;}
+	.icon .img,
+	.icon .img img {height:100px;} 
+}
+
+@media screen and (max-width:525px)
+{
+	/* 비주얼 */
+	#visual .bx-viewport {margin-bottom:0;}
+}

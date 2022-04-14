@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.man.log.dao.ManlogDAO">
+	
+	<insert id="insertManlog" parameterType="manlogVO">
+		
+		<selectKey resultType="java.lang.Integer" keyProperty="log_idx" order="BEFORE">
+			SELECT IFNULL(MAX(LOG_IDX) + 1, 1) AS LOG_IDX FROM CMS_MAN_LOG
+		</selectKey>
+
+		INSERT INTO CMS_MAN_LOG
+		(
+			LOG_IDX,
+			LOG_KEY,
+			LOG_KEY_NM,
+			LOG_KEY_DEST,
+			LOG_JOB_GB,
+			LOG_RADDR,
+			LOG_UID,
+			LOG_DT
+		)
+		VALUES
+		(
+			#{log_idx},
+			#{log_key},
+			#{log_key_nm},
+			#{log_key_dest},
+			#{log_job_gb},
+			#{log_raddr},
+			#{log_uid},
+			NOW()
+		)
+
+	</insert>
+	
+	<delete id="deleteManlog" parameterType="manlogVO">
+
+		DELETE FROM CMS_MAN_LOG
+		WHERE
+			LOG_IDX = #{log_idx}
+
+	</delete>
+	
+	<select id="selectManlogSearchKind" parameterType="manlogVO" resultType="int">
+
+		SELECT
+			COUNT(*)
+		FROM
+			(
+				SELECT
+					LOG_IDX,
+					LOG_KEY,
+					LOG_KEY_NM,
+					LOG_KEY_DEST,
+					LOG_JOB_GB,
+					LOG_RADDR,
+					LOG_UID,
+					LOG_DT,
+					(NOW() - LOG_DT) * 60 * 60 * 24 LOG_FLOW 				
+				FROM
+					CMS_MAN_LOG
+			) INN
+		WHERE
+			LOG_KEY = #{log_key} AND
+			LOG_JOB_GB = #{log_job_gb} AND
+			LOG_UID = #{log_uid} AND
+			LOG_RADDR = #{log_raddr} AND
+			LOG_FLOW <![CDATA[ < ]]> 120
+
+
+	</select>
+	
+	<select id="selectManlog" parameterType="manlogVO" resultType="manlogVO">
+
+		SELECT
+			LOG_IDX,
+			LOG_KEY,
+			LOG_KEY_NM,
+			LOG_KEY_DEST,
+			LOG_JOB_GB,
+			LOG_RADDR,
+			LOG_UID,
+			SF_USER_NM(LOG_UID) LOG_UNM,
+			DATE_FORMAT(LOG_DT, '%Y-%m-%d %H:%i:%s') LOG_DT
+		FROM
+			CMS_MAN_LOG
+		WHERE
+			LOG_IDX = #{log_idx}
+
+	</select>
+	
+	<select id="selectManlogList" parameterType="manlogVO" resultType="manlogVO">
+
+		SELECT * FROM ( SELECT @RNUM := @RNUM + 1 AS rn, TB.* FROM (
+	
+			SELECT
+				LOG_IDX,
+				LOG_KEY,
+				LOG_KEY_NM,
+				LOG_KEY_DEST,
+				LOG_JOB_GB,
+				LOG_RADDR,
+				LOG_UID,
+				LOG_UNM,
+				LOG_DT
+			FROM
+				(
+					SELECT
+						LOG_IDX,
+						LOG_KEY,
+						LOG_KEY_NM,
+						LOG_KEY_DEST,
+						LOG_JOB_GB,
+						LOG_RADDR,
+						LOG_UID,
+						SF_USER_NM(LOG_UID) LOG_UNM,
+						DATE_FORMAT(LOG_DT, '%Y-%m-%d %H:%i:%s') LOG_DT
+					FROM
+						CMS_MAN_LOG
+				) INN
+			WHERE
+				1 = 1
+				<if test="searchKeyword != null and searchKeyword != ''">
+				 	AND ${searchCondition} LIKE CONCAT('%', #{searchKeyword}, '%')
+				</if>
+				<if test="srchFromDT != null and srchFromDT != ''">
+					<if test="srchToDT != null and srchToDT != ''">
+						AND DATE_FORMAT(LOG_DT, '%Y-%m-%d %H:%i:%s') BETWEEN CONCAT(#{srchFromDT}, ' 00:00:00') AND CONCAT(#{srchToDT}, ' 23:59:59') 
+					</if>				
+				</if>
+	
+				ORDER BY LOG_DT DESC
+
+		) TB, ( SELECT @RNUM := 0 ) R ) AL  WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+
+	</select>
+	
+	<select id="selectManlogListTotCnt" parameterType="manlogVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_MAN_LOG
+		WHERE
+			1 = 1
+			<if test="searchKeyword != null and searchKeyword != ''">
+				AND ${searchCondition} LIKE CONCAT('%', #{searchKeyword}, '%')
+			</if>
+			<if test="srchFromDT != null and srchFromDT != ''">
+				<if test="srchToDT != null and srchToDT != ''">
+					AND DATE_FORMAT(LOG_DT, '%Y-%m-%d %H:%i:%s') BETWEEN CONCAT(#{srchFromDT}, ' 00:00:00') AND CONCAT(#{srchToDT}, ' 23:59:59') 
+				</if>				
+			</if>
+
+	</select>
+	
+	<select id="xlsManlogList" parameterType="manlogVO" resultType="manlogVO">
+
+		SELECT * FROM ( SELECT @RNUM := @RNUM + 1 AS rn, TB.* FROM (
+	
+			SELECT
+				LOG_IDX,
+				LOG_KEY,
+				LOG_KEY_NM,
+				LOG_KEY_DEST,
+				LOG_JOB_GB,				
+				LOG_RADDR,
+				LOG_UID,
+				SF_USER_NM(LOG_UID) LOG_UNM,
+				DATE_FORMAT(LOG_DT, '%Y-%m-%d %H:%i:%s') LOG_DT
+			FROM
+				CMS_MAN_LOG
+			WHERE
+				1 = 1
+				<if test="searchKeyword != null and searchKeyword != ''">
+					AND ${searchCondition} LIKE CONCAT('%', #{searchKeyword}, '%')
+				</if>
+				<if test="srchFromDT != null and srchFromDT != ''">
+					<if test="srchToDT != null and srchToDT != ''">
+						AND DATE_FORMAT(LOG_DT, '%Y-%m-%d %H:%i:%s') BETWEEN #{srchFromDT} || ' 00:00:00' AND #{srchToDT} || ' 23:59:59'
+					</if>				
+				</if>
+				
+		) TB, ( SELECT @RNUM := 0 ) R ) AL 
+
+	</select>
+	
+	
+</mapper>

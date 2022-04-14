@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="manlog">
+
+	<typeAlias  alias="manlogVO" type="egovframework.plani.template.man.log.vo.ManlogVO"/>
+	
+	
+	<insert id="manlogDAO.insertManlog" parameterClass="manlogVO">
+
+		
+		<selectKey resultClass="java.lang.Integer" keyProperty="log_idx">
+			SELECT NVL(MAX(LOG_IDX) + 1, 1) AS LOG_IDX FROM CMS_MAN_LOG
+		</selectKey>
+		
+
+		INSERT INTO CMS_MAN_LOG
+		(
+			LOG_IDX,
+			LOG_KEY,
+			LOG_KEY_NM,
+			LOG_KEY_DEST,
+			LOG_JOB_GB,
+			LOG_RADDR,
+			LOG_UID,
+			LOG_DT
+		)
+		VALUES
+		(
+			#log_idx#,
+			#log_key#,
+			#log_key_nm#,
+			#log_key_dest#,
+			#log_job_gb#,
+			#log_raddr#,
+			#log_uid#,
+			SYSDATE
+		)
+
+	</insert>
+	
+	<delete id="manlogDAO.deleteManlog" parameterClass="manlogVO">
+
+		DELETE FROM CMS_MAN_LOG
+		WHERE
+			LOG_IDX = #log_idx#
+
+	</delete>
+	
+	<select id="manlogDAO.selectManlogSearchKind" parameterClass="manlogVO" resultClass="int">
+
+		SELECT
+			COUNT(*)
+		FROM
+			(
+				SELECT
+					LOG_IDX,
+					LOG_KEY,
+					LOG_KEY_NM,
+					LOG_KEY_DEST,
+					LOG_JOB_GB,
+					LOG_RADDR,
+					LOG_UID,
+					LOG_DT,
+					(SYSDATE - LOG_DT) * 60 * 60 * 24 LOG_FLOW 				
+				FROM
+					CMS_MAN_LOG
+			)
+		WHERE
+			LOG_KEY = #log_key# AND
+			LOG_JOB_GB = #log_job_gb# AND
+			LOG_UID = #log_uid# AND
+			LOG_RADDR = #log_raddr# AND
+			LOG_FLOW <![CDATA[ < ]]> 120
+
+
+	</select>
+	
+	<select id="manlogDAO.selectManlog" parameterClass="manlogVO" resultClass="manlogVO">
+
+		SELECT
+			LOG_IDX,
+			LOG_KEY,
+			LOG_KEY_NM,
+			LOG_KEY_DEST,
+			LOG_JOB_GB,
+			LOG_RADDR,
+			LOG_UID,
+			SF_USER_NM(LOG_UID) LOG_UNM,
+			TO_CHAR(LOG_DT, 'YYYY-MM-DD HH24:MI:SS') LOG_DT
+		FROM
+			CMS_MAN_LOG
+		WHERE
+			LOG_IDX = #log_idx#
+
+	</select>
+	
+	<select id="manlogDAO.selectManlogList" parameterClass="manlogVO" resultClass="manlogVO">
+
+		SELECT * FROM ( SELECT ROW_NUMBER() OVER(ORDER BY LOG_DT DESC) rn, TB.* FROM (
+	
+			SELECT
+				LOG_IDX,
+				LOG_KEY,
+				LOG_KEY_NM,
+				LOG_KEY_DEST,
+				LOG_JOB_GB,
+				LOG_RADDR,
+				LOG_UID,
+				LOG_UNM,
+				LOG_DT
+			FROM
+				(
+					SELECT
+						LOG_IDX,
+						LOG_KEY,
+						LOG_KEY_NM,
+						LOG_KEY_DEST,
+						LOG_JOB_GB,
+						LOG_RADDR,
+						LOG_UID,
+						SF_USER_NM(LOG_UID) LOG_UNM,
+						TO_CHAR(LOG_DT, 'YYYY-MM-DD HH24:MI:SS') LOG_DT
+					FROM
+						CMS_MAN_LOG
+				)
+			WHERE
+				1 = 1
+				<isNotEmpty property="searchKeyword" prepend="AND">
+					$searchCondition$ LIKE '%' || #searchKeyword# || '%'
+				</isNotEmpty>
+				<isNotEmpty property = "srchFromDT">
+					<isNotEmpty property = "srchToDT" prepend="AND">
+						LOG_DT BETWEEN #srchFromDT# || ' 00:00:00' AND #srchToDT# || ' 23:59:59'
+					</isNotEmpty>				
+				</isNotEmpty>
+	
+				
+
+		) TB )  WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+
+	</select>
+	
+	<select id="manlogDAO.selectManlogListTotCnt" parameterClass="manlogVO" resultClass="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_MAN_LOG
+		WHERE
+			1 = 1
+			<isNotEmpty property="searchKeyword" prepend="AND">
+				$searchCondition$ LIKE '%' || #searchKeyword# || '%'
+			</isNotEmpty>
+			<isNotEmpty property = "srchFromDT">
+				<isNotEmpty property = "srchToDT" prepend="AND">
+					TO_CHAR(LOG_DT, 'YYYY-MM-DD HH24:MI:SS') BETWEEN #srchFromDT# || ' 00:00:00' AND #srchToDT# || ' 23:59:59'
+				</isNotEmpty>				
+			</isNotEmpty>
+
+	</select>
+	
+	<select id="manlogDAO.xlsManlogList" parameterClass="manlogVO" resultClass="manlogVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+	
+			SELECT
+				LOG_IDX,
+				LOG_KEY,
+				LOG_KEY_NM,
+				LOG_KEY_DEST,
+				LOG_JOB_GB,				
+				LOG_RADDR,
+				LOG_UID,
+				SF_USER_NM(LOG_UID) LOG_UNM,
+				TO_CHAR(LOG_DT, 'YYYY-MM-DD HH24:MI:SS') LOG_DT
+			FROM
+				CMS_MAN_LOG
+			WHERE
+				1 = 1
+				<isNotEmpty property="searchKeyword" prepend="AND">
+					$searchCondition$ LIKE '%' || #searchKeyword# || '%'
+				</isNotEmpty>
+				<isNotEmpty property = "srchFromDT">
+					<isNotEmpty property = "srchToDT" prepend="AND">
+						TO_CHAR(LOG_DT, 'YYYY-MM-DD HH24:MI:SS') BETWEEN #srchFromDT# || ' 00:00:00' AND #srchToDT# || ' 23:59:59'
+					</isNotEmpty>				
+				</isNotEmpty>
+		) TB ) 
+
+	</select>
+	
+	
+
+</sqlMap>
+

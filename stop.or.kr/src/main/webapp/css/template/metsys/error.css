@@ -1,0 +1,147 @@
+@charset "utf-8";
+/*-------------------------------------------------
+General Style Sheet
+Version : 1.0
+Author : myeong-hee park
+Create date : 2014. 09. 10.
+-------------------------------------------------*/
+html {
+	margin: 0;
+	padding: 0;
+	overflow-y: scroll;
+	-webkit-text-size-adjust: none; 
+	-moz-text-size-adjust: none; 
+	-ms-text-size-adjust: none; 
+	}
+body {
+	margin: 0;
+	padding: 0;
+	color: #626262;
+	vertical-align: baseline;
+	font-size: 87.5%;
+	font-family: "맑은 고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Tahoma, Verdana, AppleGothic, UnDotum, sans-serif;
+	}	
+a {
+	color: #464646;
+	text-decoration: none;
+	}
+a:hover {
+	text-decoration: underline;
+	}
+img {
+	border: none;
+	}		
+hr {
+	display: none;
+	}	
+* button {
+	position: relative;
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+	background: none;
+	border: 0;
+	cursor: pointer; 
+	_cursor: hand;	
+	text-decoration: none;
+	overflow: visible;
+	font-family: "맑은 고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Tahoma, Verdana, AppleGothic, UnDotum, sans-serif;
+	white-space: nowrap;
+	}	
+ul, li, p, dt, dd {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	}	
+form  {
+	margin: 0;
+	padding: 0;
+	}		
+fieldset  {
+	margin: 0;
+	padding: 0;
+	border: none;
+	}	
+legend  {
+	width: 100%;
+	height: 0;
+	color: transparent;
+	overflow: hidden;
+	}
+.message_hidden {
+	margin: 30px 20px;
+	color: transparent;
+	}
+.message_hidden dt {
+	margin-bottom: 20px;
+	font-weight: bold;
+	}	
+	
+/*콘텐츠 STYLE*/	
+#wrap {
+	}
+	
+/*에러메세지 */		
+.error_txt {
+	width: 540px;
+	margin: 20% auto 0;
+	padding-left: 160px;
+	overflow: hidden;
+	}
+.error_txt strong {
+	display: block;
+	margin-bottom: 15px;
+	color: #313131;
+	letter-spacing: -0.08em;
+	font-size: 1.517em;
+	}	
+.errorPage {
+	background: url(../../../images/template/cmm/icon_error.gif) no-repeat 0 11px;
+	}	
+.errorPage .point01 {
+	display: block;
+	color: #f79d00;
+	}
+.errorPage .point02 {
+	display: block;
+	color: #5671a7;;
+	}
+.sorry {
+	padding: 15px 0 15px 160px;
+	background: url(../../../images/template/cmm/icon_sorry.gif) no-repeat 0 0;
+	}
+.sorry strong {
+	}		
+.sorry .point01 {
+	color: #e9573f;
+	}	
+.dot_lstyle {
+	}
+.dot_lstyle > li,
+p.dot_lstyle  {
+	margin-top: 2px;
+	padding-left: 8px;
+	background: url(../../../images/template/webadm/common/gray_dot.gif) no-repeat 0 9px;
+	}	
+.line_lstyle > li:first-child,
+.dot_lstyle > li:first-child {
+	margin-top: 0;
+	}	
+.errorMessage {
+	margin: 20px 0;
+	}	
+.btn_line,
+.btn_linebold {
+	display: inline-block; 
+	width: 180px;
+	height: 35px; 
+	margin-top: 20px;
+	margin-bottom: 2px;
+	padding: 0;
+	background-color: #fff;
+	border: solid 1px #313131; 
+	box-sizing: border-box;
+	font-size: 0.929em;
+	line-height: 31px; 
+	vertical-align: top;
+	}	

@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.brdartcl.dao.BoarddryDAO">
+
+	
+	<insert id="insertBoarddry" parameterType="boarddryVO">
+
+		<selectKey resultType="java.lang.Integer" keyProperty="cont_idx" order="BEFORE">
+		
+			SELECT IFNULL(MAX(CONT_IDX) + 1, 1) AS CONT_IDX FROM ${tbl_nm} WHERE
+				BRD_ID = #{brd_id}
+		
+		</selectKey>
+		
+		INSERT INTO ${tbl_nm}
+		(
+			BRD_ID,
+			CONT_IDX,
+			SUBJECT,
+			BRD_CONT,
+			REPEAT_YN,
+			ALLDAY_YN,
+			HOLIDAY_YN,
+			STARTDT,
+			ENDDT,
+			WRITER,
+			WDT,
+			REFERENCE_KEY
+		)
+		VALUES
+		(
+			#{brd_id},
+			#{cont_idx},
+			#{subject},
+			#{brd_cont},
+			#{repeat_yn},
+			#{allday_yn},
+			#{holiday_yn},
+			STR_TO_DATE(#{startdt}, '%Y-%m-%d HH24:MI'),
+			STR_TO_DATE(#{enddt}, '%Y-%m-%d HH24:MI'),
+			#{writer},
+			NOW(),
+			#{reference_key}
+		)
+
+	</insert>
+	
+	<update id="updateBoarddry" parameterType="boarddryVO">
+
+		UPDATE ${tbl_nm} SET
+			SUBJECT = #{subject},
+			BRD_CONT = #{brd_cont},
+			REPEAT_YN = #{repeat_yn},
+			ALLDAY_YN = #{allday_yn},
+			HOLIDAY_YN = #{holiday_yn},
+			STARTDT = STR_TO_DATE(#{startdt}, '%Y-%m-%d HH24:MI'),
+			ENDDT = STR_TO_DATE(#{enddt}, '%Y-%m-%d HH24:MI'),
+			MODIFIER = #{modifier},
+			MDT = NOW()
+		WHERE
+			BRD_ID = #{brd_id} AND
+
+			<choose>			
+				<when test="reference_key == null or reference_key == ''">
+					CONT_IDX = #{cont_idx}
+				</when>
+				<otherwise>
+					REFERENCE_KEY = #{reference_key}
+				</otherwise>
+			</choose>
+			
+	</update>
+	
+	<delete id="deleteBoarddry" parameterType="boarddryVO">
+
+		DELETE FROM ${tbl_nm}
+		WHERE
+			BRD_ID = #{brd_id} AND
+
+			<choose>			
+				<when test="reference_key == null or reference_key == ''">
+					CONT_IDX = #{cont_idx}
+				</when>
+				<otherwise>
+					REFERENCE_KEY = #{reference_key}
+				</otherwise>
+			</choose>
+			
+	</delete>
+	
+	<select id="selectBoarddry" parameterType="boarddryVO" resultType="boarddryVO">
+
+		SELECT
+			BRD_ID,
+			CONT_IDX,
+			SUBJECT,
+			BRD_CONT,
+			REPEAT_YN,
+			ALLDAY_YN,
+			HOLIDAY_YN,
+			DATE_FORMAT(STARTDT, '%Y-%m-%d HH24:MI') STARTDT,
+			DATE_FORMAT(ENDDT, '%Y-%m-%d HH24:MI') ENDDT,
+			WRITER,
+			DATE_FORMAT(WDT, '%Y-%m-%d %H:%i:%s') WDT,
+			MODIFIER,
+			DATE_FORMAT(MDT, '%Y-%m-%d %H:%i:%s') MDT
+		FROM
+			${tbl_nm}
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}
+
+	</select>
+	
+	<select id="selectBoarddryList" parameterType="boarddryVO" resultType="boarddryVO">
+
+		SELECT * FROM ( SELECT @RNUM := @RNUM + 1 AS rn, TB.* FROM (
+	
+			SELECT
+				BRD_ID,
+				CONT_IDX,
+				SUBJECT,
+				BRD_CONT,
+				REPEAT_YN,
+				ALLDAY_YN,
+				HOLIDAY_YN,
+				DATE_FORMAT(STARTDT, '%Y-%m-%d HH24:MI') STARTDT,
+				DATE_FORMAT(ENDDT, '%Y-%m-%d HH24:MI') ENDDT,
+				WRITER,
+				SF_USER_NM(WRITER) WRITER_NM,
+				DATE_FORMAT(WDT, '%Y-%m-%d %H:%i:%s') WDT,
+				MODIFIER,
+				DATE_FORMAT(MDT, '%Y-%m-%d %H:%i:%s') MDT
+			FROM
+				${tbl_nm}
+			WHERE
+				BRD_ID = #{brd_id} 
+				<if test="startdt != null and startdt != ''">
+					AND
+					((STR_TO_DATE(#{startdt}, '%Y-%m-%d') BETWEEN STR_TO_DATE(DATE_FORMAT(STARTDT, '%Y-%m-%d'), '%Y-%m-%d') AND STR_TO_DATE(DATE_FORMAT(ENDDT, '%Y-%m-%d'), '%Y-%m-%d')) OR
+					(STR_TO_DATE(#{enddt}, '%Y-%m-%d') BETWEEN STR_TO_DATE(DATE_FORMAT(STARTDT, '%Y-%m-%d'), '%Y-%m-%d') AND STR_TO_DATE(DATE_FORMAT(ENDDT, '%Y-%m-%d'), '%Y-%m-%d')) OR
+          			(STR_TO_DATE(DATE_FORMAT(STARTDT, '%Y-%m-%d'), '%Y-%m-%d') BETWEEN STR_TO_DATE(#{startdt}, '%Y-%m-%d') AND STR_TO_DATE(#{enddt}, '%Y-%m-%d')))
+				</if>
+				<if test="searchKeyword != null and searchKeyword != ''">
+					AND
+					STR_TO_DATE(#{searchKeyword}, '%Y-%m-%d') BETWEEN STR_TO_DATE(DATE_FORMAT(STARTDT, '%Y-%m-%d'), '%Y-%m-%d') AND STR_TO_DATE(DATE_FORMAT(ENDDT, '%Y-%m-%d'), '%Y-%m-%d')
+				</if>
+			ORDER BY STARTDT DESC
+			
+		) TB, ( SELECT @RNUM := 0 ) R ) AL
+
+	</select>
+	
+	
+	
+	<select id="selectBoarddryListTotCnt" parameterType="boarddryVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			${tbl_nm}
+		WHERE
+			BRD_ID = #{brd_id}
+			<if test="startdt != null and startdt != ''">
+				AND
+				((STR_TO_DATE(#{startdt}, '%Y-%m-%d') BETWEEN STR_TO_DATE(DATE_FORMAT(STARTDT, '%Y-%m-%d'), '%Y-%m-%d') AND STR_TO_DATE(DATE_FORMAT(ENDDT, '%Y-%m-%d'), '%Y-%m-%d')) OR
+					(STR_TO_DATE(#{enddt}, '%Y-%m-%d') BETWEEN STR_TO_DATE(DATE_FORMAT(STARTDT, '%Y-%m-%d'), '%Y-%m-%d') AND STR_TO_DATE(DATE_FORMAT(ENDDT, '%Y-%m-%d'), '%Y-%m-%d')) OR
+          			(STR_TO_DATE(DATE_FORMAT(STARTDT, '%Y-%m-%d'), '%Y-%m-%d') BETWEEN STR_TO_DATE(#{startdt}, '%Y-%m-%d') AND STR_TO_DATE(#{enddt}, '%Y-%m-%d')))
+			</if>
+			<if test="searchKeyword != null and searchKeyword != ''">
+				AND
+				STR_TO_DATE(#{searchKeyword}, '%Y-%m-%d') BETWEEN STR_TO_DATE(DATE_FORMAT(STARTDT, '%Y-%m-%d'), '%Y-%m-%d') AND STR_TO_DATE(DATE_FORMAT(ENDDT, '%Y-%m-%d'), '%Y-%m-%d')
+			</if>
+
+	</select>
+	
+	<select id="xlsBoarddryList" parameterType="boarddryVO" resultType="boarddryVO">
+
+		SELECT * FROM ( SELECT @RNUM := @RNUM + 1 AS rn, TB.* FROM (
+		
+			SELECT
+				BRD_ID,
+				CONT_IDX,
+				SUBJECT,
+				BRD_CONT,
+				REPEAT_YN,
+				ALLDAY_YN,
+				HOLIDAY_YN,
+				DATE_FORMAT(STARTDT, '%Y-%m-%d HH24:MI') STARTDT,
+				DATE_FORMAT(ENDDT, '%Y-%m-%d HH24:MI') ENDDT,
+				WRITER,
+				DATE_FORMAT(WDT, '%Y-%m-%d %H:%i:%s') WDT,
+				MODIFIER,
+				DATE_FORMAT(MDT, '%Y-%m-%d %H:%i:%s') MDT
+			FROM
+				${tbl_nm}
+			WHERE
+				BRD_ID = #{brd_id} AND
+				CONT_IDX = #{cont_idx}
+			ORDER BY STARTDT DESC
+			
+		) TB, ( SELECT @RNUM := 0 ) R ) AL 
+
+	</select>
+	
+	
+	<select id="selectBoarddryMainList" parameterType="boarddryVO" resultType="boarddryVO">
+
+		SELECT * FROM ( SELECT @RNUM := @RNUM + 1 AS rn, TB.* FROM (
+	
+			SELECT
+				BRD_ID,
+				CONT_IDX,
+				SUBJECT,
+				BRD_CONT,
+				REPEAT_YN,
+				ALLDAY_YN,
+				HOLIDAY_YN,
+				DATE_FORMAT(STARTDT, '%Y-%m-%d HH24:MI') STARTDT,
+				DATE_FORMAT(ENDDT, '%Y-%m-%d HH24:MI') ENDDT,
+				WRITER,
+				DATE_FORMAT(WDT, 'YY.MM.DD') MAIN_WDT,
+				DATE_FORMAT(WDT, '%Y-%m-%d %H:%i:%s') WDT,
+				MODIFIER,
+				DATE_FORMAT(MDT, '%Y-%m-%d %H:%i:%s') MDT
+			FROM
+				${tbl_nm}
+			WHERE
+				BRD_ID = #{brd_id} 
+				<if test="startdt != null and startdt != ''">
+					AND
+					((STR_TO_DATE(#{startdt}, '%Y-%m-%d') BETWEEN STR_TO_DATE(DATE_FORMAT(STARTDT, '%Y-%m-%d'), '%Y-%m-%d') AND STR_TO_DATE(DATE_FORMAT(ENDDT, '%Y-%m-%d'), '%Y-%m-%d')) OR
+					(STR_TO_DATE(#{enddt}, '%Y-%m-%d') BETWEEN STR_TO_DATE(DATE_FORMAT(STARTDT, '%Y-%m-%d'), '%Y-%m-%d') AND STR_TO_DATE(DATE_FORMAT(ENDDT, '%Y-%m-%d'), '%Y-%m-%d')) OR
+          			(STR_TO_DATE(DATE_FORMAT(STARTDT, '%Y-%m-%d'), '%Y-%m-%d') BETWEEN STR_TO_DATE(#{startdt}, '%Y-%m-%d') AND STR_TO_DATE(#{enddt}, '%Y-%m-%d')))
+				</if>
+				<if test="searchKeyword != null and searchKeyword != ''">
+					AND
+					STR_TO_DATE(#{searchKeyword}, '%Y-%m-%d') BETWEEN STR_TO_DATE(DATE_FORMAT(STARTDT, '%Y-%m-%d'), '%Y-%m-%d') AND STR_TO_DATE(DATE_FORMAT(ENDDT, '%Y-%m-%d'), '%Y-%m-%d')
+				</if>
+			ORDER BY STARTDT DESC
+		) TB, ( SELECT @RNUM := 0 ) R ) AL  WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+
+	</select>
+
+
+</mapper>

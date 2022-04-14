@@ -1,0 +1,81 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="elfunc" uri="/WEB-INF/tlds/egov_elfunc.tld"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+<form:form name="reqForm" commandName="{##BIZNM##}VO">
+
+	<!-- content -->
+	<div id="container">
+	
+		<div class="articles_search">		
+			<!--<p class="articles">전체 <span class="txt_bold">${totCnt}건</span>, 현재 페이지 <span class="total">${curPage}</span> / ${totPage } pages</p>-->		
+			<div class="basic_searchForm">
+				<!-- 검색기능 구현 필요 -->
+				<form:select path="searchCondition">
+					<form:option value="">선택</form:option>
+				</form:select>
+				<form:input path="searchKeyword" title="검색어 입력"/>
+				<a href="javascript:fn_egov_{##BIZNM##}_search()" class="input_smallBlack">검색</a> 
+				<!-- 검색기능 구현 필요 -->
+			</div>
+		</div>
+		
+		<div class="tablewrap">
+			<table class="tstyle_list"  summary="{##BIZNM##} 목록 조회">
+				<caption>{##BIZNM##}</caption>
+				<colgroup>
+					<col width="10%"/>
+					{##COLGROUP_ITER##}
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">순번</th>
+						{##THEAD_ITER##}
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach var="result" items="${resultList}" varStatus="status">
+					<tr>
+						<td>${(totCnt + 1) - result.rn}</td>
+						{##TR_ITER##}
+					</tr>
+					</c:forEach>
+					<c:if test="${totCnt eq 0}">
+						<tr>
+							<td colspan="{##COLSPAN##}"> 조회 결과가 없습니다 </td>
+						</tr>
+					</c:if>
+				</tbody>
+			</table>	
+		</div>
+		
+		<br/>
+		
+		<div class="btn_area_right">
+			<a href="javascript:fn_egov_{##BIZNM##}_add()" class="btn_line">등록</a>
+		</div>
+		
+		<br/>
+
+		<!-- 게시글 리스트 페이징 -->
+		<c:if test="${totPage gt 1}">
+			<div class="board_pager">
+				<ui:pagination paginationInfo="${paginationInfo}" type="image"
+					jsFunction="fn_egov_link_page" />
+			</div>
+		</c:if>
+		<!-- 게시글 리스트 페이징 //-->
+
+		<br/>
+		
+	</div>
+
+	<form:hidden path="edomweivgp"/>
+	<form:hidden path="pageIndex"/>
+	{##HIDDEN_PK_ITER##}
+	
+</form:form>

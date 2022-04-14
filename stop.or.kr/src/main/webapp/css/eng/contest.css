@@ -1,0 +1,114 @@
+@charset "utf-8";
+@import url("layout.css");
+@import url("sub.css");
+/*-------------------------------------------------
+Author : ㅈㅁㅈ
+Create date : 2018-07-09
+-------------------------------------------------*/
+
+/* 상단 */
+#header {height:110px; margin-bottom:0; padding:40px 0 0;}
+.logo a {width:293px; height:26px; margin-top:5px;}
+
+/* 상단 유틸 */
+.util {top:47px;}
+.util .sns a {overflow:hidden; position:relative; top:-5px; width:33px; margin-left:25px; padding:0; border-radius:100%; border:0 none; background-color:#3b5999; color:transparent; text-align:center; white-space:nowrap; line-height:33px;}
+.util .sns a:before {position:absolute; left:0; top:0; width:100%; height:100%; font-family:'xeicon'; font-size:1.5rem; color:#fff; content:'';}
+.util .sns .twitter {background-color:#1ebbf3;}
+.util .sns .twitter:before {content:'';}
+.util .all-menu {position:relative; top:2px; margin-left:45px; padding:0;}
+
+/* 주메뉴 */
+#gnb {padding-right:140px; font-size:2rem; font-weight:600; text-align:right;}
+#gnb li {margin-right:65px;}
+#gnb a {z-index:0;}
+#gnb a:before {left:-12px; bottom:auto; top:0; z-index:-2; width:18px; height:18px; margin:0; background:linear-gradient(120deg, #ab52ae, #7046a9); opacity:0;}
+#gnb a:after {position:absolute; left:-7px; top:5px; z-index:-1; width:13px; height:13px; background-color:#fff; content:'';}
+#gnb a:hover:before,
+#gnb a:focus:before,
+#gnb a:active:before,
+#gnb .active a:before {left:-12px; width:18px; opacity:1;}
+
+/* 서브 비주얼 */
+#spot {position:relative; height:600px; padding-top:190px; background:url('../../images/kor/contest/spot.gif') no-repeat center 0 #372454;}
+#spot span {display:block; font-size:2rem; font-weight:400;}
+#spot strong {display:block; margin-bottom:40px; font-family:'Cheonnyeon'; font-size:4.5rem; font-weight:normal;}
+#spot strong:before,
+#spot strong:after,
+#spot p:before {display:none;}
+#spot p {max-width:90%; margin:0 auto; padding:0;}
+#spot em {position:absolute; left:50%; top:65px; width:120px; height:120px; margin-left:385px; padding:35px 25px 0 0; background:url('../../images/kor/contest/spot_em.png') no-repeat; background-size:100%; font-family:'Gotham'; font-size:2.2rem; font-weight:300; color:#fff; text-align:right; line-height:1.181;}
+#spot a {display:inline-block; width:230px; max-width:48%; height:60px; margin:0 2px; border-radius:5px; border:4px solid rgba(255, 255, 255, 0); background-color:rgba(255, 255, 255, .9); font-size:1.8rem; font-weight:500; color:#000; text-align:center; line-height:52px; transition:all .2s; -webkit-transition:all .2s;}
+#spot a:hover,
+#spot a:focus,
+#spot a:active {border-color:#fff; background:none; color:#fff;}
+
+/* 콘텐츠 */
+.cont-wrap {margin:0 auto; padding:0;}
+#contents {margin:65px auto 110px;}
+
+/* 서브메뉴 */
+#snb {position:relative; width:100%;}
+#snb ul {display:table; width:100%; table-layout:fixed;}
+#snb li {display:table-cell;}
+#snb a {display:block; font-size:1.8rem; color:#999; text-align:center;}
+#snb a:after {right:50%; top:100%; width:0; height:2px; margin:0; border:0 none; background-color:#5c2e98; transform:rotate(0deg); -webkit-transform:rotate(0deg); transition:all .2s; -webkit-transition:all .2s;}
+#snb .active a {background:none; color:#5c2e98;}
+#snb .active a:after {right:0; width:100%;}
+#snb:before {position:absolute; left:50%; bottom:0; width:1000%; height:1px; margin-left:-500%; border-bottom:1px solid #e5e5e5; content:'';}
+#snb.fixed {position:fixed; left:0; top:0; z-index:1; width:100%; background-color:#fff;}
+#snb.fixed nav {width:1280px; max-width:100%; margin:0 auto;}
+#snb.fixed + #contents {padding-top:60px;}
+
+/* 하단 배너존 삭제 */
+#bannerzone {display:none;}
+
+/* 박스1 */
+.box1 .item {width:auto;}
+
+/* 썸네일게시판 */
+.board-thumb a {position:relative; padding:42px;}
+.board-thumb .img {padding-top:72%;}
+.board-thumb .icon1 {position:absolute; left:60px; top:60px;}
+.board-thumb strong {height:auto; padding:0; text-overflow:ellipsis; white-space:nowrap;}
+
+/* 접수확인 */
+.form-contest {padding:60px 0 0 !important;}
+.form-contest .item {margin-top:60px; padding:30px; background-color:#f8f9fa;}
+.form-contest .item .form {position:relative; width:460px; max-width:100%; margin:0 auto; padding-right:140px;}
+.form-contest .item .form input {width:100%; height:33px; padding-left:10px; border:1px solid #e0e1e5; color:#888;}
+.form-contest .item .form input + input {margin-top:10px;}
+.form-contest .item .form .btn {position:absolute; right:0; top:0; width:130px; height:100%; background-color:#5c2e98; color:#fff; text-align:center; line-height:75px;}
+
+/* 메인 비주얼 */
+#visual {position:relative; z-index:0; margin:-65px 0 65px; padding:120px 0; text-align:right;}
+#visual:before {position:absolute; left:50%; top:0; z-index:-1; width:1000%; height:100%; margin-left:-500%; background-color:#e9ecf3; background:linear-gradient(to right, #e0f3f3 40%, #f1e7f4 60%); content:'';}
+#visual:after {position:absolute; right:-20px; bottom:-90px; font-family:'Cheonnyeon'; font-size:25rem; font-weight:bold; color:#5929a2; content:'”'; opacity:.1; line-height:.1;}
+#visual .img {position:absolute; left:0; right:320px; top:50%; z-index:0; transform:translate(0, -50%); -webkit-transform:translate(0, -50%);}
+#visual .img:after {position:absolute; left:-20px; top:-20px; z-index:-1; width:100%; height:100%; border:2px solid #7632b5; content:'';}
+#visual .img img {max-width:100%;}
+#visual .desc {display:inline-block; position:relative; width:410px; max-width:100%; padding:165px 50px 50px; box-shadow:25px 25px 0 rgba(125, 58, 175, .1); border-radius:30px; background-color:#7632b5; font-size:1.7rem; color:rgba(255, 255, 255, .7); text-align:left;}
+#visual .desc strong {position:absolute; right:35px; top:30px; font-family:'Gotham'; font-size:3.4rem; font-weight:300; color:#fff; text-align:right; line-height:1.205;}
+#visual .desc p {margin-bottom:5px; font-family:'Cheonnyeon'; font-size:3.5rem; font-weight:bold; color:#fff; line-height:1.314;}
+#visual .desc a {display:block; width:230px; max-width:100%; height:45px; margin-top:20px; border-radius:5px; border:3px solid #fff; font-size:1.6rem; color:#fff; line-height:39px; text-align:center;}
+
+/* 메인 링크 */
+.go {position:relative; padding-left:270px;}
+.go .title {position:absolute; left:0; top:0; width:230px; font-size:1.7rem; word-break:keep-all;}
+.go .title h2 {margin-bottom:10px; font-family:'Cheonnyeon'; font-size:3rem; font-weight:400; color:#000; line-height:1.366;}
+.go .title span {width:200px;}
+.go ul {overflow:hidden;}
+.go li {float:left; width:20%; font-size:1.8rem; color:#222; text-align:center;}
+.go span {display:block; margin-top:12px;}
+
+/* 공모요강 */
+p.board-view.txt-center {padding:40px 0;}
+
+/* 소개 */
+.intro .title {display:table; width:100%; height:260px; padding:20px; background:url('../../images/kor/contest/intro.jpg') no-repeat center 0; font-family:'Cheonnyeon'; font-size:4rem; color:#342b25; text-align:center; line-height:1.2;}
+.intro .title p {display:table-cell; vertical-align:middle; word-break:keep-all;}
+.intro .item {position:relative; margin-top:70px; padding-left:290px; font-size:1.8rem;}
+.intro .item p {margin-bottom:40px;}
+.intro .item p span {font-size:2rem; color:#222;}
+.intro .item p img {display:inline-block; max-width:100%; margin-top:50px;}
+.intro .label {position:absolute; left:0; top:0; font-size:3.3rem; font-weight:500; color:#000022; line-height:1.424;}

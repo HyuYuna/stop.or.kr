@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.man.menuctgry.dao.SysauthmenuDAO">
+
+	
+	<insert id="insertSysauthmenu" parameterType="sysmenuVO">
+
+		MERGE INTO CMS_MENU_AUTH USING DUAL
+	    ON (
+	    	AUTH_CD = #{auth_cd} AND
+	    	MENU_IDX = #{menu_idx}
+	    )
+	    WHEN MATCHED THEN
+	    	UPDATE SET
+	        AUTH_YN = 'Y'
+	    WHEN NOT MATCHED THEN
+	    	INSERT
+	        (
+				AUTH_CD,
+				MENU_IDX,
+				AUTH_YN,
+				WRITER,
+				WDT
+	        )
+	        VALUES
+	        (
+				#{auth_cd},
+				#{menu_idx},
+				'Y',
+				#{writer},
+				SYSDATE
+	        )
+
+	</insert>
+	
+	<update id="updateSysauthmenu" parameterType="sysmenuVO">
+
+		UPDATE CMS_MENU_AUTH SET
+			AUTH_YN = 'N',
+			MODIFIER = #{modifier},
+			MDT = SYSDATE
+		WHERE
+			AUTH_CD = #{auth_cd}
+
+	</update>
+	
+	<delete id="deleteSysauthmenuByAuthcd" parameterType="sysauthVO">
+
+		DELETE FROM CMS_MENU_AUTH
+		WHERE
+			AUTH_CD = #{auth_cd}
+
+	</delete>
+
+	<delete id="deleteSysauthmenuByMenuidx" parameterType="sysmenuVO">
+
+		DELETE FROM CMS_MENU_AUTH
+		WHERE
+			MENU_IDX = #{menu_idx}
+
+	</delete>
+	
+	<select id="selectSysauthmenu" parameterType="sysmenuVO" resultType="sysmenuVO">
+
+		SELECT
+			AUTH_CD,
+			MENU_IDX,
+			AUTH_YN,
+			WRITER,
+			TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+			MODIFIER,
+			TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+		FROM
+			CMS_MENU_AUTH
+		WHERE
+			AUTH_CD = #{auth_cd} AND
+			MENU_IDX = #{menu_idx}
+
+	</select>
+	
+
+	<select id="selectSysauthmenuList" parameterType="sysmenuVO" resultType="sysmenuVO">
+
+		SELECT  
+    		A.MENU_IDX, 
+    		A.MENU_NM, 
+        	A.UP_MENU_IDX, 
+        	A.MENU_ORD,
+   			LEVEL MENU_LV, 
+        	B.AUTH_CD,
+	        DECODE(B.AUTH_CD, NULL, 'N', AUTH_YN) AUTH_YN 
+  		FROM 
+        	(
+        		SELECT 
+        			MENU_IDX, 
+        			MENU_NM, 
+        			UP_MENU_IDX, 
+        			MENU_ORD 
+          		FROM  
+          			CMS_SYS_MENU 
+         		WHERE  
+         			MU_GUB = #{mu_gub} AND 
+                	USE_YN = 'Y' 
+                	<if test="auth_cd != 'D0001'.toString()">
+         				AND MENU_IDX NOT IN ('MNIDX00001', 'MNIDX00101')
+                	</if>
+        	) A, 
+        	(
+        		SELECT 
+        			* 
+          		FROM  
+          			CMS_MENU_AUTH 
+         		WHERE  
+         				AUTH_CD = #{auth_cd} 
+        	) B 
+ 		WHERE  
+ 			A.MENU_IDX = B.MENU_IDX(+)  
+            CONNECT BY PRIOR A.MENU_IDX = UP_MENU_IDX START 
+       		WITH UP_MENU_IDX IS NULL 
+       		ORDER SIBLINGS BY MENU_ORD 
+			
+	</select>
+
+	
+	<select id="selectSysauthmenuListTotCnt" parameterType="sysmenuVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_MENU_AUTH
+		WHERE
+			AUTH_CD = #{auth_cd} AND
+			MENU_IDX = #{menu_idx}
+
+	</select>
+	
+	<select id="xlsSysauthmenuList" parameterType="sysmenuVO" resultType="sysmenuVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+
+		SELECT
+			AUTH_CD,
+			MENU_IDX,
+			AUTH_YN,
+			WRITER,
+			TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+			MODIFIER,
+			TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+		FROM
+			CMS_MENU_AUTH
+		WHERE
+			AUTH_CD = #{auth_cd} AND
+			MENU_IDX = #{menu_idx}
+
+		) TB ) 
+
+	</select>
+	
+	
+
+</mapper>
+

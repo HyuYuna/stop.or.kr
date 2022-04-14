@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 
+	 <definition name="/modest/*" extends="metsysUserContent">
+		 <put-attribute name="metsysTitle"	value="통계" />
+ 		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_st.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/st/{1}.jsp" />
+	 </definition>
+
+</tiles-definitions>
+

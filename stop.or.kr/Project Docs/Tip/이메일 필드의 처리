@@ -1,0 +1,85 @@
+
+## 사용자 페이지 부분
+
+<input type="text" name="user_email_01" id="user_email_01" class="form-control md" title="이메일 계정 아이디"  />
+@ <input type="text" name="user_email_02" id="user_email_02" class="form-control xl" title="이메일 도메인 입력"/>
+<select name="user_email_03" id="user_email_03" class="form-control lg" title="이메일 도메인 선택">
+	<option value="direct" selected="selected">직접입력</option>
+	<option value="nate.com">nate.com</option>
+	<option value="gmail.com">gmail.com</option>
+	<option value="empal.com">empal.com</option>
+	<option value="naver.com">naver.com</option>
+	<option value="dreamwiz.com">dreamwiz.com</option>
+	<option value="hanmail.net">hanmail.net</option>
+	<option value="freechal.com">freechal.com</option>
+	<option value="paran.com">paran.com</option>
+	<option value="hitel.net">hitel.net</option>
+	<option value="hanmir.com">hanmir.com</option>
+	<option value="netian.com">netian.com</option>
+	<option value="lycos.co.kr">lycos.co.kr</option>
+	<option value="yahoo.co.kr">yahoo.co.kr</option>
+	<option value="chillian.net">chillian.net</option>
+	<option value="korea.com">korea.com</option>
+	<option value="hotmail.com">hotmail.com</option>
+	<option value="unitel.co.kr">unitel.co.kr</option>
+	<option value="nownuri.net">nownuri.net</option>
+	<option value="hanafos.com">hanafos.com</option>
+	<option value="kornet.net">kornet.net</option>
+</select>
+<form:hidden path="user_email" title="이메일"/>		
+
+
+
+
+
+
+
+
+## javascript 부분
+
+
+	// 페이지 로딩부분에 추가
+	if(cmmfn_exist_object("user_email") == true)
+	{
+	
+		jQuery("#user_email_03").change(function(){
+			
+			if($(this).val() == "direct")
+			{
+				jQuery("#user_email_02")
+					.val("")
+					.prop("readonly", false);
+			}
+			else
+			{
+				jQuery("#user_email_02")
+					.val($(this).val())
+					.prop("readonly", true);			
+			}
+		});
+	
+		var mailval = jQuery("#user_email").val() 
+		if(mailval != null && mailval != "" && mailval.indexOf("@") >= 0)
+		{
+			var arrmailval = mailval.split("@");
+			if(arrmailval.length == 2)
+			{
+				jQuery("#user_email_01").val(arrmailval[0]);
+				jQuery("#user_email_02").val(arrmailval[1]);
+			}
+		}	
+		
+	}
+	
+	
+	
+	// 이메일 저장 부분에 추가
+	
+	jQuery("#user_email").val(jQuery("#user_email_01").val() + "@" + jQuery("#user_email_02").val());
+		
+	
+	
+	
+	
+	
+	

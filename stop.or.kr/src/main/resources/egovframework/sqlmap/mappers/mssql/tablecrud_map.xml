@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.man.metsys.dao.TablecrudDAO">
+
+	<select id="selectTableList" parameterType="TablecrudVO" resultType="tablecrudVO">
+	
+		SELECT 
+			NAME TABLE_NAME
+  		FROM 
+  			SYS.TABLES  
+ 		WHERE 
+ 			(
+ 				NAME LIKE 'CMS_%'
+ 				<if test="table_prefix_01 != null and table_prefix_01 != ''">
+	 				OR NAME LIKE #{table_prefix_01} + '%'
+	 			</if>
+ 				<if test="table_prefix_02 != null and table_prefix_02 != ''">
+	 				OR NAME LIKE #{table_prefix_02} + '%'
+	 			</if>
+ 			)
+ 		ORDER BY TABLE_NAME
+	
+	</select>
+
+	<select id="selectTablecolList" parameterType="TablecrudVO" resultType="tablecrudVO">
+		 
+		SELECT
+			NULL OWNER,
+			A.NAME AS TABLE_NAME,
+			B.NAME AS COLUMN_NAME,
+			UPPER(C.NAME) AS DATA_TYPE,
+			C.LENGTH AS DATA_LENGTH,
+			CASE B.ISNULLABLE WHEN 1 THEN 'Y' WHEN 0 THEN 'N' END NULLABLE,
+			NULL COLUMN_ID,
+			dbo.SF_COL_INFO(A.NAME, B.NAME, 'CMNT') COMMENTS,
+			dbo.SF_COL_INFO(A.NAME, B.NAME, 'ISPK') CONSTRAINT_TYPE
+		FROM SYS.TABLES A
+			INNER JOIN SYS.SYSCOLUMNS B ON A.OBJECT_ID=B.ID
+			INNER JOIN SYS.SYSTYPES C ON C.XTYPE=B.XTYPE
+		WHERE A.NAME = #{table_name}
+			ORDER BY TABLE_NAME, B.COLORDER
+			
+		 
+	</select>
+	
+	<!--
+	<insert id="insertTablecrud" parameterType="TablecrudVO>
+	</insert>
+	
+	<update id="updateTablecrud" parameterType="TablecrudVO>
+	</update>
+	
+	<delete id="deleteTablecrud" parameterType="TablecrudVO>
+	</delete>
+	
+	<select id="selectTablecrud" parameterType="TablecrudVO" resultType="TablecrudVO">
+	</select>
+	
+	
+	<select id="selectTablecrudListTotCnt" parameterType="TablecrudVO" resultType="int">
+	</select>
+	
+	-->
+</mapper>
+

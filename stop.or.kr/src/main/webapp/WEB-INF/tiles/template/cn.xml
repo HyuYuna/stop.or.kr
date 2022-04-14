@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	
+	 <definition name="metsysCardnewsContent" template="/WEB-INF/jsp/layout/template/metsys/layout/modeecLayout.jsp">
+		 <put-attribute name="metsysMeta"	value="/WEB-INF/jsp/layout/template/metsys/meta/meta_type_uploader.jsp"/>
+		 <put-attribute name="metsysHeader"	value="/WEB-INF/jsp/layout/template/metsys/header.jsp"/>
+		 <put-attribute name="metsysMenu"	value="/WEB-INF/jsp/layout/template/metsys/menu.jsp"/>
+		 <put-attribute name="metsysSubmenu"	value="/WEB-INF/jsp/layout/template/metsys/submenu/submenu.jsp"/>
+		 <put-attribute name="metsysScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script.jsp"/>
+		 <put-attribute name="metsysFooter"	value="/WEB-INF/jsp/layout/template/metsys/footer.jsp"/>
+	 </definition>
+	 
+	 
+	 <definition name="/metsys/cardnews/cardNewsManList" extends="metsysCardnewsContent">
+		 <put-attribute name="metsysTitle"	value="카드뉴스 관리" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_cn.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/cn/cardNewsManList.jsp" />
+	 </definition>
+	 
+	 <definition name="/metsys/cardnews/cardNewsForm" extends="metsysCardnewsContent">
+		 <put-attribute name="metsysTitle"	value="카드뉴스 관리" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_cn.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/cn/cardNewsForm.jsp" />
+	 </definition>
+	 
+	 <definition name="/metsys/webtoon/webtoonManList" extends="metsysCardnewsContent">
+		 <put-attribute name="metsysTitle"	value="웹툰 관리" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_wt.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/wt/webtoonManList.jsp" />
+	 </definition>
+	 
+	 <definition name="/metsys/webtoon/webtoonForm" extends="metsysCardnewsContent">
+		 <put-attribute name="metsysTitle"	value="웹툰 관리" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_wt.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/wt/webtoonForm.jsp" />
+	 </definition>
+	 
+	 <definition name="/metsys/webtooncategory/*" extends="metsysCardnewsContent">
+		 <put-attribute name="metsysTitle"	value="웹툰카테고리관리" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_wt_category.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/wtc/{1}.jsp" />
+	 </definition>
+
+</tiles-definitions>
+

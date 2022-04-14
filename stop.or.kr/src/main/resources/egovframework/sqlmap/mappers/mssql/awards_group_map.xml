@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.plani.template.man.metsys.dao.AwardsGroupDAO">
+	
+	<select id="selectAwardsGroupList" parameterType="awardsGroupVO" resultType="awardsGroupVO">
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY WDT DESC) RN, TB.* FROM (
+				SELECT
+				GROUP_ID,
+				NAME,
+				MU_SITE,
+				MU_LANG,
+				WRITER,
+				dbo.SF_USER_NM(WRITER) WRITER_NM,
+				CONVERT(VARCHAR(19), WDT, 20) WDT,
+				MODIFIER,
+				CONVERT(VARCHAR(19), MDT, 20) MDT
+			FROM
+				CMS_AWARDS_GROUP 
+		) TB ) MORG   WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+	</select>	
+	
+	<select id="selectAwardsGroupListAll" parameterType="awardsGroupVO" resultType="awardsGroupVO">
+			SELECT
+			GROUP_ID,
+			NAME,
+			MU_SITE,
+			MU_LANG,
+			WRITER,
+			dbo.SF_USER_NM(WRITER) WRITER_NM,
+			CONVERT(VARCHAR(19), WDT, 20) WDT,
+			MODIFIER,
+			CONVERT(VARCHAR(19), MDT, 20) MDT
+		FROM
+			CMS_AWARDS_GROUP 
+	</select>	
+	
+	<select id="selectAwardsGroupListTotalCount" parameterType="awardsGroupVO" resultType="int">
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			(
+				SELECT
+					GROUP_ID,
+					NAME,
+					MU_SITE,
+					MU_LANG,
+					WRITER,
+					dbo.SF_USER_NM(WRITER) WRITER_NM,
+					CONVERT(VARCHAR(19), WDT, 20) WDT,
+					MODIFIER,
+					CONVERT(VARCHAR(19), MDT, 20) MDT
+				FROM
+					CMS_AWARDS_GROUP
+			) INNB
+	</select>
+	
+	<select id="selectAwardsGroup" parameterType="awardsGroupVO" resultMap="awardsGroup">
+		SELECT
+			GROUP_ID,
+			NAME,
+			MU_SITE,
+			MU_LANG,
+			WRITER,
+			dbo.SF_USER_NM(WRITER) WRITER_NM,
+			CONVERT(VARCHAR(19), WDT, 20) WDT,
+			MODIFIER,
+			CONVERT(VARCHAR(19), MDT, 20) MDT
+		FROM
+			CMS_AWARDS_GROUP
+		WHERE
+			GROUP_ID=#{group_id}
+	</select>
+	
+	<resultMap id="awardsGroup" type="awardsGroupVO"> 
+		<result property="group_id" column="group_id"/>
+		<result property="name" column="name"/>
+		<result property="mu_site" column="mu_site"/>
+		<result property="mu_lang" column="mu_lang"/>
+		<result property="writer" column="writer"/>
+		<result property="writer_nm" column="writer_nm"/>
+		<result property="wdt" column="wdt"/>
+		<result property="modifier" column="modifier"/>
+		<result property="mdt" column="mdt"/>
+	</resultMap>
+
+	<insert id="insertAwardsGroup" parameterType="awardsGroupVO">
+		<selectKey resultType="java.lang.String" keyProperty="group_id" order="BEFORE">
+	     SELECT 
+	     		'IDX' + RIGHT(REPLICATE('0', 6) + CAST((ISNULL(MAX(CAST(REPLACE(GROUP_ID, 'IDX', '') AS INT)), 0) + 1) AS VARCHAR),  6)
+				AS GROUP_ID
+	     	FROM 
+	     		CMS_AWARDS_GROUP
+		</selectKey>
+		INSERT INTO CMS_AWARDS_GROUP
+		(
+			GROUP_ID,
+			NAME,
+			MU_SITE,
+			MU_LANG,
+			WRITER,
+			WDT, 
+			MODIFIER,
+			MDT 
+		)
+		VALUES
+		(
+			#{group_id},
+			#{name},
+			#{mu_site},
+			#{mu_lang},
+			#{writer},
+			GETDATE(),
+			#{modifier},
+			GETDATE()
+		)
+	</insert>
+	
+	<update id="updateAwardsGroup" parameterType="awardsGroupVO">
+		UPDATE CMS_AWARDS_GROUP SET
+			MU_SITE = #{mu_site},
+			MU_LANG = #{mu_lang},
+			NAME = #{name},
+			MODIFIER = #{modifier},
+			MDT = GETDATE()
+		WHERE
+			GROUP_ID = #{group_id}
+	</update>	
+	
+	<delete id="deleteAwardsGroup" parameterType="awardsGroupVO">
+		DELETE FROM CMS_AWARDS_GROUP
+		WHERE
+			GROUP_ID = #{group_id}
+	</delete>
+	
+</mapper>

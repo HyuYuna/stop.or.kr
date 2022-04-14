@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 
+	 <definition name="movePageDefinitionContent" template="/WEB-INF/jsp/layout/custom/web/kor/cmm/movePageLayout.jsp">
+	 </definition>
+
+	 <definition name="/movepage/redirect" extends="movePageDefinitionContent">
+		 <put-attribute name="title"	value="페이지 리다이렉트" />
+		 <put-attribute name="content"	value="/WEB-INF/jsp/wpages/custom/web/kor/cmm/redirect.jsp" />
+	 </definition>
+	 
+</tiles-definitions>

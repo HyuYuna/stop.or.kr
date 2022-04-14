@@ -1,0 +1,823 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="boardarticle">
+
+	<typeAlias  alias="boardarticleVO" type="egovframework.plani.template.brdartcl.vo.BoardarticleVO"/>
+	
+	<resultMap id="boardarticle" class="egovframework.plani.template.brdartcl.vo.BoardarticleVO"> 
+		<result property="rn" column="rn"/>
+		<result property="brd_id" column="brd_id"/>
+		<result property="cont_idx" column="cont_idx"/>
+		<result property="ctgry_idx" column="ctgry_idx"/>
+		<result property="ctgry_nm" column="ctgry_nm"/>
+		<result property="subject" column="subject"/>
+		<result property="brd_cont" column="brd_cont" jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="hits" column="hits"/>
+		<result property="rcmnd_cnt" column="rcmnd_cnt"/>
+		<result property="rjct_cnt" column="rjct_cnt"/>
+		<result property="grp_no" column="grp_no"/>
+		<result property="grp_lv" column="grp_lv"/>
+		<result property="grp_ord" column="grp_ord"/>
+		<result property="is_notice" column="is_notice"/>
+		<result property="is_scrt" column="is_scrt"/>
+		<result property="writer" column="writer"/>
+		<result property="dfr_wdt" column="dfr_wdt"/>
+		<result property="pre_atcl" column="pre_atcl"/>
+		<result property="pre_subj" column="pre_subj"/>
+		<result property="next_atcl" column="next_atcl"/>
+		<result property="next_subj" column="next_subj"/>
+		<result property="kogl" column="kogl"/>
+		<result property="atach_cnt" column="atach_cnt"/>
+		<result property="vchkcode" column="vchkcode"/>
+		<result property="reply_cnt" column="reply_cnt"/>
+		<result property="add_info_01" column="add_info_01"/>
+		<result property="add_info_02" column="add_info_02"/>
+		<result property="add_info_03" column="add_info_03"/>
+		<result property="add_info_04" column="add_info_04"/>
+		<result property="add_info_05" column="add_info_05"/>
+		<result property="writer_nm" column="writer_nm"/>
+		<result property="wdt" column="wdt"/>
+		<result property="modifier" column="modifier"/>
+		<result property="mdt" column="mdt"/>
+	</resultMap>
+	<resultMap id="boardarticleXML" class="egovframework.plani.template.brdartcl.vo.BoardarticleVO">
+		<result property="brd_id" column="brd_id"/>
+		<result property="cont_idx" column="cont_idx"/>
+		<result property="ctgry_idx" column="ctgry_idx"/>
+		<result property="ctgry_nm" column="ctgry_nm"/>
+		<result property="subject" column="subject"/>
+		<result property="brd_cont" column="brd_cont" jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="hits" column="hits"/>
+		<result property="rcmnd_cnt" column="rcmnd_cnt"/>
+		<result property="rjct_cnt" column="rjct_cnt"/>
+		<result property="grp_no" column="grp_no"/>
+		<result property="grp_lv" column="grp_lv"/>
+		<result property="grp_ord" column="grp_ord"/>
+		<result property="is_notice" column="is_notice"/>
+		<result property="is_scrt" column="is_scrt"/>
+		<result property="writer" column="writer"/>
+		<result property="dfr_wdt" column="dfr_wdt"/>
+		<result property="pre_atcl" column="pre_atcl"/>
+		<result property="pre_subj" column="pre_subj"/>
+		<result property="next_atcl" column="next_atcl"/>
+		<result property="next_subj" column="next_subj"/>
+		<result property="kogl" column="kogl"/>
+		<result property="atach_cnt" column="atach_cnt"/>
+		<result property="vchkcode" column="vchkcode"/>
+		<result property="rname" column="rname"/>
+		
+		<result property="reply_cnt" column="reply_cnt"/>
+		<result property="add_info_01" column="add_info_01"/>
+		<result property="add_info_02" column="add_info_02"/>
+		<result property="add_info_03" column="add_info_03"/>
+		<result property="add_info_04" column="add_info_04"/>
+		<result property="add_info_05" column="add_info_05"/>
+		<result property="writer_nm" column="writer_nm"/>
+		<result property="wdt" column="wdt"/>
+		<result property="modifier" column="modifier"/>
+		<result property="mdt" column="mdt"/>
+	</resultMap>  
+	
+	
+	<insert id="boardarticleDAO.insertBoardarticle" parameterClass="boardarticleVO">
+		
+		<selectKey resultClass="java.lang.Integer" keyProperty="cont_idx">
+		
+			SELECT NVL(MAX(CONT_IDX) + 1, 1) AS CONT_IDX FROM $tbl_nm$ WHERE
+				BRD_ID = #brd_id#
+		
+		</selectKey>
+		
+		INSERT INTO $tbl_nm$
+		(
+			BRD_ID,
+			CONT_IDX,
+			CTGRY_IDX,
+			SUBJECT,
+			BRD_CONT,
+			HITS,
+			GRP_NO,
+			GRP_LV,
+			GRP_ORD,
+			IS_NOTICE,
+			IS_SCRT,
+			KOGL,
+			ADD_INFO_01,
+			ADD_INFO_02,
+			ADD_INFO_03,
+			ADD_INFO_04,
+			ADD_INFO_05,
+			WRITER,
+			WDT
+		)
+		VALUES
+		(
+			#brd_id#,
+			#cont_idx#,
+			#ctgry_idx#,
+			#subject#,
+			#brd_cont:CLOB#,
+			#hits#,
+			<isEqual property="edomweivgp" compareValue="A">
+				(SELECT NVL(MAX(GRP_NO) + 1, 1) FROM $tbl_nm$ WHERE BRD_ID = #brd_id#),
+				#grp_lv#,
+				#grp_ord#,
+			</isEqual>
+			<isEqual property="edomweivgp" compareValue="P">
+				#grp_no#,
+				#grp_lv# + 1,
+				#grp_ord# + 1,
+			</isEqual>
+			#is_notice#,
+			#is_scrt#,
+			#kogl#,
+			#add_info_01#,
+			#add_info_02#,
+			#add_info_03#,
+			#add_info_04#,
+			#add_info_05#,
+			#writer#,
+			<isEmpty property="wdt">
+				SYSDATE
+			</isEmpty>
+			<isNotEmpty property="wdt">
+				 TO_DATE(#wdt# || ' ' || TO_CHAR(SYSDATE, 'HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS')
+			</isNotEmpty>
+		)
+	
+	</insert>
+	
+	<update id="boardarticleDAO.updateBoardarticlereply" parameterClass="boardarticleVO">
+		
+		UPDATE $tbl_nm$ SET
+			GRP_ORD = GRP_ORD + 1 
+		WHERE
+			GRP_NO = #grp_no# AND
+			GRP_ORD <![CDATA[ > ]]> #grp_ord#
+				
+	</update>
+	
+	
+	<update id="boardarticleDAO.updateBoardarticle" parameterClass="boardarticleVO">
+		
+		UPDATE $tbl_nm$ SET
+			<isNotEmpty property="subject">
+				CTGRY_IDX = #ctgry_idx#,
+				SUBJECT = #subject#,
+				BRD_CONT = #brd_cont:CLOB#,
+			</isNotEmpty>
+			<isNotEmpty property="is_notice">
+				IS_NOTICE = #is_notice#,
+			</isNotEmpty>
+			<isNotEmpty property="is_scrt">
+				IS_SCRT = #is_scrt#,
+			</isNotEmpty>
+			<isNotEmpty property="kogl">
+				KOGL = #kogl#,
+			</isNotEmpty>
+			<isNotEmpty property="add_info_01">
+				ADD_INFO_01 = #add_info_01#,
+			</isNotEmpty>
+			<isNotEmpty property="add_info_02">
+				ADD_INFO_02 = #add_info_02#,
+			</isNotEmpty>
+			<isNotEmpty property="add_info_03">
+				ADD_INFO_03 = #add_info_03#,
+			</isNotEmpty>
+			<isNotEmpty property="add_info_04">
+				ADD_INFO_04 = #add_info_04#,
+			</isNotEmpty>
+			<isNotEmpty property="add_info_05">
+				ADD_INFO_05 = #add_info_05#,
+			</isNotEmpty>
+			<isNotEmpty property="wdt">
+				WDT = TO_DATE(#wdt#, 'YYYY-MM-DD HH24:MI:SS'),
+			</isNotEmpty>
+			MODIFIER = #modifier#,
+			MDT = SYSDATE
+		WHERE
+			BRD_ID = #brd_id# AND
+			CONT_IDX = #cont_idx#
+	
+	</update>
+	
+	<update id="boardarticleDAO.updateBoardxcount" parameterClass="boardarticleVO" >
+		UPDATE $tbl_nm$ SET
+			<isNotEqual property="hits" compareValue="0">
+				HITS = #hits#,
+			</isNotEqual>
+			MDT = MDT
+		WHERE
+			BRD_ID = #brd_id# AND
+			CONT_IDX = #cont_idx#
+	</update>
+
+	
+	<delete id="boardarticleDAO.deleteBoard" parameterClass="boardarticleVO">
+	
+		DELETE FROM
+			$tbl_nm$
+		WHERE
+			BRD_ID = #brd_id# 
+	
+	</delete>
+	
+	<delete id="boardarticleDAO.deleteBoardarticle" parameterClass="boardarticleVO">
+	
+		DELETE FROM
+			$tbl_nm$
+		WHERE
+			BRD_ID = #brd_id# AND
+			CONT_IDX = #cont_idx#	
+	
+	</delete>
+	
+	<select id="boardarticleDAO.selectBoardarticle" parameterClass="boardarticleVO" resultMap="boardarticle">
+	
+		SELECT
+			1 AS RN,
+			BRD_ID,
+			CONT_IDX,
+			CTGRY_IDX,
+			SF_CTGRY_NM(CTGRY_IDX) CTGRY_NM,
+			SUBJECT,
+			BRD_CONT,
+			HITS,
+			<isNotEmpty property="use_rcmnd">
+				<isEqual property="use_rcmnd" compareValue="N">
+					0 RCMND_CNT,
+				</isEqual>
+				<isNotEqual property="use_rcmnd" compareValue="N">
+					(SELECT COUNT(*) FROM CMS_BRD_RCMND WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX AND RCMND_GB = 'R') RCMND_CNT,
+				</isNotEqual>
+			</isNotEmpty>
+			<isNotEmpty property="use_rjct">
+				<isEqual property="use_rjct" compareValue="N">
+					0 RJCT_CNT,
+				</isEqual>
+				<isNotEqual property="use_rjct" compareValue="N">
+					(SELECT COUNT(*) FROM CMS_BRD_RCMND WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX AND RCMND_GB = 'J') RJCT_CNT,
+				</isNotEqual>
+			</isNotEmpty>
+			GRP_NO,
+			GRP_LV,
+			GRP_ORD,
+			IS_NOTICE,
+			IS_SCRT,
+			PRE_ATCL,
+			PRE_SUBJ,
+			NEXT_ATCL,
+			NEXT_SUBJ,
+			KOGL,
+			0 REPLY_CNT,
+			ADD_INFO_01, 
+			ADD_INFO_02,
+			ADD_INFO_03,
+			ADD_INFO_04,
+			ADD_INFO_05,
+			A.WRITER,
+			TO_CHAR(A.WDT, 'YYYY-MM-DD') WDT,
+			A.MODIFIER,
+			TO_CHAR(A.MDT, 'YYYY-MM-DD') MDT,
+			NVL(SF_USER_NM(WRITER), 'GUEST') WRITER_NM,
+			ROUND(SYSDATE - A.WDT) DFR_WDT,
+			1 ATACH_CNT, 
+	        '' VCHKCODE
+		FROM
+			(
+				SELECT
+					X.*,
+			    	LAG(CONT_IDX, 1, '') OVER (ORDER BY CONT_IDX ) PRE_ATCL,
+			    	LAG(SUBJECT, 1, '') OVER (ORDER BY CONT_IDX ) PRE_SUBJ,
+			    	LEAD(CONT_IDX, 1, '') OVER (ORDER BY CONT_IDX) NEXT_ATCL,
+			    	LEAD(SUBJECT, 1, '') OVER (ORDER BY CONT_IDX) NEXT_SUBJ
+			    FROM 
+			    	$tbl_nm$ X
+			    WHERE
+			    	BRD_ID = #brd_id# AND
+			    	IS_NOTICE = 'N'
+			    	<isNotEmpty property="srch_ctgry_idx" prepend="AND">
+						CTGRY_IDX = #srch_ctgry_idx#
+					</isNotEmpty>
+			    UNION ALL
+			    SELECT
+				    Y.*,
+			    	LAG(CONT_IDX, 1, '') OVER (ORDER BY CONT_IDX ) PRE_ATCL,
+			    	LAG(SUBJECT, 1, '') OVER (ORDER BY CONT_IDX ) PRE_SUBJ,
+			    	LEAD(CONT_IDX, 1, '') OVER (ORDER BY CONT_IDX) NEXT_ATCL,
+			    	LEAD(SUBJECT, 1, '') OVER (ORDER BY CONT_IDX) NEXT_SUBJ
+			    FROM
+			  	  	$tbl_nm$ Y
+			    WHERE
+			    	BRD_ID = #brd_id# AND
+		    		IS_NOTICE = 'Y'
+		    		<isNotEmpty property="srch_ctgry_idx" prepend="AND">
+						CTGRY_IDX = #srch_ctgry_idx#
+					</isNotEmpty>
+			) A
+		WHERE
+			BRD_ID = #brd_id# AND
+			CONT_IDX = #cont_idx#	
+
+	
+	</select>
+	
+	
+	<select id="boardarticleDAO.selectBoardarticleGrpwriterCnt" parameterClass="boardarticleVO" resultClass="int">
+	
+		SELECT
+			COUNT(*)
+		FROM
+	    	$tbl_nm$ X
+		WHERE
+			BRD_ID = #brd_id# AND
+			GRP_NO = #grp_no# AND
+			WRITER = #writer#	
+	
+	</select>
+	
+	<select id="boardarticleDAO.selectBoardarticlePwd" parameterClass="boardarticleVO" resultClass="boardarticleVO">
+	
+		SELECT
+			CONT_IDX
+		FROM
+			$tbl_nm$
+		WHERE
+			BRD_ID = #brd_id# AND
+			CONT_IDX = #cont_idx# AND
+			ADD_INFO_04 = #add_info_04#
+
+	
+	</select>
+	
+	<select id="boardarticleDAO.selectBoardarticleList" parameterClass="boardarticleVO" resultMap="boardarticle">
+		
+		<isEqual property="is_notice" compareValue="N">
+			
+			SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+			
+				SELECT
+					BRD_ID,
+					CONT_IDX,
+					CTGRY_IDX,
+					SF_CTGRY_NM(CTGRY_IDX) CTGRY_NM,
+					SUBJECT,
+					BRD_CONT,
+					HITS,
+					<isNotEmpty property="use_rcmnd">
+						<isEqual property="use_rcmnd" compareValue="N">
+							0 RCMND_CNT,
+						</isEqual>
+						<isNotEqual property="use_rcmnd" compareValue="N">
+							(SELECT COUNT(*) FROM CMS_BRD_RCMND WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX AND RCMND_GB = 'R') RCMND_CNT,
+						</isNotEqual>
+					</isNotEmpty>
+					<isNotEmpty property="use_rjct">
+						<isEqual property="use_rjct" compareValue="N">
+							0 RJCT_CNT,
+						</isEqual>
+						<isNotEqual property="use_rjct" compareValue="N">
+							(SELECT COUNT(*) FROM CMS_BRD_RCMND WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX AND RCMND_GB = 'J') RJCT_CNT,
+						</isNotEqual>
+					</isNotEmpty>
+					GRP_NO,
+					GRP_LV,
+					GRP_ORD,
+					IS_NOTICE,
+					IS_SCRT,
+					'' PRE_ATCL,
+					'' PRE_SUBJ,
+					'' NEXT_ATCL,
+					'' NEXT_SUBJ,
+	                KOGL,
+					ADD_INFO_01,
+					ADD_INFO_02,
+					ADD_INFO_03,
+					ADD_INFO_04,
+					ADD_INFO_05,
+	                A.WRITER,
+	                TO_CHAR(A.WDT, 'YY.MM.DD') MAIN_WDT,
+	                TO_CHAR(A.WDT, 'YYYY-MM-DD') WDT,
+	                A.MODIFIER,
+	                TO_CHAR(A.MDT, 'YYYY-MM-DD') MDT,
+					NVL(SF_USER_NM(WRITER), 'GUEST') WRITER_NM,
+	                ROUND(SYSDATE - A.WDT) DFR_WDT,
+	                <isEqual property="reply_gb" compareValue="R">
+	                	(SELECT COUNT(*) FROM $reply_tbl_nm$ WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX) REPLY_CNT,
+	                </isEqual>        
+	                <isEqual property="reply_gb" compareValue="B">
+	                	(SELECT COUNT(*) FROM $reply_tbl_nm$ WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX) REPLY_CNT,
+	                </isEqual>
+	                <isEqual property="reply_gb" compareValue="A">
+	                 	0 REPLY_CNT,
+	                </isEqual>
+	                <isEqual property="reply_gb" compareValue="N">
+	                	0 REPLY_CNT,
+	                </isEqual>
+					SF_ATCFILE_INFO(BRD_ID, TO_CHAR(CONT_IDX), 0, 0, 'N', 'COUNT') ATACH_CNT,
+	                SF_ATCFILE_INFO(BRD_ID, TO_CHAR(CONT_IDX), 0, 0, 'N', 'VCODE') VCHKCODE
+				FROM
+			        $tbl_nm$ A
+				WHERE
+					BRD_ID = #brd_id# AND
+					IS_NOTICE = 'N'
+					<isNotEmpty property="searchKeyword">
+						<isNotEmpty property="searchCondition" prepend="AND">
+							<isEqual property="searchCondition" compareValue="SC_ALL">
+								( SUBJECT LIKE '%' || #searchKeyword# || '%' OR BRD_CONT LIKE '%' || #searchKeyword# || '%' OR ADD_INFO_01 LIKE '%' || #searchKeyword# || '%')
+							</isEqual>
+							<isNotEqual property="searchCondition" compareValue="SC_ALL">
+								$searchCondition$ LIKE '%' || #searchKeyword# || '%'
+							</isNotEqual>
+						</isNotEmpty>
+					</isNotEmpty>
+					<isNotEmpty property="srch_ctgry_idx" prepend="AND">
+						CTGRY_IDX = #srch_ctgry_idx#
+					</isNotEmpty>
+
+				<isNotEqual property="reply_gb" compareValue="N">
+					ORDER BY 
+						IS_NOTICE DESC, GRP_NO DESC, GRP_ORD ASC
+				</isNotEqual>
+				<isEqual property="reply_gb" compareValue="N">
+					ORDER BY 
+						WDT DESC, CONT_IDX DESC
+				</isEqual>
+									
+			) TB )  WHERE rn BETWEEN #firstIndex# + 1 AND #firstIndex# + #recordCountPerPage#
+			
+		</isEqual>
+		
+		<isEqual property="is_notice" compareValue="Y">
+			
+
+			SELECT
+				ROWNUM RN,
+				BRD_ID,
+				CONT_IDX,
+				CTGRY_IDX,
+				SF_CTGRY_NM(CTGRY_IDX) CTGRY_NM,
+				SUBJECT,
+				'' BRD_CONT,
+				HITS,
+				<isNotEmpty property="use_rcmnd">
+					<isEqual property="use_rcmnd" compareValue="N">
+						0 RCMND_CNT,
+					</isEqual>
+					<isNotEqual property="use_rcmnd" compareValue="N">
+						(SELECT COUNT(*) FROM CMS_BRD_RCMND WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX AND RCMND_GB = 'R') RCMND_CNT,
+					</isNotEqual>
+				</isNotEmpty>
+				<isNotEmpty property="use_rjct">
+					<isEqual property="use_rjct" compareValue="N">
+						0 RJCT_CNT,
+					</isEqual>
+					<isNotEqual property="use_rjct" compareValue="N">
+						(SELECT COUNT(*) FROM CMS_BRD_RCMND WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX AND RCMND_GB = 'J') RJCT_CNT,
+					</isNotEqual>
+				</isNotEmpty>
+				GRP_NO,
+				GRP_LV, 
+				GRP_ORD,
+				IS_NOTICE,
+				IS_SCRT,
+				'' PRE_ATCL,
+				'' PRE_SUBJ,
+				'' NEXT_ATCL,
+				'' NEXT_SUBJ,
+				KOGL,
+				ADD_INFO_01,
+				ADD_INFO_02,
+				ADD_INFO_03,
+				ADD_INFO_04,
+				ADD_INFO_05,
+                A.WRITER,
+				NVL(SF_USER_NM(WRITER), 'GUEST') WRITER_NM,
+                TO_CHAR(A.WDT, 'YY.MM.DD') MAIN_WDT,
+                TO_CHAR(A.WDT, 'YYYY-MM-DD') WDT,
+                A.MODIFIER,
+                TO_CHAR(A.MDT, 'YYYY-MM-DD') MDT,
+                ROUND(SYSDATE - A.WDT) DFR_WDT,
+               	<isEqual property="reply_gb" compareValue="R">
+                	(SELECT COUNT(*) FROM $reply_tbl_nm$ WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX) REPLY_CNT,
+                </isEqual>        
+                <isEqual property="reply_gb" compareValue="B">
+                	(SELECT COUNT(*) FROM $reply_tbl_nm$ WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX) REPLY_CNT,
+                </isEqual>
+                <isEqual property="reply_gb" compareValue="A">
+                 	0 REPLY_CNT,
+                </isEqual>
+                <isEqual property="reply_gb" compareValue="N">
+                	0 REPLY_CNT,
+                </isEqual> 
+				SF_ATCFILE_INFO(BRD_ID, TO_CHAR(CONT_IDX), 0, 0, 'N', 'COUNT') ATACH_CNT,
+                SF_ATCFILE_INFO(BRD_ID, TO_CHAR(CONT_IDX), 0, 0, 'N', 'VCODE') VCHKCODE
+			FROM
+				$tbl_nm$ A
+			WHERE
+				BRD_ID = #brd_id# AND
+				IS_NOTICE = 'Y'
+				<isNotEmpty property="srch_ctgry_idx" prepend="AND">
+					CTGRY_IDX = #srch_ctgry_idx#
+				</isNotEmpty>
+		
+			<isNotEqual property="reply_gb" compareValue="N">
+				ORDER BY 
+					IS_NOTICE DESC, GRP_NO DESC, GRP_ORD ASC
+			</isNotEqual>
+			<isEqual property="reply_gb" compareValue="N">
+				ORDER BY 
+					WDT DESC, CONT_IDX DESC
+			</isEqual>
+		
+		
+		</isEqual>
+	</select>
+	
+	
+	
+	<select id="boardarticleDAO.selectBoardarticleListTotCnt" parameterClass="boardarticleVO" resultClass="int">
+
+		SELECT
+			COUNT(*) AS "totcnt"
+		FROM
+			(
+				SELECT 
+					A.*,
+					SF_USER_NM(WRITER) WRITER_NM 
+				FROM
+					$tbl_nm$ A
+			)
+		WHERE
+			BRD_ID = #brd_id#
+			<isEqual property="is_notice" prepend="AND" compareValue="Y">
+				IS_NOTICE = 'Y'
+			</isEqual>
+			<isEqual property="is_notice" prepend="AND" compareValue="N">
+				IS_NOTICE = 'N'
+				<isNotEmpty property="searchKeyword">
+					<isNotEmpty property="searchCondition" prepend="AND">
+						<isEqual property="searchCondition" compareValue="SC_ALL">
+							( SUBJECT LIKE '%' || #searchKeyword# || '%' OR BRD_CONT LIKE '%' || #searchKeyword# || '%' )
+						</isEqual>
+						<isNotEqual property="searchCondition" compareValue="SC_ALL">
+							$searchCondition$ LIKE '%' || #searchKeyword# || '%'
+						</isNotEqual>
+					</isNotEmpty>
+				</isNotEmpty>			
+				<isNotEmpty property="srch_ctgry_idx" prepend="AND">
+					CTGRY_IDX = #srch_ctgry_idx#
+				</isNotEmpty>	
+			</isEqual>
+			
+	</select>
+	
+	<select id="boardarticleDAO.selectBoardarticlegroupList" parameterClass="boardarticleVO" resultClass="boardarticleVO">
+	
+		SELECT
+			brd_id,
+		    cont_idx
+		FROM
+		    $tbl_nm$
+		WHERE
+		    BRD_ID = #brd_id# AND
+		    GRP_NO = #grp_no# AND
+		    <![CDATA[
+		    GRP_ORD  >=  #grp_ord# AND  GRP_ORD < ( SELECT NVL(MIN(GRP_ORD), 1024 * 1024) FROM $tbl_nm$ 
+		    		WHERE GRP_NO = #grp_no# AND GRP_ORD > #grp_ord# AND GRP_LV <= #grp_lv#)
+			]]> 
+		ORDER BY
+		    GRP_ORD
+	
+	</select>
+
+	<select id="boardarticleDAO.selectTotalSearchList" parameterClass="boardarticleVO" resultClass="boardarticleVO">
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+		
+			<isEqual property="searchType" compareValue="BRD">
+		
+			SELECT
+				A.BRD_ID,
+			    BRD_NM,
+			    CONT_IDX,
+				SUBJECT,
+			    BRD_CONT,
+			    WRITER_NM,
+			    (SELECT MIN(MENU_NIX) FROM CMS_SYS_MENU WHERE MENU_NM = B.BRD_NM) MENU_NIX,
+			    '' CONT_PATH,
+			    BRD_GB,
+			    A.WRITER,
+			    TO_CHAR(A.WDT, 'YY-MM-DD') WDT
+			FROM
+			  (
+			    SELECT
+			        BRD_ID,
+			        CONT_IDX,
+			        SUBJECT,
+			        BRD_CONT,
+			        SF_USER_NM(WRITER) WRITER_NM,
+			        WRITER,
+			        TO_DATE(WDT, 'YYYY-MM-DD') WDT
+			    FROM	
+			        CMS_BRD_TXT_IDX_VXD5L880
+			    UNION ALL
+			    SELECT
+			        BRD_ID,
+			        CONT_IDX,
+			        SUBJECT,
+			        BRD_CONT,
+			        SF_USER_NM(WRITER) WRITER_NM,
+			        WRITER,
+			        TO_DATE(WDT, 'YYYY-MM-DD') WDT
+			    FROM	
+			        CMS_BRD_TXT_IDX_FAD1X223
+			    UNION ALL
+			    SELECT
+			        BRD_ID,
+			        CONT_IDX,
+			        SUBJECT,
+			        BRD_CONT,
+			        SF_USER_NM(WRITER) WRITER_NM,
+			        WRITER,
+			        TO_DATE(WDT, 'YYYY-MM-DD') WDT
+			    FROM	
+			        CMS_BRD_THM_IDX_CF68M3GZ
+			  ) A,
+			  CMS_BRD_INFO B
+			WHERE
+				A.BRD_ID = B.BRD_ID    
+				<isNotEmpty property="searchKeyword" prepend="AND">
+					<isEqual property="searchCondition" compareValue="SC_ALL">
+						( WRITER_NM LIKE '%' || #searchKeyword# || '%' OR SUBJECT LIKE '%' || #searchKeyword# || '%' OR BRD_CONT LIKE '%' || #searchKeyword# || '%' )
+					</isEqual>
+					<isNotEqual property="searchCondition" compareValue="SC_ALL">
+						$searchCondition$ LIKE '%' || #searchKeyword# || '%'
+					</isNotEqual>
+				</isNotEmpty>
+				
+				ORDER BY A.BRD_ID ASC, CONT_IDX DESC
+
+			</isEqual>
+			<isEqual property="searchType" compareValue="CONT">
+				SELECT
+					BRD_ID,
+				    BRD_NM,
+					BRD_GB,
+				    CONT_IDX,
+					SUBJECT,
+				    BRD_CONT,
+				    WRITER_NM,
+				  	MENU_NIX,
+				    WRITER,
+				    WDT
+				FROM
+					(
+						SELECT
+							UCONT_ID BRD_ID,
+							'USR_CONTENT' BRD_NM,
+							'' BRD_GB,
+						    0 CONT_IDX,
+							UCONT_VERSION,
+							UCONT_SUBJECT SUBJECT,
+							UCONT_CONT BRD_CONT,
+						    (SELECT MENU_NIX FROM CMS_SYS_MENU WHERE MENU_NM = UCONT_SUBJECT) MENU_NIX,
+						    (SELECT MENU_IDX FROM CMS_SYS_MENU WHERE MENU_NM = UCONT_SUBJECT) MENU_IDX,
+						    (SELECT TABMENU_YN FROM CMS_SYS_MENU WHERE MENU_NM = UCONT_SUBJECT) TABMENU_YN,
+						    SF_USER_NM(WRITER) WRITER_NM,
+							WRITER,
+							WDT
+						FROM
+							(
+								SELECT
+									UCONT_ID,
+									UCONT_VERSION,
+									UCONT_SUBJECT,
+									UCONT_CSS,
+									UCONT_CONT,
+									WRITER,
+									TO_CHAR(WDT, 'YYYY-MM-DD') WDT,
+									RANK() OVER (PARTITION BY UCONT_ID ORDER BY UCONT_VERSION DESC) RANKORD
+								FROM
+									CMS_USR_CONTENTS
+							)
+							WHERE RANKORD = 1					
+					)
+				WHERE
+					1 = 1
+					AND TABMENU_YN='N'
+					<isNotEmpty property="searchKeyword" prepend="AND">
+						<isEqual property="searchCondition" compareValue="SC_ALL">
+							( WRITER_NM LIKE '%' || #searchKeyword# || '%' OR SUBJECT LIKE '%' || #searchKeyword# || '%' OR BRD_CONT LIKE '%' || #searchKeyword# || '%' )
+						</isEqual>
+						<isNotEqual property="searchCondition" compareValue="SC_ALL">
+							$searchCondition$ LIKE '%' || #searchKeyword# || '%'
+						</isNotEqual>
+					</isNotEmpty>
+			</isEqual>
+	
+		) TB ) 
+	</select>
+
+	
+	<select id="boardarticleDAO.selectBoardarticleMainList" parameterClass="boardarticleVO" resultClass="boardarticleVO">
+		SELECT * FROM (
+			
+			SELECT
+				ROWNUM RN,
+				BRD_ID,
+				CONT_IDX,
+				CTGRY_IDX,
+				SF_CTGRY_NM(CTGRY_IDX) CTGRY_NM,
+				SUBJECT,
+				'' BRD_CONT,
+				HITS,
+				<isNotEmpty property="use_rcmnd">
+					<isEqual property="use_rcmnd" compareValue="N">
+						0 RCMND_CNT,
+					</isEqual>
+					<isNotEqual property="use_rcmnd" compareValue="N">
+						(SELECT COUNT(*) FROM CMS_BRD_RCMND WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX AND RCMND_GB = 'R') RCMND_CNT,
+					</isNotEqual>
+				</isNotEmpty>
+				<isNotEmpty property="use_rjct">
+					<isEqual property="use_rjct" compareValue="N">
+						0 RJCT_CNT,
+					</isEqual>
+					<isNotEqual property="use_rjct" compareValue="N">
+						(SELECT COUNT(*) FROM CMS_BRD_RCMND WHERE BRD_ID = A.BRD_ID AND CONT_IDX = A.CONT_IDX AND RCMND_GB = 'J') RJCT_CNT,
+					</isNotEqual>
+				</isNotEmpty>
+				GRP_NO,
+				GRP_LV,
+				GRP_ORD,
+				IS_NOTICE,
+				IS_SCRT,
+				'' PRE_ATCL,
+				'' PRE_SUBJ,
+				'' NEXT_ATCL,
+				'' NEXT_SUBJ,
+	               KOGL,
+				ADD_INFO_01,
+				ADD_INFO_02,
+				ADD_INFO_03,
+				ADD_INFO_04,
+				ADD_INFO_05,
+	            A.WRITER,
+	            TO_CHAR(A.WDT, 'YY.MM.DD') MAIN_WDT,
+	            TO_CHAR(A.WDT, 'YYYY-MM-DD') WDT,
+	            A.MODIFIER,
+	            TO_CHAR(A.MDT, 'YYYY-MM-DD') MDT,
+				NVL(SF_USER_NM(WRITER), 'GUEST') WRITER_NM,
+	            0 REPLY_CNT,
+				ROUND(SYSDATE - A.WDT) DFR_WDT,
+				SF_ATCFILE_INFO(BRD_ID, TO_CHAR(CONT_IDX), 0, 0, 'N', 'COUNT') ATACH_CNT,
+	            SF_ATCFILE_INFO(BRD_ID, TO_CHAR(CONT_IDX), 0, 0, 'N', 'VCODE') VCHKCODE,
+	            RANK() OVER (PARTITION BY BRD_ID ORDER BY CONT_IDX DESC) RANKORD
+			FROM
+		        $tbl_nm$ A
+			WHERE
+				BRD_ID IN ($brd_id_list$)
+				<isNotEmpty property="searchKeyword">
+					<isNotEmpty property="searchCondition" prepend="AND">
+						<isEqual property="searchCondition" compareValue="SC_ALL">
+							( SUBJECT LIKE '%' || #searchKeyword# || '%' OR BRD_CONT LIKE '%' || #searchKeyword# || '%')
+						</isEqual>
+						<isNotEqual property="searchCondition" compareValue="SC_ALL">
+							$searchCondition$ LIKE '%' || #searchKeyword# || '%'
+						</isNotEqual>
+					</isNotEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="srch_ctgry_idx" prepend="AND">
+					CTGRY_IDX = #srch_ctgry_idx#
+				</isNotEmpty>
+	
+			<isNotEqual property="reply_gb" compareValue="N">
+				ORDER BY 
+					BRD_ID ASC, IS_NOTICE DESC, GRP_NO DESC, GRP_ORD ASC
+			</isNotEqual>
+			<isEqual property="reply_gb" compareValue="N">
+				ORDER BY 
+					BRD_ID ASC, WDT DESC, CONT_IDX DESC
+			</isEqual>
+		
+		) WHERE RANKORD BETWEEN #firstIndex# + 1 AND #recordCountPerPage#
+	</select>
+	
+	
+		
+	<select id="boardarticleDAO.selectBoardarticleAnonimChk" parameterClass="boardarticleVO" resultClass="int">
+			
+			SELECT
+				COUNT (*)
+			FROM
+		        $tbl_nm$ A
+			WHERE
+				BRD_ID = #brd_id# AND
+				ADD_INFO_02 = #add_info_02# AND
+				(SYSDATE - WDT) * 24 * 60 * 60 <![CDATA[ < ]]> 180
+				  			
+	</select>
+	
+
+</sqlMap>
+

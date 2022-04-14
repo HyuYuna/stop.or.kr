@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 
+	 <definition name="/modeip/accessipList" extends="modeecDefinitionContent">
+		 <put-attribute name="metsysTitle"	value="관리자 접근 IP 제한 목록" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_ip.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/ip/accessipList.jsp" />
+	 </definition>
+
+	 <definition name="/modeip/accessipWrite" extends="modeecDefinitionContent">
+		 <put-attribute name="metsysTitle"	value="관리자 접근 IP 제한 등록" />
+		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_ip.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/ip//accessipWrite.jsp" />
+	 </definition>
+
+</tiles-definitions>
+
+	 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<CMS_MAN_LOG LOG_IDX="243" LOG_KEY="test_test" LOG_KEY_NM="테스트관리" LOG_KEY_DEST="테스트조회" 
+	LOG_JOB_GB="F" LOG_RADDR="MDowOjA6MDowOjA6MDox" LOG_UID="ych"/>
+	<CMS_MAN_LOG LOG_IDX="244" LOG_KEY="test_test2" LOG_KEY_NM="테스트관리2" LOG_KEY_DEST="테스트조회2" 
+	LOG_JOB_GB="F" LOG_RADDR="MDowOjA6MDowOjA6MDox" LOG_UID="ych"/>
+</dataset>

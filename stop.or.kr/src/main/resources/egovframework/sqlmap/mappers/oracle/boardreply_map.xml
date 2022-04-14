@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Converted at: Sun Apr 29 19:55:57 KST 2018-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.plani.template.brdartcl.dao.BoardreplyDAO">
+
+	
+	<insert id="insertBoardreply" parameterType="egovframework.plani.template.brdartcl.vo.BoardreplyVO">
+		
+		<selectKey keyProperty="reply_idx" resultType="java.lang.Integer" order="BEFORE">
+		
+			SELECT NVL(MAX(REPLY_IDX) + 1, 1) AS REPLY_IDX FROM CMS_BRD_REPLY_IDX_VXD5L880 WHERE
+				BRD_ID = #{brd_id} AND
+				CONT_IDX = #{cont_idx}
+		
+		</selectKey>
+		
+		INSERT INTO CMS_BRD_REPLY_IDX_VXD5L880
+		(
+			BRD_ID,
+			BRD_PWD,
+			CONT_IDX,
+			REPLY_IDX,
+			REPLY_CONT,
+			RCMND_CNT,
+			WRITER,
+			WDT
+		)
+		VALUES
+		(
+			#{brd_id},
+			#{brd_pwd},
+			#{cont_idx},
+			#{reply_idx},
+			#{reply_cont},
+			#{rcmnd_cnt},
+			#{writer},
+			SYSDATE
+		)
+		
+	</insert>
+	
+	
+	<insert id="createBoardReplyTable" parameterType="egovframework.plani.template.brdartcl.vo.BoardreplyVO">
+		CREATE TABLE CMS_BRD_REPLY_IDX_VXD5L880 (
+			BRD_ID        VARCHAR2(32 BYTE)       NOT NULL, 
+			CONT_IDX      NUMBER                  NOT NULL, 
+			REPLY_IDX     NUMBER                  NOT NULL, 
+			REPLY_CONT    VARCHAR2(4000 BYTE)         NULL, 
+			RCMND_CNT     NUMBER                      NULL, 
+			WRITER        VARCHAR2(24 BYTE)           NULL, 
+			WDT           DATE                        NULL, 
+			MODIFIER      VARCHAR2(24 BYTE)           NULL, 
+			MDT           DATE                        NULL, 
+			CONSTRAINT PK_CMS_BRD_REPLY_IDX_VXD5L880
+			PRIMARY KEY ( BRD_ID, CONT_IDX, REPLY_IDX )
+		)
+	</insert>
+	
+	<update id="updateBoardreply" parameterType="egovframework.plani.template.brdartcl.vo.BoardreplyVO">
+		
+		UPDATE CMS_BRD_REPLY_IDX_VXD5L880 SET
+			REPLY_CONT = #{reply_cont},
+			<if test="rcmnd_cnt != 0">
+				RCMND_CNT = #{rcmnd_cnt},
+			</if>
+			MODIFIER = #{modifier},
+			MDT = SYSDATE
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx} AND
+			REPLY_IDX = #{reply_idx}
+					
+	</update>
+	
+	<delete id="deleteBoard" parameterType="egovframework.plani.template.brdartcl.vo.BoardreplyVO">
+	
+		DELETE FROM
+			CMS_BRD_REPLY_IDX_VXD5L880
+		WHERE
+			BRD_ID = #{brd_id} 
+	
+	</delete>
+	
+	<delete id="deleteBoardreply" parameterType="egovframework.plani.template.brdartcl.vo.BoardreplyVO">
+	
+		DELETE FROM
+			CMS_BRD_REPLY_IDX_VXD5L880
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx} AND
+			REPLY_IDX = #{reply_idx}
+	
+	</delete>
+<delete id="deleteBoardreplyByCont" parameterType="egovframework.plani.template.brdartcl.vo.BoardreplyVO">
+	
+		DELETE FROM
+			CMS_BRD_REPLY_IDX_VXD5L880
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}
+	
+	</delete>
+	
+	<select id="selectBoardreply" parameterType="egovframework.plani.template.brdartcl.vo.BoardreplyVO" resultType="egovframework.plani.template.brdartcl.vo.BoardreplyVO">
+			
+		SELECT
+			BRD_ID,
+			CONT_IDX,
+			REPLY_IDX,
+			REPLY_CONT,
+			RCMND_CNT,
+			A.WRITER,
+			TO_CHAR(A.WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+			A.MODIFIER,
+			TO_CHAR(A.MDT, 'YYYY-MM-DD HH24:MI:SS') MDT,
+			NVL(B.USER_NM, A.WRITER) WRITER_NM   
+		FROM
+			CMS_BRD_REPLY_IDX_VXD5L880 A,
+            CMS_USR_INFO B
+		WHERE
+			A.WRITER = B.USER_ID(+) AND
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx} AND
+			REPLY_IDX = #{reply_idx}
+			<if test="brd_pwd_chk != null and brd_pwd_chk != ''">AND
+				BRD_PWD = #{brd_pwd_chk}
+			</if>
+	
+	</select>
+	
+	<select id="selectBoardreplyList" parameterType="egovframework.plani.template.brdartcl.vo.BoardreplyVO" resultType="egovframework.plani.template.brdartcl.vo.BoardreplyVO">
+		
+		SELECT
+			BRD_ID,
+			CONT_IDX,
+			REPLY_IDX,
+			REPLY_CONT,
+			RCMND_CNT,
+			A.WRITER,
+			TO_CHAR(A.WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+			A.MODIFIER,
+			TO_CHAR(A.MDT, 'YYYY-MM-DD HH24:MI:SS') MDT,
+			NVL(B.USER_NM, A.WRITER) WRITER_NM   
+		FROM
+			CMS_BRD_REPLY_IDX_VXD5L880 A,
+            CMS_USR_INFO B
+		WHERE
+			A.WRITER = B.USER_ID(+) AND
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}
+	
+	</select>
+		
+	
+</mapper>

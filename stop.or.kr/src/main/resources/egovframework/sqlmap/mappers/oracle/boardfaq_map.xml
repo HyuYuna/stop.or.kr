@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Converted at: Sun Apr 29 19:55:56 KST 2018-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.plani.template.brdartcl.dao.BoardfaqDAO">
+
+		<insert id="insertBoardfaq" parameterType="egovframework.plani.template.brdartcl.vo.BoardfaqVO">
+		
+		<selectKey keyProperty="cont_idx" resultType="java.lang.Integer" order="BEFORE">
+		
+			SELECT NVL(MAX(CONT_IDX) + 1, 1) AS CONT_IDX FROM ${tbl_nm} WHERE
+				BRD_ID = #{brd_id}
+		
+		</selectKey>
+		
+		INSERT INTO ${tbl_nm}
+		(
+			BRD_ID,
+			CONT_IDX,
+			CTGRY_IDX,
+			SUBJECT,
+			BRD_CONT,
+			HITS,
+			WRITER,
+			WDT
+		)
+		VALUES
+		(
+			#{brd_id},
+			#{cont_idx},
+			#{ctgry_idx},
+			#{subject},
+			#{brd_cont:CLOB},
+			#{hits},
+			#{writer},
+			SYSDATE
+		)
+	
+	</insert>
+		
+	<update id="updateBoardfaq" parameterType="egovframework.plani.template.brdartcl.vo.BoardfaqVO">
+		
+		UPDATE ${tbl_nm} SET
+			<if test="subject != null and subject != ''">
+				CTGRY_IDX = #{ctgry_idx},
+				SUBJECT = #{subject},
+				BRD_CONT = #{brd_cont:CLOB},
+			</if>
+			MODIFIER = #{modifier},
+			MDT = SYSDATE
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}
+	
+	</update>
+	
+	<update id="updateBoardxcount" parameterType="egovframework.plani.template.brdartcl.vo.BoardfaqVO">
+		UPDATE ${tbl_nm} SET
+			HITS = HITS + 1,
+			MDT = MDT
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}
+	</update>
+	
+	
+	<delete id="deleteBoardfaq" parameterType="egovframework.plani.template.brdartcl.vo.BoardfaqVO">
+	
+		DELETE FROM
+			${tbl_nm}
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}	
+	
+	</delete>
+	
+	<select id="selectBoardfaq" parameterType="egovframework.plani.template.brdartcl.vo.BoardfaqVO" resultType="egovframework.plani.template.brdartcl.vo.BoardfaqVO">
+	
+		SELECT
+			BRD_ID,
+			CONT_IDX,
+			CTGRY_IDX,
+			SF_CTGRY_NM(CTGRY_IDX) CTGRY_NM,
+			SUBJECT,
+			BRD_CONT,
+			HITS,
+			PRE_ATCL,
+			PRE_SUBJ,
+			NEXT_ATCL,
+			NEXT_SUBJ,
+			A.WRITER,
+			TO_CHAR(A.WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+			A.MODIFIER,
+			TO_CHAR(A.MDT, 'YYYY-MM-DD HH24:MI:SS') MDT,
+			NVL(SF_USER_NM(WRITER), 'GUEST') WRITER_NM,
+			ROUND(SYSDATE - A.WDT) DFR_WDT  
+		FROM
+			(
+		    	SELECT
+				    Y.*,
+			    	LAG(CONT_IDX, 1, '') OVER (ORDER BY CONT_IDX ) PRE_ATCL,
+			    	LAG(SUBJECT, 1, '') OVER (ORDER BY CONT_IDX ) PRE_SUBJ,
+			    	LEAD(CONT_IDX, 1, '') OVER (ORDER BY CONT_IDX) NEXT_ATCL,
+			    	LEAD(SUBJECT, 1, '') OVER (ORDER BY CONT_IDX) NEXT_SUBJ
+			      FROM
+			  	  	${tbl_nm} Y
+			    	WHERE
+				    	BRD_ID = #{brd_id}
+			) A
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}		
+	</select>
+	
+	<select id="selectBoardfaqList" parameterType="egovframework.plani.template.brdartcl.vo.BoardfaqVO" resultType="egovframework.plani.template.brdartcl.vo.BoardfaqVO">
+		
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+		
+			SELECT
+				BRD_ID,
+				CONT_IDX,
+				CTGRY_IDX,
+				SF_CTGRY_NM(CTGRY_IDX) CTGRY_NM,
+				SUBJECT,
+				BRD_CONT,
+				HITS,
+                A.WRITER,
+                TO_CHAR(A.WDT, 'YYYY-MM-DD') WDT,
+                A.MODIFIER,
+                TO_CHAR(A.MDT, 'YYYY-MM-DD') MDT,
+				NVL(SF_USER_NM(WRITER), 'GUEST') WRITER_NM,
+				ROUND(SYSDATE - A.WDT) DFR_WDT
+			FROM
+		        ${tbl_nm} A
+			WHERE
+				BRD_ID = #{brd_id}
+				<if test="searchKeyword != null and searchKeyword != ''">AND
+					<if test="searchCondition == &quot;SC_ALL&quot;">
+						( SUBJECT LIKE '%' || #{searchKeyword} || '%' OR BRD_CONT LIKE '%' || #{searchKeyword} || '%' )
+					</if>
+					<if test="searchCondition != &quot;SC_ALL&quot;">
+						${searchCondition} LIKE '%' || #{searchKeyword} || '%'
+					</if>
+				</if>
+				<if test="ctgry_idx != null and ctgry_idx != ''">AND
+					CTGRY_IDX = #{ctgry_idx}
+				</if>
+			ORDER BY 
+				CONT_IDX DESC
+				
+		) TB )  WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+			
+	</select>
+	
+	<select id="selectBoardfaqListTotCnt" parameterType="egovframework.plani.template.brdartcl.vo.BoardfaqVO" resultType="int">
+	SELECT
+			COUNT(*) AS "totcnt"
+		FROM
+			(
+				SELECT 
+					A.*,
+					SF_USER_NM(WRITER) WRITER_NM 
+				FROM
+					${tbl_nm} A
+			)
+		WHERE
+			BRD_ID = #{brd_id}
+			<if test="searchKeyword != null and searchKeyword != ''">AND
+				<if test="searchCondition == &quot;SC_ALL&quot;">
+					( SUBJECT LIKE '%' || #{searchKeyword} || '%' OR BRD_CONT LIKE '%' || #{searchKeyword} || '%' )
+				</if>
+				<if test="searchCondition != &quot;SC_ALL&quot;">
+					${searchCondition} LIKE '%' || #{searchKeyword} || '%'
+				</if>
+			</if>
+		
+			<if test="ctgry_idx != null and ctgry_idx != ''">AND
+				CTGRY_IDX = #{ctgry_idx}
+			</if>
+
+			
+	</select></mapper>

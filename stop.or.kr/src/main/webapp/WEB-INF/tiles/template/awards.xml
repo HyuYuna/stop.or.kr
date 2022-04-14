@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	 <definition name="MetsysAwardsDefinitionContent" template="/WEB-INF/jsp/layout/template/metsys/layout/modeecLayout.jsp">
+		 <put-attribute name="metsysMeta"	value="/WEB-INF/jsp/layout/template/metsys/meta/meta_type_content.jsp"/>
+		 <put-attribute name="metsysHeader"	value="/WEB-INF/jsp/layout/template/metsys/header.jsp"/>
+		 <put-attribute name="metsysMenu"	value="/WEB-INF/jsp/layout/template/metsys/menu.jsp"/>
+		 <put-attribute name="metsysScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script.jsp"/>
+		 <put-attribute name="metsysSubmenu"	value="/WEB-INF/jsp/layout/template/metsys/submenu/submenu.jsp"/>
+		 <put-attribute name="metsysFooter"	value="/WEB-INF/jsp/layout/template/metsys/footer.jsp"/>
+	 </definition>
+	 <definition name="MetsysAwardsDefinitionEditor" template="/WEB-INF/jsp/layout/template/metsys/layout/modeecLayout.jsp">
+		 <put-attribute name="metsysMeta"	value="/WEB-INF/jsp/layout/template/metsys/meta/meta_type_editor.jsp"/>
+		 <put-attribute name="metsysHeader"	value="/WEB-INF/jsp/layout/template/metsys/header.jsp"/>
+		 <put-attribute name="metsysMenu"	value="/WEB-INF/jsp/layout/template/metsys/menu.jsp"/>
+		 <put-attribute name="metsysScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script.jsp"/>
+		 <put-attribute name="metsysSubmenu"	value="/WEB-INF/jsp/layout/template/metsys/submenu/submenu.jsp"/>
+		 <put-attribute name="metsysFooter"	value="/WEB-INF/jsp/layout/template/metsys/footer.jsp"/>
+	 </definition>
+
+	 <!-- 2018-06-27 pigcos -->
+	 <definition name="/metsys/awardsGroupList" extends="MetsysAwardsDefinitionContent">
+		 <put-attribute name="metsysTitle"	value="수상작 그룹 목록" />
+ 		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_cont.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/awards/awardsGroupList.jsp" />
+	 </definition>
+	 
+	 <!-- 2018-06-27 pigcos -->
+	 <definition name="/metsys/awardsGroupForm" extends="MetsysAwardsDefinitionContent">
+		 <put-attribute name="metsysTitle"	value="수상작 그룹 등록" />
+ 		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_cont.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/awards/awardsGroupForm.jsp" />
+	 </definition>
+	 
+	 <!-- 2018-06-28 pigcos -->
+	 <definition name="/metsys/awardsDataList" extends="MetsysAwardsDefinitionContent">
+		 <put-attribute name="metsysTitle"	value="수상작 목록" />
+ 		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_cont.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/awards/awardsDataList.jsp" />
+	 </definition>
+	 
+	 <!-- 2018-07-02 pigcos -->
+	 <definition name="/metsys/awardsDataForm" extends="MetsysAwardsDefinitionEditor">
+		 <put-attribute name="metsysTitle"	value="수상작목록" />
+ 		 <put-attribute name="metsysSubScript"	value="/WEB-INF/jsp/layout/template/metsys/script/script_cont.jsp"/>
+		 <put-attribute name="metsysContent"	value="/WEB-INF/jsp/wpages/template/metsys/awards/awardsDataForm.jsp" />
+	 </definition>
+	 
+	 
+	
+
+
+</tiles-definitions>
+

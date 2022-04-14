@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.plani.template.brdartcl.dao.BoardrcmndDAO">
+
+	<insert id="insertBoardrcmnd" parameterType="boardrcmndVO">
+		<selectKey resultType="java.lang.Integer" keyProperty="rcmnd_idx" order="BEFORE">
+			SELECT ISNULL(MAX(RCMND_IDX) + 1, 1) AS RCMND_IDX FROM CMS_BRD_RCMND
+		</selectKey>
+		
+		INSERT INTO CMS_BRD_RCMND
+		(
+			RCMND_IDX,
+			BRD_ID,
+			CONT_IDX,
+			RCMND_ID,
+			RCMND_GB,
+			RDT
+		)
+		VALUES
+		(
+			#{rcmnd_idx},
+			#{brd_id},
+			#{cont_idx},
+			#{rcmnd_id},
+			#{rcmnd_gb},
+			GETDATE()
+		)
+
+	</insert>
+		
+	<select id="selectBoardrcmnd" parameterType="boardrcmndVO" resultType="boardrcmndVO">
+
+		SELECT
+			RCMND_IDX,
+			BRD_ID,
+			CONT_IDX,
+			RCMND_ID,
+			RCMND_GB,
+			CONVERT(VARCHAR(19), RDT, 20) RDT
+		FROM
+			CMS_BRD_RCMND
+		WHERE
+			RCMND_IDX = #{rcmnd_idx}
+
+	</select>
+	
+	<select id="selectBoardrcmndList" parameterType="boardrcmndVO" resultType="boardrcmndVO">
+
+		SELECT
+			RCMND_IDX,
+			BRD_ID,
+			CONT_IDX,
+			RCMND_ID,
+			RCMND_GB,
+			CONVERT(VARCHAR(19), RDT, 20) RDT
+		FROM
+			CMS_BRD_RCMND
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx} 
+			<if test="rcmnd_gb != null and rcmnd_gb != ''">AND
+				RCMND_GB = #{rcmnd_gb}
+			</if>
+			<if test="rcmnd_id != null and rcmnd_id != ''">AND
+				RCMND_ID = #{rcmnd_id}
+			</if>
+
+	</select>
+	
+	<select id="selectBoardrcmndListTotCnt" parameterType="boardrcmndVO" resultType="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_BRD_RCMND	
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}
+			<if test="rcmnd_gb != null and rcmnd_gb != ''">AND
+				RCMND_GB = #{rcmnd_gb}
+			</if>
+			<if test="rcmnd_id != null and rcmnd_id != ''">AND
+				RCMND_ID = #{rcmnd_id}
+			</if>
+
+	</select>
+	
+	<delete id="deleteBoardrcmnd" parameterType="boardrcmndVO">
+		DELETE FROM CMS_BRD_RCMND
+		WHERE
+			BRD_ID = #{brd_id} AND
+			CONT_IDX = #{cont_idx}
+	</delete>
+	
+
+</mapper>
+

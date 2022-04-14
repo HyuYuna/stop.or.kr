@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="sysauthmenu">
+
+	<typeAlias  alias="sysmenuVO" type="egovframework.plani.template.man.menuctgry.vo.SysmenuVO"/>
+	<typeAlias  alias="sysauthVO" type="egovframework.plani.template.man.menuctgry.vo.SysauthVO"/>
+	
+	
+	<insert id="sysauthmenuDAO.insertSysauthmenu" parameterClass="sysmenuVO">
+
+		MERGE INTO CMS_MENU_AUTH USING DUAL
+	    ON (
+	    	AUTH_CD = #auth_cd# AND
+	    	MENU_IDX = #menu_idx#
+	    )
+	    WHEN MATCHED THEN
+	    	UPDATE SET
+	        AUTH_YN = 'Y'
+	    WHEN NOT MATCHED THEN
+	    	INSERT
+	        (
+				AUTH_CD,
+				MENU_IDX,
+				AUTH_YN,
+				WRITER,
+				WDT
+	        )
+	        VALUES
+	        (
+				#auth_cd#,
+				#menu_idx#,
+				'Y',
+				#writer#,
+				SYSDATE
+	        )
+
+	</insert>
+	
+	<update id="sysauthmenuDAO.updateSysauthmenu" parameterClass="sysmenuVO">
+
+		UPDATE CMS_MENU_AUTH SET
+			AUTH_YN = 'N',
+			MODIFIER = #modifier#,
+			MDT = SYSDATE
+		WHERE
+			AUTH_CD = #auth_cd#
+
+	</update>
+	
+	<delete id="sysauthmenuDAO.deleteSysauthmenuByAuthcd" parameterClass="sysauthVO">
+
+		DELETE FROM CMS_MENU_AUTH
+		WHERE
+			AUTH_CD = #auth_cd#
+
+	</delete>
+
+	<delete id="sysauthmenuDAO.deleteSysauthmenuByMenuidx" parameterClass="sysmenuVO">
+
+		DELETE FROM CMS_MENU_AUTH
+		WHERE
+			MENU_IDX = #menu_idx#
+
+	</delete>
+	
+	<select id="sysauthmenuDAO.selectSysauthmenu" parameterClass="sysmenuVO" resultClass="sysmenuVO">
+
+		SELECT
+			AUTH_CD,
+			MENU_IDX,
+			AUTH_YN,
+			WRITER,
+			TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+			MODIFIER,
+			TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+		FROM
+			CMS_MENU_AUTH
+		WHERE
+			AUTH_CD = #auth_cd# AND
+			MENU_IDX = #menu_idx#
+
+	</select>
+	
+
+	<select id="sysauthmenuDAO.selectSysauthmenuList" parameterClass="sysmenuVO" resultClass="sysmenuVO">
+
+		SELECT  
+    		A.MENU_IDX, 
+    		A.MENU_NM, 
+        	A.UP_MENU_IDX, 
+        	A.MENU_ORD,
+   			LEVEL MENU_LV, 
+        	B.AUTH_CD,
+	        DECODE(B.AUTH_CD, NULL, 'N', AUTH_YN) AUTH_YN 
+  		FROM 
+        	(
+        		SELECT 
+        			MENU_IDX, 
+        			MENU_NM, 
+        			UP_MENU_IDX, 
+        			MENU_ORD 
+          		FROM  
+          			CMS_SYS_MENU 
+         		WHERE  
+         			MU_GUB = #mu_gub# AND 
+                	USE_YN = 'Y' 
+         			<isNotEqual property="auth_cd" prepend="AND" compareValue="D0001">
+         				MENU_IDX NOT IN ('MNIDX00001', 'MNIDX00101')
+         			</isNotEqual>         			
+        	) A, 
+        	(
+        		SELECT 
+        			* 
+          		FROM  
+          			CMS_MENU_AUTH 
+         		WHERE  
+         				AUTH_CD = #auth_cd# 
+        	) B 
+ 		WHERE  
+ 			A.MENU_IDX = B.MENU_IDX(+)  
+            CONNECT BY PRIOR A.MENU_IDX = UP_MENU_IDX START 
+       		WITH UP_MENU_IDX IS NULL 
+       		ORDER SIBLINGS BY MENU_ORD 
+			
+	</select>
+
+	
+	<select id="sysauthmenuDAO.selectSysauthmenuListTotCnt" parameterClass="sysmenuVO" resultClass="int">
+
+		SELECT
+			COUNT(*) AS TOTCNT
+		FROM
+			CMS_MENU_AUTH
+		WHERE
+			AUTH_CD = #auth_cd# AND
+			MENU_IDX = #menu_idx#
+
+	</select>
+	
+	<select id="sysauthmenuDAO.xlsSysauthmenuList" parameterClass="sysmenuVO" resultClass="sysmenuVO">
+
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+
+		SELECT
+			AUTH_CD,
+			MENU_IDX,
+			AUTH_YN,
+			WRITER,
+			TO_CHAR(WDT, 'YYYY-MM-DD HH24:MI:SS') WDT,
+			MODIFIER,
+			TO_CHAR(MDT, 'YYYY-MM-DD HH24:MI:SS') MDT
+		FROM
+			CMS_MENU_AUTH
+		WHERE
+			AUTH_CD = #auth_cd# AND
+			MENU_IDX = #menu_idx#
+
+		) TB ) 
+
+	</select>
+	
+	
+
+</sqlMap>
+
