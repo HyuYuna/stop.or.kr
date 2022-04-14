@@ -107,7 +107,7 @@
 	  <div class="main-quick-wrap">
 		  <div class="main-quick">
 			  <div>
-				  <a href="https://www.women1366.kr/_main/main.html" target="_blank" title="새창열림">
+				  <a href="https://women1366.kr" target="_blank" title="새창열림">
 					  <dl>
 						  <dt>여성폭력 사이버 상담</dt>
 						  <dd>가정폭력, 성폭력 등<br />여성폭력 피해 초기상담</dd>
