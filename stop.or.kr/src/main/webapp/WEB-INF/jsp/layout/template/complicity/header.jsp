@@ -15,7 +15,7 @@
 <div class="util">
 	<span class="sns">
 		<a href="https://www.facebook.com/wrstar" target="_blank" class="facebook">페이스북</a>
-		<a href="https://twitter.com/whrck2009" target="_blank" class="twitter">트위터</a>
+		<a href="https://twitter.com/whrik2009" target="_blank" class="twitter">트위터</a>
 	</span>
 	<!-- 20180822 추가 -->
 	<a href="${pageContext.request.contextPath}/" class="go-link"><i class="xi-home"></i><span>진흥원 바로가기</span></a>

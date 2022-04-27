@@ -123,7 +123,7 @@
 				  </a>
 			  </div>
 			  <div>
-				  <a href="https://www.stop.or.kr/html/kor/support/intro.html" target="_blank" title="새창열림">
+				  <a href="https://wecan.stop.or.kr" target="_blank" title="새창열림">
 					  <dl>
 						  <dt>성희롱·성폭력 <br />근절종합지원센터</dt>
 						  <dd>성 평등한 조직문화 조성을<br />위한 사건처리지원 </dd>
