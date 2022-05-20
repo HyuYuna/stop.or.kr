@@ -61,7 +61,7 @@
 		<img src="../../images/kor/layout/wa.png" width="160px;" alt="국가공인 웹 접근성 품질인증마크">
 	</a>
 	<p><span><a href="${pageContext.request.contextPath}/modedg/contentsView.do?ucont_id=CTX000056&srch_menu_nix=Ak20GP4Z" style="color:#ffff00;">개인정보처리방침</a></span>
-	<span><a href="${pageContext.request.contextPath}/modedg/contentsView.do?ucont_id=CTX000057&srch_menu_nix=9e67SjA6" style="color:#ffff00;">영상정보처리기기</a></span>
+	<span><a href="${pageContext.request.contextPath}/modedg/contentsView.do?ucont_id=CTX000128&srch_menu_nix=9e67SjA6" style="color:#ffff00;">영상정보처리기기</a></span>
 	<span><a href="${pageContext.request.contextPath}/newsletter/newsletterForm.do" style="color:#ffff00;" target="_blank" title="새창열림">뉴스레터 수신거부</a></span></p>
 	<address>서울특별시 중구 서소문로 50 센트럴플레이스 3층 (04505) </address>
 	<span>TEL 02-735-1050</span>
