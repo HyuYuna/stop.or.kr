@@ -125,8 +125,10 @@
 			  <div>
 				  <a href="https://wecan.stop.or.kr" target="_blank" title="새창열림">
 					  <dl>
-						  <dt>성희롱·성폭력 근절 <br />종합지원센터</dt>
-						  <dd>(☎ 02-735-7544)<br />기관장 등 피해자 상담 및 지원 연계,<br />성희롱 방지 조직문화 진단 지원</dd>
+						  <dt>성희롱·성폭력 근절 <br />종합지원센터<br/>
+						  	<span style="font-size: 1.6rem;">(☎ 02-735-7544)</span>
+						  </dt>
+						  <dd>기관장 등 피해자 상담 및 지원 연계,<br />성희롱 방지 조직문화 진단 지원</dd>
 					  </dl>
 				  </a>
 			  </div>
