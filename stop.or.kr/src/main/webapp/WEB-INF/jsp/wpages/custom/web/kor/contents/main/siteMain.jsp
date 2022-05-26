@@ -117,7 +117,9 @@
 			  <div>
 				  <a href="https://d4u.stop.or.kr/" target="_blank" title="새창열림">
 					  <dl>
-						  <dt>디지털 성범죄 <br />피해자 지원센터</dt>
+						  <dt>디지털 성범죄 <br />피해자 지원센터<br/>
+						  	<span style="font-size: 1.6rem;">(☎ 02-735-8994)</span>
+						  </dt>
 						  <dd>피해 촬영물 삭제 및 <br />상담ㆍ수사ㆍ법률ㆍ의료 연계지원</dd>
 					  </dl>
 				  </a>

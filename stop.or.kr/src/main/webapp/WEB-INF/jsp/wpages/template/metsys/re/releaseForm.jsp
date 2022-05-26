@@ -34,6 +34,11 @@
 				<form:errors path="rel_title"/></td>
 			</tr>
 			<tr>
+				<th scope="row"><label for="division">분류</label></th>
+				<td><form:input path="division" name="division" class="input_width_700" title="분류"/>
+				<form:errors path="division"/></td>
+			</tr>
+			<tr>
 				<th scope="row"><label for="rel_pblntf_cycle">공개주기</label></th>
 				<td><form:input path="rel_pblntf_cycle" name="rel_pblntf_cycle" class="input_width_700" title="공시주기"/>
 				<form:errors path="rel_pblntf_cycle"/></td>

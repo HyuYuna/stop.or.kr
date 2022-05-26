@@ -7,7 +7,7 @@
 <%@ taglib prefix="cutil" uri="/WEB-INF/tlds/CommonUtil.tld"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
-
+	 
 	        
 <!-- 상세콘텐츠 영역 -->
 <%-- <div class="box1">
@@ -25,12 +25,14 @@
 		<colgroup>
 		<col style="width:5%">
 		<col style="width:15%">
-		<col style="width:30%">
+		<col style="width:15%">
+		<col style="width:20%">
 		<col span="4">
 		</colgroup>
 		<thead>
 			<tr>
 				<th scope="col">번호</th>
+				<th scope="col">분류</th>
 				<th scope="col">공표목록</th>
 				<th scope="col">공표항목</th>
 				<th scope="col">공표시기</th>
@@ -57,6 +59,7 @@
 									</c:otherwise>
 								</c:choose>	
 							</td>
+							<td class="division"><c:out value="${resultNotice.division}"/></td>
 							<td><c:out value="${resultNotice.rel_content}"/></td>
 							<td><c:out value="${resultNotice.rel_era}"/></td>
 							<td><c:out value="${resultNotice.rel_pblntf_cycle}"/></td>
@@ -70,7 +73,9 @@
 				<c:forEach var="result" items="${resultList}" varStatus="status">
 					<c:set var="viewParams" value="seq=${result.rel_seq}&pageIndex=${pageIndex}" />	
 					<tr>
-						<td><c:out value="${totCnt - (result.rn - 1)}"/></td>
+						<%-- <td><c:out value="${totCnt - (result.rn - 1)}"/></td> --%>
+						<td><c:out value="${result.rn}"/></td>
+						<td><c:out value="${result.division}"/></td>
 						<td>
 							<c:if test="${empty result.rel_dept }">
 								2020년 이전 공표 자료

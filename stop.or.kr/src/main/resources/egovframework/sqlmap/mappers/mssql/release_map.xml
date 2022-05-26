@@ -6,7 +6,7 @@
 		<!-- 정보공개목록 목록 -->
 	<select id="selectReleaseList" parameterType="releaseVO" resultType="releaseVO">
 		
-		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY REL_SEQ DESC) rn, TB.* FROM (
+		SELECT MORG.* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY REL_SEQ ASC) rn, TB.* FROM (
 	
 			SELECT
 				REL_SEQ
@@ -15,6 +15,7 @@
 				, IS_NOTICE
 				, CONVERT(VARCHAR(10), WDT, 20) WDT
 				, VCHKCODE
+				, DIVISION
 				, REL_PBLNTF_CYCLE
 				, REL_ERA
 				, REL_URL
@@ -69,6 +70,7 @@
 				, IS_NOTICE
 				, CONVERT(VARCHAR(10), WDT, 20) WDT
 				, VCHKCODE
+				, DIVISION
 				, REL_PBLNTF_CYCLE
 				, REL_ERA
 				, REL_URL
@@ -137,6 +139,7 @@
 			, REL_TITLE
 			, REL_CONTENT
 			, IS_NOTICE
+			, DIVISION
 			, WDT
 			, REL_PBLNTF_CYCLE
 			, REL_ERA
@@ -151,6 +154,7 @@
 			, #{rel_title}
 			, #{rel_content}
 			, #{is_notice}
+			, #{division}
 			, GETDATE()
 			, #{rel_pblntf_cycle}
 			, #{rel_era}
@@ -169,6 +173,7 @@
 			  REL_TITLE = #{rel_title}
 			, REL_CONTENT = #{rel_content}
 			, IS_NOTICE = #{is_notice}
+			, DIVISION = #{division}
 			, REL_PBLNTF_CYCLE = #{rel_pblntf_cycle}
 			, REL_ERA = #{rel_era}
 			, REL_URL = #{rel_url}
@@ -198,6 +203,7 @@
 			, REL_TITLE
 			, REL_CONTENT
 			, IS_NOTICE
+			, DIVISION
 			, WDT
 			, REL_PBLNTF_CYCLE
 			, REL_ERA

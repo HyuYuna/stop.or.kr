@@ -20,8 +20,9 @@
 				<thead>
 					<tr>
                        <th scope="col" width="5%">No.</th>
+                       <th scope="col" >분류</th>
                        <th scope="col" >공표목록</th>
-                       <th scope="col" width="25%">공표항목</th>
+                       <th scope="col" width="20%">공표항목</th>
                        <th scope="col" >공표시기</th>
                        <th scope="col" >공표주기</th>
                        <th scope="col" >공표방법</th>
@@ -35,6 +36,7 @@
 						<c:set var="viewParams" value="seq=${resultNotice.rel_seq}&pageIndex=${pageIndex}" />	
 						<tr>
 							<td>Notice</td>
+							<td><c:out value="${resultNotice.division}"/></td>
 							<td><c:out value="${resultNotice.rel_title}"/></td>
 							<td><a href="${cutil:getUrl('/metsys/release/releaseForm.do', viewParams, true)}"><c:out value="${resultNotice.rel_content}"/></a></td>
 							<td><c:out value="${resultNotice.rel_pblntf_cycle}"/></td>
@@ -49,7 +51,9 @@
 				<c:forEach var="result" items="${resultList}" varStatus="status">
 					<c:set var="viewParams" value="seq=${result.rel_seq}&pageIndex=${pageIndex}" />	
 					<tr>
-						<td><c:out value="${totCnt - (result.rn - 1)}"/></td>
+						<%-- <td><c:out value="${totCnt - (result.rn - 1)}"/></td> --%>
+						<td><c:out value="${result.rn}"/></td>
+						<td><c:out value="${result.division}"/></td>
 						<td>
 							<c:if test="${empty result.rel_dept }">
 								2020년 이전 공표 자료

@@ -32,6 +32,9 @@ public class ReleaseVO extends DefaultSearchVO {
   /** 공개방법(URL) **/
   private String rel_url;
   
+  /** 분류 **/
+  private String division;
+  
   /** 담당부서 **/
   private String rel_dept;
   
@@ -85,6 +88,14 @@ public String getRel_url() {
 
 public void setRel_url(String rel_url) {
 	this.rel_url = rel_url;
+}
+
+public String getDivision() {
+	return division;
+}
+
+public void setDivision(String division) {
+	this.division = division;
 }
 
 public String getRel_dept() {
