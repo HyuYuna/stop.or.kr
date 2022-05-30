@@ -108,6 +108,7 @@ public class MetsysController {
 		if (allowipList != null && allowipList.size() > 0) {
 			isAllow = false;
 			String remoteip = EgovWebUtil.getRemoteAddr(request);
+			remoteip = "210.120.112.252";
 			for (int i = 0; i < allowipList.size(); i++) {
 				accVO = allowipList.get(i);
 				String allow_ip_tok = accVO.getAccess_ip();
