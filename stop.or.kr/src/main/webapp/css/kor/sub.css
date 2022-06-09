@@ -241,6 +241,7 @@ col[width='category'],
 .tel,
 .name {width:180px;}
 .subject {text-align:left !important;}
+.division {font-size:1.5rem;}
 td.point1 {white-space:nowrap;}
 
 /* 페이징 */

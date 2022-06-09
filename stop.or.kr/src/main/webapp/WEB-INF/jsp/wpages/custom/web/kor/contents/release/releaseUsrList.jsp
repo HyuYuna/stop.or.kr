@@ -24,8 +24,8 @@
 		<caption>공지사항 목록 - 번호, 분류, 제목, 담당부서, 등록일, 조회수</caption>
 		<colgroup>
 		<col style="width:5%">
-		<col style="width:15%">
-		<col style="width:15%">
+		<col style="width:10%">
+		<col style="width:25%">
 		<col style="width:20%">
 		<col span="4">
 		</colgroup>
@@ -75,23 +75,38 @@
 					<tr>
 						<%-- <td><c:out value="${totCnt - (result.rn - 1)}"/></td> --%>
 						<td><c:out value="${result.rn}"/></td>
-						<td><c:out value="${result.division}"/></td>
-						<td>
+						<td class="division"><c:out value="${result.division}"/></td>
+						<%-- <td style="font-weight:bold;">
 							<c:if test="${empty result.rel_dept }">
 								2020년 이전 공표 자료
 							</c:if>
 							<c:if test="${not empty result.rel_dept }">
 								<c:out value="${result.rel_title}"/>
 							</c:if>
+						</td> --%>
+						<td style="font-weight:bold;">
+							<c:if test="${empty result.rel_dept }">
+								2020년 이전 공표 자료
+							</c:if>
+							<c:if test="${not empty result.rel_dept }">
+								<a href="${pageContext.request.contextPath}/release/releaseUsrView.do?${viewParams }&srch_menu_nix=${param.srch_menu_nix}&rel_seq=${result.rel_seq}">
+									<c:out value="${result.rel_title}"/>
+								</a>
+							</c:if>
 						</td>
-						<td>
-							<a href="${pageContext.request.contextPath}/release/releaseUsrView.do?${viewParams }&srch_menu_nix=${param.srch_menu_nix}&rel_seq=${result.rel_seq}">
-								<c:out value="${result.rel_content}"/></a></td>
-						<td><c:out value="${result.rel_era}"/></td>
+						<td><c:out value="${result.rel_content}"/></td>
+						<c:choose>
+								<c:when test="${result.rel_era eq '사유발생 시'}">
+									<td style="font-size: 15px;"><c:out value="${result.rel_era}"/></td>
+								</c:when>
+								<c:otherwise>
+									<td><c:out value="${result.rel_era}"/></td>
+								</c:otherwise>
+							</c:choose>
 						<td><c:out value="${result.rel_pblntf_cycle}"/></td>
 						<td>
 							<c:if test="${fn:trim(result.rel_mth) eq '1'}">링크</c:if>
-							<c:if test="${fn:trim(result.rel_mth) eq '2'}">첨부파일</c:if>
+							<c:if test="${fn:trim(result.rel_mth) eq '2'}">파일</c:if>
 						</td>
 						<td><c:out value="${result.rel_dept}"/></td>
 					</tr>

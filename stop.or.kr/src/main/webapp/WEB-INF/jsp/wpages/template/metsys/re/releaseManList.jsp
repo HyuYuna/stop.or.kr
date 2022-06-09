@@ -67,7 +67,7 @@
 						<td><c:out value="${result.rel_era}"/></td>
 						<td>
 							<c:if test="${fn:trim(result.rel_mth) eq '1'}">링크</c:if>
-							<c:if test="${fn:trim(result.rel_mth) eq '2'}">첨부파일</c:if>
+							<c:if test="${fn:trim(result.rel_mth) eq '2'}">파일</c:if>
 						</td>
 						<td><a href="${cutil:getUrl('/metsys/release/deleteRelease.do', viewParams, true)}" class="deleteRelease">삭제</a></td>
 					</tr>
