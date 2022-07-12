@@ -37,15 +37,22 @@
 		<tbody>
 			
 			<c:forEach var="result" items="${resultList}" varStatus="status">
+				<fmt:parseDate value="${result.srvy_start}" var="startPlanDate" pattern="yyyy-MM-dd"/>
+				<fmt:parseNumber value="${startPlanDate.time / (1000*60*60*24)}" integerOnly="true" var="startDate"></fmt:parseNumber>
+				<fmt:parseNumber value="${todayDate - startDate }" integerOnly="true" var="srvyValidStart"></fmt:parseNumber>
+				
 				<fmt:parseDate value="${result.srvy_end}" var="endPlanDate" pattern="yyyy-MM-dd"/>
 				<fmt:parseNumber value="${endPlanDate.time / (1000*60*60*24)}" integerOnly="true" var="endDate"></fmt:parseNumber>
-				<fmt:parseNumber value="${todayDate - endDate}" integerOnly="true" var="srvyVaildDay"></fmt:parseNumber>
+				<fmt:parseNumber value="${todayDate - endDate}" integerOnly="true" var="srvyValidEnd"></fmt:parseNumber>
 				
 				<tr>
 					<td><c:out value="${totCnt - (result.rn - 1)}"/></td>
 					<td class="subject">
 						<c:choose>
-							<c:when test="${srvyVaildDay <= 0 and result.srvy_open_yn eq 'Y'}">
+							<c:when test="${srvyValidStart < 0 and result.srvy_open_yn eq 'Y'}">
+								<a href="#" onclick="alert('설문기간이 아닙니다'); return false;"><c:out value="${result.srvy_nm}" /></a>
+							</c:when>
+							<c:when test="${srvyValidEnd <= 0 and result.srvy_act_yn eq 'Y'}">
 								<%-- <a href="javascript:fn_egov_srvymain_view('${result.srvy_idx}')"><c:out value="${result.srvy_nm}" /></a> --%>
 								<a href="${pageContext.request.contextPath}/usract/surveySrvydata/srvyView.do?srch_menu_nix=${param.srch_menu_nix}&seltab_idx=1&srvy_idx=${result.srvy_idx}"><c:out value="${result.srvy_nm}" /></a>
 							</c:when>
@@ -58,7 +65,10 @@
 					<td><c:out value="${result.srvy_start}" /> ~ <c:out value="${result.srvy_end}" /></td>
 					<td>						
 						<c:choose>
-							<c:when test="${srvyVaildDay <= 0 and result.srvy_open_yn eq 'Y'}">
+							<c:when test="${srvyValidStart < 0 and result.srvy_open_yn eq 'Y'}">
+								<span class="icon3 type1">예정</span>
+							</c:when>
+							<c:when test="${srvyValidEnd <= 0 and result.srvy_open_yn eq 'Y'}">
 								<span class="icon3 type1">진행중</span>
 							</c:when>
 							<c:otherwise>

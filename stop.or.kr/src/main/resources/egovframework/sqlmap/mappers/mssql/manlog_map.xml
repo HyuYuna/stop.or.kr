@@ -146,8 +146,11 @@
 		FROM
 			CMS_MAN_LOG
 		WHERE left(LOG_UID,5) <![CDATA[<>]]> 'GUEST'
-			<if test="searchKeyword != null and searchKeyword != ''">AND
+			<if test="searchKeyword != null and searchKeyword != '' and searchCondition != 'log_unm'">AND
 				${searchCondition} LIKE '%' + #{searchKeyword} + '%'
+			</if>
+			<if test="searchKeyword != null and searchKeyword != '' and searchCondition == 'log_unm'">AND
+				dbo.SF_USER_NM(LOG_UID) LIKE '%' + #{searchKeyword} + '%'
 			</if>
 			<if test="srchFromDT != null and srchFromDT != ''">
 				<if test="srchToDT != null and srchToDT != ''">AND
